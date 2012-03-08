@@ -1,0 +1,47 @@
+[list main]
+ID              = 序号
+Operate         = 操作
+View            = 查看
+Edit            = 修改
+Add             = 添加
+Save            = 保存
+Del             = 删
+Delete          = 删除
+Group           = 所属组
+Explain         = 说明
+Manage          = 管理
+Close           = 关闭
+
+
+[administrator manage]
+Login Num         = 登录次数
+Last login IP     = 最后登录IP
+Add administrator = 添加管理员
+Add administrator group = 添加管理组
+Are you sure you want to delete this administrator?     = 您确定要删除此管理员？
+
+
+[login page]
+Administrator login = 管理员登录
+Username            = 用户名
+Password            = 密码
+Verification code   = 验证码
+Login               = 登录
+
+Attempts too much, and temporarily can not login     = 尝试次数太多，暂不可登录
+Username can not be empty                            = 用户名不能空
+The password can not be empty                        = 密码不能空
+Verification code error                              = 验证码错误
+Not allowed to login through this page               = 不允许通过此页面登录
+You have been blocked                                = 您已被屏蔽
+User does not exist                                  = 用户不存在
+Password is incorrect                                = 密码错误
+Login timeout, please log in again                   = 登录超时，请重新登录
+Please login                                         = 请先登录
+This account password has been updated, please re-login = 此账号密码已更新，请重新登录
+You do not have the authority to operate in this project, please contact administrator = 您不具备此项目的操作权限，请联系管理员
+This account has been elsewhere login, log the IP: :ip (:iplocal), login time: :time = 此号已在其它地方登录，登录IP::ip (:iplocal)，登录时间: :time
+
+
+[view]
+IndexPage           = 管理首页
