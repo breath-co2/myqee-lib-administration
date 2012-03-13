@@ -82,7 +82,7 @@ class Admin extends \Controller
             if ( $member->setting['only_self_login'] && $session->id()!=$member->last_login_session_id )
             {
                 # 如果设置为仅仅可单人登录，若发现最后登录session id和当前登录session不一致，则取消此用户登录，并输出相应信息
-                throw new \Exception(\__('This account has been elsewhere login, log the IP: :ip (:iplocal), login time: :time',array(':ip'=>$member->last_login_ip,':iplocal'=>\IpSource::get($member->last_login_ip),':time'=>$member->last_login_time)));
+                throw new \Exception(\__('This account has been elsewhere login, log the IP: :ip - :iplocal, login time: :time',array(':ip'=>$member->last_login_ip,':iplocal'=>\IpSource::get($member->last_login_ip),':time'=>$member->last_login_time)));
             }
 
         }

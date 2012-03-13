@@ -65,7 +65,7 @@ class Member_Result extends \OOP\ORM\Result
  * @copyright  Copyright (c) 2008-2011 myqee.com
  * @license	   http://www.myqee.com/license.html
  */
-class Member_Data extends \OOP\ORM\Data
+class Member_Data extends \Member
 {
     /**
      * 权限对象
