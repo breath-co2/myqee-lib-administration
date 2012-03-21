@@ -14,12 +14,6 @@ class Group extends \Controller\Admin
      */
     public function action_default()
     {
-        $this->quick_menu = array
-        (
-            'administrator/group/add' => '添加权限组',
-            'administrator/'          => '管理员列表',
-            'administrator/add'       => '添加管理员',
-        );
 
         if (!$this->session()->member()->perm()->is_own('administrator.view_group_info'))
         {
@@ -85,12 +79,6 @@ class Group extends \Controller\Admin
      */
     public function action_edit($group_id=0)
     {
-        $this->quick_menu = array
-        (
-            'administrator/group/' => '权限组列表',
-            'administrator/'       => '管理员列表',
-            'administrator/add'    => '添加管理员',
-        );
         if ($group_id>0)
         {
             $this->page_title = '修改管理组';
@@ -236,7 +224,7 @@ class Group extends \Controller\Admin
         {
             try
             {
-                $perm_setting = \Controller\Administrator\Index::check_perm_data($_POST['perm_setting']);
+                $perm_setting = \Controller\Administrator::check_perm_data($_POST['perm_setting']);
             }
             catch (\Exception $e)
             {

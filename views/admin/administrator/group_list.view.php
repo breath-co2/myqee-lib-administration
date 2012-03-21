@@ -20,8 +20,8 @@
         <td class="td2"><?php echo $item->group_name;?></td>
         <td class="td2"><?php echo $item->group_desc;?></td>
         <td class="td2">
-        <input type="button" value="查看成员"<?php if ( $group_manager && !$groups_setting[$item->id]['view_users'])echo ' disabled="disabled"'; ?> onclick="goto('<?php echo Core::url('administrator/?group_id='.$item->id);?>')" />
-        <input type="button" value="修改"<?php if ( $group_manager && !$groups_setting[$item->id]['edit_group'])echo ' disabled="disabled"'; ?> onclick="goto('<?php echo Core::url('administrator/group/edit/'.$item->id);?>')" />
+        <a class="button"<?php if ( $group_manager && !$groups_setting[$item->id]['view_users'])echo ' disabled="disabled"'; ?> href="<?php echo Core::url('administrator/?group_id='.$item->id);?>">查看成员</a>
+        <a class="button"<?php if ( $group_manager && !$groups_setting[$item->id]['edit_group'])echo ' disabled="disabled"'; ?> href="<?php echo Core::url('administrator/group/edit/'.$item->id);?>">修改</a>
         <input type="button" value="删除"<?php if ($group_manager)echo ' disabled="disabled"';?> onclick="MyQEE.ask_todo('<?php echo Core::url('administrator/group/delete/'.$item->id);?>','您确认要删除此管理组？')" />
         </td>
     </tr>

@@ -4,8 +4,11 @@ namespace Library\MyQEE\Administration\ORM\Admin;
 /**
  * 超级管理员ORM
  *
- * @author jonwang
- *
+ * @author     jonwang(jonwang@myqee.com)
+ * @category   Library
+ * @package    ORM
+ * @copyright  Copyright (c) 2008-2012 myqee.com
+ * @license    http://www.myqee.com/license.html
  */
 class Member_Finder extends \OOP\ORM\Finder\DB
 {
@@ -16,7 +19,7 @@ class Member_Finder extends \OOP\ORM\Finder\DB
     /**
      * 获取指定组所有的用户
      *
-     * @return ORM_Admin_Member_Result
+     * @return \ORM\Admin\Member_Result
      */
     public function get_all_members_by_group_id($group_id)
     {
@@ -46,8 +49,11 @@ class Member_Finder extends \OOP\ORM\Finder\DB
 /**
  * 超级管理员ORM查询结果集
  *
- * @author jonwang
- *
+ * @author     jonwang(jonwang@myqee.com)
+ * @category   Library
+ * @package    ORM
+ * @copyright  Copyright (c) 2008-2012 myqee.com
+ * @license    http://www.myqee.com/license.html
  */
 class Member_Result extends \OOP\ORM\Result
 {
@@ -58,19 +64,18 @@ class Member_Result extends \OOP\ORM\Result
 /**
  * 超管用户基础类
  *
- * @author	   jonwang(jonwang@myqee.com)
- * @category   MyQEE
- * @package	   System
- * @subpackage Core
- * @copyright  Copyright (c) 2008-2011 myqee.com
- * @license	   http://www.myqee.com/license.html
+ * @author     jonwang(jonwang@myqee.com)
+ * @category   Library
+ * @package    ORM
+ * @copyright  Copyright (c) 2008-2012 myqee.com
+ * @license    http://www.myqee.com/license.html
  */
 class Member_Data extends \Member
 {
     /**
      * 权限对象
      *
-     * @var Permission
+     * @var \Permission
      */
     protected $_permission;
 
@@ -196,7 +201,7 @@ class Member_Data extends \Member
     /**
      * 所有组
      *
-     * @var ORM_Admin_MemberGroup_Result
+     * @var \ORM\Admin\MemberGroup_Result
      */
     protected $_groups = null;
 
@@ -218,7 +223,7 @@ class Member_Data extends \Member
     /**
      * 设置管理组
      *
-     * @param ORM_Admin_MemberGroup_Result $rs
+     * @param \ORM\Admin\MemberGroup_Result $rs
      * @return \ORM\MyQEE\Admin\Member_Data
      */
     public function set_groups(\ORM\Admin\MemberGroup_Result $member_group_result)
@@ -231,7 +236,7 @@ class Member_Data extends \Member
     /**
      * 所有组设置
      *
-     * @var ORM_Admin_MemberGroup_Result
+     * @var \ORM\Admin\MemberGroup_Result
      */
     protected $_groups_setting = null;
 
@@ -254,7 +259,7 @@ class Member_Data extends \Member
      * 设置管理组设置
      *
      * @param array $setting
-     * @return ORM_MyQEE_Admin_Member_Data
+     * @return \ORM\MyQEE\Admin\Member_Data
      */
     public function set_groups_setting(array $setting)
     {
@@ -428,7 +433,7 @@ class Member_Data extends \Member
      * $perm_str 参数同 $this->is_own_group_perm()
      *
      * @param string $perm_str
-     * @return ORM_Admin_MemberGroup_Result
+     * @return \ORM\Admin\MemberGroup_Result
      */
     public function has_own_perm_groups($perm_str)
     {

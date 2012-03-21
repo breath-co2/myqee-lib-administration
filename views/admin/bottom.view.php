@@ -6,7 +6,7 @@
 
 <div id="bottomdiv">
     <div style="padding:0 10px;">
-    &copy; MyQEE All Rights Reserved. Design by <?php echo HTML::email('jonwang@myqee.com')?>. Run Time:<?php echo number_format(microtime(true)-START_TIME,4);?>s.
+    &copy; MyQEE All Rights Reserved. Design by <?php echo HTML::email('jonwang@myqee.com')?>. Run Time:<span id="bottom_runtime"><?php echo number_format(microtime(true)-START_TIME,4);?></span>s.
     </div>
 </div>
 <script type="text/javascript">

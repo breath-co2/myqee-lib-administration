@@ -5,7 +5,7 @@ namespace Library\MyQEE\Administration;
  * Session
  *
  * @author     jonwang(jonwang@myqee.com)
- * @category   Core
+ * @category   Library
  * @package    Classes
  * @subpackage Session
  * @copyright  Copyright (c) 2008-2012 myqee.com

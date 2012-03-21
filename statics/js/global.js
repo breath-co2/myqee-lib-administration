@@ -2312,11 +2312,11 @@ window.scroll = function(x,y){
     }
     MyQEE._scroll_runNum_ = 0;
     var runNum = MyQEE._scroll_runNum_;
-    var scrollX = MyQEE.DOM.scrollLeft || document.body.scrollLeft;
-    var scrollY = MyQEE.DOM.scrollTop || document.body.scrollTop;
+    var scrollX = MyQEE.DOM().scrollLeft || document.body.scrollLeft;
+    var scrollY = MyQEE.DOM().scrollTop || document.body.scrollTop;
     var tmpX = scrollX-x;
     var tmpY = scrollY-y;
-    var scroll = function(){
+    var s = function(){
         runNum++;
         var newX = 0;
         var newY = 0;
@@ -2332,12 +2332,12 @@ window.scroll = function(x,y){
         }
         if (runNum<=20){
             _scroll(newX,newY);
-            setTimeout(scroll,10);
+            setTimeout(s,10);
         }else{
             _scroll(x,y);
         }
     }
-    window.scroll();
+    s();
 }
 
 MyQEE.scroll = scroll;

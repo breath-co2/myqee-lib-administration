@@ -91,6 +91,7 @@ input[type="submit"]
     -o-transition: all 0.1s ease-in-out 0s;
 }
 
+a.submit,
 .submit,
 input.submit,
 input[type="submit"]
@@ -105,7 +106,15 @@ input[type="submit"]
     line-height:27px;
     line-height:29px\9;
     letter-spacing:1px;
+    text-decoration:none;
     background:url(../images/button.gif) repeat-x center top;
+}
+
+a.submit
+{
+    height:25px;
+    line-height:25px;
+    line-height:25px\9;
 }
 
 .submit:hover,
@@ -119,6 +128,7 @@ input[type="submit"]:hover
     color:#C22F0A;
     border:1px solid #c60;
     inner-border:1px solid red;
+    text-decoration:none;
 }
 
 .submit:active,
@@ -191,6 +201,7 @@ input[type="password"]
     font-family:Tahoma,Simsun,Helvetica,sans-serif;
 }
 
+a.disabled,
 .disabled,
 .disabled:hover,
 .disabled:active,
@@ -558,75 +569,6 @@ p{
     line-height:24px;
     line-height:26px\9;
 }
-#go_and_back_button{
-    width:68px;
-    height:23px;
-    background:url(../images/go_and_back.gif) no-repeat;
-}
-#button_back{
-    float:left;
-    display:inline;
-    width:22px;
-    height:23px;
-    background:url(../images/go_and_back.gif) no-repeat 0 -24px;
-}
-#button_renew{
-    float:left;
-    display:inline;
-    width:21px;
-    height:23px;
-    background:url(../images/go_and_back.gif) no-repeat -22px -24px;
-}
-#button_go{
-    float:left;
-    display:inline;
-    width:22px;
-    height:23px;
-    background:url(../images/go_and_back.gif) no-repeat -43px -24px;
-}
-#menutag_more{
-    position:absolute;
-    right:0;
-    border:1px solid #aaa;
-    background:rgba(204,204,204,0.2) url(../images/fav-arrow.gif) no-repeat right -7px;
-    height:16px;
-    overflow:hidden;
-    margin:3px 84px 0 0;
-    padding:1px;
-    line-height:16px;
-    border-radius:10px;
-    -moz-border-radius:10px;
-    -khtml-border-radius:10px;
-    -webkit-border-radius:10px;
-    transition: all 0.2s ease-in-out 0s;
-    -webkit-transition: all 0.2s ease-in-out 0s;
-    -moz-transition: all 0.2s ease-in-out 0s;
-    -o-transition: all 0.2s ease-in-out 0s;
-}
-#menutag_more:hover{
-    height:auto;
-    background:rgba(244,244,244,0.9) url(../images/fav-arrow.gif) no-repeat right -50px;
-    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
-    -moz-box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
-    -webkit-box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
-    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=7, Direction=135, Color='#dddddd')
-}
-#menutag_more li {
-    height:18px;
-    padding:0 23px 0 12px;
-    border-radius:10px;
-    -moz-border-radius:10px;
-    -khtml-border-radius:10px;
-    -webkit-border-radius:10px;
-}
-#menutag_more a{
-    display:block;
-    height:18px;
-}
-#menutag_more li:hover{
-    background:#b0daf0;
-}
-
 #leftmenudiv{
     background:#eee;
     padding-left:10px;

@@ -36,18 +36,6 @@ class Admin extends \Controller
      */
     protected $location;
 
-    /**
-     * 快速菜单
-     *
-     * array(
-     *     'test/url1' => '测试菜单',
-     *     'test/url12' => '测试菜单2',
-     * )
-     *
-     * @var array
-     */
-    protected $quick_menu;
-
     function __construct()
     {
         $this->check_login();
@@ -136,7 +124,7 @@ class Admin extends \Controller
 
     public function after()
     {
-        $output = ob_get_clean();
+        $output = \ob_get_clean();
 
         if ( !\HttpIO::IS_AJAX )
         {
@@ -144,10 +132,12 @@ class Admin extends \Controller
             echo $output;
             $this->run_bottom();
         }
-        elseif (isset($_GET['_pjax']) && $_GET['_pjax']=='true')
+        elseif (isset($_SERVER["HTTP_X_PJAX"]) && $_SERVER["HTTP_X_PJAX"]=='true')
         {
+            # pjax支持
+
             $admin_menu = \Core::config('admin.menu',array());
-            $url = \Core::url()->site(\HttpIO::$uri);
+            $url = \Core::url(\HttpIO::$uri);
             $page_title = $this->page_title;
             $location = $this->location;
 
@@ -161,6 +151,7 @@ class Admin extends \Controller
                 if (!$page_title)$page_title = \__('IndexPage');
             }
             if (!$menu)$menu = array();
+            $top_menu = \current($menu);
 
             if ( !$location || !\is_array($location) )
             {
@@ -194,8 +185,9 @@ class Admin extends \Controller
                 }
             }
 
-            echo '<title>'.$page_title.'</title>'.N;
+            echo '<title>'.$page_title.'</title>'.CRLF;
             echo $output;
+            echo '<script>myqee_top_menu='.var_export($top_menu,true).';myqee_menu='.json_encode($menu).';renew_runtime('.\number_format(\microtime(true)-\START_TIME,4).')</script>';
         }
         else
         {
@@ -265,7 +257,6 @@ class Admin extends \Controller
         $view->page_title = $page_title;
         $view->location   = $location;
         $view->admin_menu = $admin_menu;
-        $view->quick_menu = $this->quick_menu;
         $view->url        = $url;
 
         $view->render(true);
@@ -284,7 +275,7 @@ class Admin extends \Controller
     {
         if (\HttpIO::IS_AJAX)
         {
-            if ( \is_array($msg) )
+            if (\is_array($msg))
             {
                 $data = $msg;
             }

@@ -39,7 +39,7 @@ class Login extends \Controller
         if ($error)
         {
             $error_num = $error['error_num'];
-            $config = \Core::config('admin/setting');
+            $config = \Core::config('admin.setting');
             if ( $error_num>=$config['login_error_show_captcha_num']-1 )
             {
                 $show_captcha = true;
@@ -130,7 +130,7 @@ class Login extends \Controller
             if ( $error_num )
             {
                 # 有登录错误
-                $config = \Core::config('admin/core');
+                $config = \Core::config('admin.core');
                 if ( $error_num>=$config['login_error_show_captcha_num']-1 )
                 {
                     if ( \Captcha::valid($data['captcha'])<0 )

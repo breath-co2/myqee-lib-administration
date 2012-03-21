@@ -3,6 +3,7 @@
 namespace Controller
 {
     class Admin extends \Library\MyQEE\Administration\Controller\Admin{}
+    class Administrator extends \Library\MyQEE\Administration\Controller\Administrator{}
 }
 
 

@@ -11,11 +11,6 @@ class Administrator extends \Controller\Admin
 {
     public function action_default()
     {
-        $this->quick_menu = array(
-            'administrator/add'       => '添加管理员',
-            'administrator/group/'    => '权限组列表',
-            'administrator/group/add' => '添加权限组',
-        );
         $view = new \View('admin/administrator/list');
 
         $model_administrator = new \Model\Admin\Administrator();
@@ -179,11 +174,6 @@ class Administrator extends \Controller\Admin
 
     public function action_edit( $member_id=0 )
     {
-        $this->quick_menu = array(
-            'administrator/'		  => '管理员列表',
-            'administrator/group/'    => '权限组列表',
-            'administrator/group/add' => '添加权限组',
-        );
         if ( $member_id>0 )
         {
             $this->page_title = '修改管理员';
@@ -791,12 +781,12 @@ class Administrator extends \Controller\Admin
                 }
 
                 # 修改权限组需要验证一下新权限
-                \Controller\Administrator\Index::check_perm_data( $new_group_perm_setting );
+                \Controller\Administrator::check_perm_data( $new_group_perm_setting );
             }
             if ( $_POST['perm_setting'] && \is_array($_POST['perm_setting']) )
             {
                 # 检查提交的额外权限
-                $perm_setting = \Controller\Administrator\Index::check_perm_data($_POST['perm_setting']);
+                $perm_setting = \Controller\Administrator::check_perm_data($_POST['perm_setting']);
             }
 
             if ( isset($member->setting['_group_admin']) )unset($member->setting['_group_admin']);
@@ -885,11 +875,13 @@ class Administrator extends \Controller\Admin
                     # 更新
                     foreach ( $same_group as $group_id )
                     {
-                        $where = array(
+                        $where = array
+                        (
                             'admin_id'             => $member->id,
                             'group_id'             => $group_id,
                         );
-                        $data = array(
+                        $data = array
+                        (
                             'admin_id'             => $member->id,
                             'group_id'             => $group_id,
                             'view_users'           => $_POST['manage_groups']['g'.$group_id]['view_users']?1:0,
@@ -911,18 +903,19 @@ class Administrator extends \Controller\Admin
             {
                 foreach ( $new_diff_group as $group_id )
                 {
-                    $data = array(
-                            'admin_id'             => $member->id,
-                            'group_id'             => $group_id,
-                            'view_users'           => $_POST['manage_groups']['g'.$group_id]['view_users']?1:0,
-                            'edit_users'           => $_POST['manage_groups']['g'.$group_id]['edit_users']?1:0,
-                            'edit_users_password'  => $_POST['manage_groups']['g'.$group_id]['edit_users_password']?1:0,
-                            'add_user'             => $_POST['manage_groups']['g'.$group_id]['add_user']?1:0,
-                            'del_user'             => $_POST['manage_groups']['g'.$group_id]['del_user']?1:0,
-                            'remove_user'          => $_POST['manage_groups']['g'.$group_id]['remove_user']?1:0,
-                            'shield_user'          => $_POST['manage_groups']['g'.$group_id]['shield_user']?1:0,
-                            'liftshield_user'      => $_POST['manage_groups']['g'.$group_id]['liftshield_user']?1:0,
-                            'edit_group'           => $_POST['manage_groups']['g'.$group_id]['edit_group']?1:0,
+                    $data = array
+                    (
+                        'admin_id'             => $member->id,
+                        'group_id'             => $group_id,
+                        'view_users'           => $_POST['manage_groups']['g'.$group_id]['view_users']?1:0,
+                        'edit_users'           => $_POST['manage_groups']['g'.$group_id]['edit_users']?1:0,
+                        'edit_users_password'  => $_POST['manage_groups']['g'.$group_id]['edit_users_password']?1:0,
+                        'add_user'             => $_POST['manage_groups']['g'.$group_id]['add_user']?1:0,
+                        'del_user'             => $_POST['manage_groups']['g'.$group_id]['del_user']?1:0,
+                        'remove_user'          => $_POST['manage_groups']['g'.$group_id]['remove_user']?1:0,
+                        'shield_user'          => $_POST['manage_groups']['g'.$group_id]['shield_user']?1:0,
+                        'liftshield_user'      => $_POST['manage_groups']['g'.$group_id]['liftshield_user']?1:0,
+                        'edit_group'           => $_POST['manage_groups']['g'.$group_id]['edit_group']?1:0,
                     );
                     $orm_group->db()->values($data);
                 }

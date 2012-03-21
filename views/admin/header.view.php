@@ -20,6 +20,33 @@ MyQEE.Url = {
 <!--[if (gte IE 6)&(lte IE 8)]>
   <script type="text/javascript" src="<?php echo Core::url('statics/js/selectivizr-min.js');?>"></script>
 <![endif]-->
+<script type="text/javascript" src="<?php echo Core::url('statics/js/jquery.pajax.js');?>"></script>
+<script type="text/javascript">
+$(function(){
+var n = 0;
+var is_error = false;
+$('a').pjax('#maindiv_td',{'data':null});
+$('#maindiv_td')
+.bind('pjax:beforeSend',function(e,xhr,s){
+    if(n>200){document.location=document.location;return false;}
+    if (s.clickedElement.context.onclick)
+    {
+        if(false==s.clickedElement.context.onclick())
+        {
+            return false;
+        }
+    }
+    if (s.clickedElement.context.getAttribute('disabled')=='disabled')
+    {
+        return false;
+    }
+    n++;
+    window.MyQEE.show_loading();
+    })
+.bind('pjax:success',function(e,response,msg){window._scroll(0,0);window.MyQEE.hidden_loading();change_menu(myqee_top_menu,null,myqee_menu);})
+;
+})
+</script>
 </head>
 <body>
 <iframe width="1" height="1" name="hiddenFrame" id="hiddenFrame" style="display:none;"></iframe>
@@ -33,8 +60,7 @@ header - begin
             <div class="mainWidth clear">
                 <div id="logo">
                     <?php $logurl = Core::url('statics/images/logo.png');?>
-                    <img src="<?php echo $logurl;?>" style="_display:none;" />
-                    <img src="<?php echo  Core::url('statics/images/spacer.gif');?>" style="display:none;_display:inline;_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=image,src=<?php echo $logurl;?> );" alt="Logo" />
+                    <img src="<?php echo $logurl;?>" style="_display:none;" /><!--[if lt IE 7]><img src="<?php echo Core::url('statics/images/spacer.gif');?>" style="_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=image,src=<?php echo $logurl;?> );" alt="Logo" /><![endif]-->
                 </div>
                 <div id="top_info_div">
                     <?php
@@ -127,94 +153,10 @@ header - begin
     </div>
     <div id="menutagdiv">
         <div class="menutagdiv">
-            <ul class="menutagul ul" id="menutagdiv_ul">
-                <li style="float:right;width:64px;padding-right:5px;">
-                    <div id="go_and_back_button"><a id="button_back" href="#" onclick="window.history.back();return false;" title="转到上一页"></a><a id="button_renew" href="#" onclick="window.location.reload();return false;" title="刷新本页"></a><a href="#" id="button_go" onclick="window.history.forward();return false;" title="转到下一页"></a></div>
-                </li>
-                <?php
-                if ($quick_menu){
-                ?>
-                <li style="float:right;padding-right:5px;">
-                    <div id="menutag_more">
-                        <style type="text/css">
-                            #menutag_more:hover{height:<?php echo 18*count($quick_menu);?>px;}
-                        </style>
-                        <ul class="menutag_more ul">
-                            <?php
-                            foreach ($quick_menu as $k=>$item)
-                            {
-                                echo '<li><a href="'.Core::url($k).'">' .$item. '</a></li>';
-                            }
-                            ?>
-                        </ul>
-                    </div>
-                </li>
-                <?php
-                }
-                ?>
-                <li class="tag_menu"><font><strong><a href="<?php echo Core::url('/');?>">网站管理</a></strong></font></li>
-<?php
-$i=0;
-$tmp_menu = $admin_menu;
-foreach ($menu as $key){
-    $i++;
-    $tmp_menu = $tmp_menu[$key];
-    if ($i==$this_key_len || !isset($tmp_menu['href']) ){
-        echo '<li class="tag_menu hover"><font><strong style="cursor:default;">'.$tmp_menu['innerHTML'].'</strong></font></li>';
-    }else{
-        echo '<li class="tag_menu"><font><strong><a href="'.$tmp_menu['href'].'">'.$tmp_menu['innerHTML'].'</a></strong></font></li>';
-    }
-}
-
-$i=0;
-$location_count = count($location);
-if ($location)foreach ($location as $value){
-    $i++;
-    if ( is_array($value) )
-    {
-        $tag = isset($value['href'])?'a':'span';
-    }
-    else
-    {
-        $tag = 'span';
-    }
-    echo "\r\n".'<li'.($location_count==$i?' class="tag_menu hover"':'tag_menu').'><font><strong'.($tag=='span'?' style="cursor:default;"':'').'>';
-
-    if ( is_array($value) )
-    {
-        echo '<'.$tag.' ';
-        foreach ($value as $k=>$v)
-        {
-            if ($k=='innerHTML')continue;
-            echo ' ' . $k.'="'.$v.'"';
-        }
-        echo '>'.$value['innerHTML'].'</'.$tag.'>';
-    }
-    else
-    {
-        echo (string)$value;
-    }
-
-    echo '</strong></font></li>';
-}
-;?>
-            </ul>
+            <ul class="menutagul ul" id="menutagdiv_ul"></ul>
         </div>
     </div>
 </div>
-<script type="text/javascript">
-//更新前进后退菜单
-setTimeout(function(){
-    var obj_go = MyQEE.$('button_go');
-    var obj_back = MyQEE.$('button_back');
-    if (!document.referrer)
-    {
-        obj_back.style.opacity=0.3;
-        obj_back.style.filter='alpha(opacity=30)';
-    }
-},10);
-
-</script>
 <!--
 header - end
 -->

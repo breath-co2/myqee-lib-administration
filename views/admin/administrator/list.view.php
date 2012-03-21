@@ -163,8 +163,8 @@ if ($list)
         <td class="td2"><?php echo $item->shielded?'<font style="color:red">是</font>':'<font style="color:green">否</font>';?></td>
         <td class="td2" title="<?php echo '最后登录IP：'.$item->last_login_ip;?><?php if($item->last_login_time>0)echo '<br>'.date('Y-m-d H:i:s',$item->last_login_time);?>"><?php echo $item->login_num;?></td>
         <td class="td2">
-        <input type="button" value="改设置" onclick="goto('<?php echo Core::url('administrator/edit/'.$item->id);?>')" />
-        <input type="button" value="改密码" onclick="goto('<?php echo Core::url('administrator/change_password/'.$item->id);?>')" />
+        <a class="button" href="<?php echo Core::url('administrator/edit/'.$item->id);?>">改设置</a>
+        <a class="button" href="<?php echo Core::url('administrator/change_password/'.$item->id);?>">改密码</a>
         <?php
         if ($item->shielded)
         {
@@ -188,7 +188,7 @@ if ($list)
     <tr>
         <td class="td1" colspan="7"> </td>
         <td class="td1" align="center">
-        <input type="button" class="submit" value="创建新用户" onclick="goto('<?php echo Core::url('administrator/add');?>')" />
+        <a class="submit" href="<?php echo Core::url('administrator/add');?>">创建新用户</a>
         </td>
     </tr>
 </table>

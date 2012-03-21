@@ -74,17 +74,18 @@ $config['admin']['menu'] = array
     'index' => array
     (
         'innerHTML' => '管理首页',
-        'href' => '/',
         'style' => 'font-weight:bold',
+        'href' => '/',
         'dev_tools' => array
         (
             'prem' => 'index.phpinfo',
             'innerHTML' => '开发工具',
-            'phpinfo' => array(
+            'phpinfo' => array
+            (
                 'innerHTML' => 'phpinfo()',
                 'href' => 'phpinfo/',
                 'perm' => 'default.view_phpinfo',
-            )
+            ),
         ),
     ),
 
@@ -93,7 +94,8 @@ $config['admin']['menu'] = array
         'innerHTML' => '应用管理',
         'list' => array(
             'innerHTML' => '应用商店',
-            'list' => array(
+            'list' => array
+            (
                 'innerHTML' => '精选应用',
                 'href' => 'apps/',
             ),
@@ -102,15 +104,18 @@ $config['admin']['menu'] = array
                 'innerHTML' => '排行榜',
                 'href' => 'apps/paihang',
             ),
-            'cat' => array(
+            'cat' => array
+            (
                 'innerHTML' => '应用分类',
                 'href' => 'apps/cat',
             ),
-            'buyed' => array(
+            'buyed' => array
+            (
                 'innerHTML' => '已购买的应用',
                 'href' => 'apps/buyed',
             ),
-            'update' => array(
+            'update' => array
+            (
                 'innerHTML' => '更新',
                 'href' => 'apps/update',
             )

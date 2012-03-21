@@ -79,6 +79,11 @@ function change_menu(menu_key,a_obj,show_key)
                 //相同链接，或略
             }else{
                 //返回true，允许页面跳转到href指定url上
+                var all_a = MyQEE.$('menu_ul').getElementsByTagName('a');
+                for(var i=0;i<all_a.length;i++){
+                    all_a[i].className = '';
+                }
+                a_obj.className = 'hover';
                 return true;
             }
         }
@@ -90,7 +95,6 @@ function change_menu(menu_key,a_obj,show_key)
 
     var show_key_len = 0;
     if (show_key)show_key_len = show_key.length;
-
 
     var show_html = function(keystr,arr,n,islast,leftstr,isfocus)
     {
@@ -188,6 +192,28 @@ function change_menu(menu_key,a_obj,show_key)
         MyQEE.$('leftmenu').scrollTop = 0;
         
         scroll_left_menu();
+
+        var reset_location = function()
+        {
+            var l = '';
+            var f = function(ks,mm)
+            {
+                var k = ks.shift();
+                var m = mm[k];
+                var html = '';
+                if (mm['innerHTML'])
+                {
+                    html='<li class="tag_menu"><font><strong'+(mm['href']?'':' style="cursor:default;"')+'>'+(mm['href']?'<a href="'+mm['href']+'">'+mm['innerHTML']+'</a>':mm['innerHTML'])+'</strong></font></li>';
+                    l = mm['innerHTML'];
+                }
+                if (ks && m && typeof m=='object')html+=f(ks,m);
+                
+                return html;
+            }
+            MyQEE.$('menutagdiv_ul').innerHTML = '<li class="tag_menu"><font><strong><a href="'+MyQEE.Url.Site+'/">网站管理</a></strong></font></li>'+f(myqee_menu.concat(),_myqee_admin_menu)+(document.title!=l?'<li style="float:left;padding-left:6px;position:relative;">'+document.title+'</li>':'');
+        }
+
+        reset_location();
         return false;
     }else{
         return true;
@@ -412,4 +438,10 @@ function init_left_scroll()
         MyQEE.$('leftmenu_srcollbar').innerHTML = '<div id="leftmenu_srcollbar_c" style="display:none;z-index:1;position:absolute;margin-top:0;margin-left:142px;background:#000;opacity:0.5;filter:alpha(opacity=50);width:7px;height:200px;border-radius:4px;-moz-border-radius:4px;-khtml-border-radius:4px;-webkit-border-radius:4px;"></div>';
         document.body.onfocus = show_left_srcoll;
     }
+}
+
+function renew_runtime(str)
+{
+    var obj=MyQEE.$('bottom_runtime');
+    if (obj)obj.innerHTML = str;
 }

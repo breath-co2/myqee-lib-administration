@@ -4,8 +4,11 @@ namespace Library\MyQEE\Administration\ORM\Admin;
 /**
  * 超级管理员ORM
  *
- * @author jonwang
- *
+ * @author     jonwang(jonwang@myqee.com)
+ * @category   Library
+ * @package    ORM
+ * @copyright  Copyright (c) 2008-2012 myqee.com
+ * @license    http://www.myqee.com/license.html
  */
 class MemberGroup_Finder extends \OOP\ORM\Finder\DB
 {
@@ -95,10 +98,8 @@ class MemberGroup_Finder extends \OOP\ORM\Finder\DB
         {
             $ids[] = $item->id;
         }
-        $rs = $this->db()
-        ->in('ids.admin_id',$ids)
-        ->get()
-        ->as_array();
+
+        $rs = $this->db()->in('ids.admin_id',$ids)->get()->as_array();
 
         $rsArr = array();
 
@@ -137,7 +138,8 @@ class MemberGroup_Finder extends \OOP\ORM\Finder\DB
             # 当前用户为超管，直接返回所有组
             foreach ( $member->groups() as $group )
             {
-                $rsArr[$group->id] = array(
+                $rsArr[$group->id] = array
+                (
                     'view_users'          => 1,
                     'edit_users'          => 1,
                     'edit_users_password' => 1,
@@ -165,10 +167,7 @@ class MemberGroup_Finder extends \OOP\ORM\Finder\DB
         {
             $ids[] = $item->id;
         }
-        $rs = $this->db()
-        ->in('ids.admin_id',$ids)
-        ->get()
-        ->as_array();
+        $rs = $this->db()->in('ids.admin_id',$ids)->get()->as_array();
 
         $rsArr = array();
 
@@ -242,8 +241,11 @@ class MemberGroup_Finder extends \OOP\ORM\Finder\DB
 /**
  * 超级管理员ORM查询结果集
  *
- * @author jonwang
- *
+ * @author     jonwang(jonwang@myqee.com)
+ * @category   Library
+ * @package    ORM
+ * @copyright  Copyright (c) 2008-2012 myqee.com
+ * @license    http://www.myqee.com/license.html
  */
 class MemberGroup_Result extends \OOP\ORM\Result
 {
@@ -281,8 +283,11 @@ class MemberGroup_Result extends \OOP\ORM\Result
 /**
  * 超级管理员ORM数据
  *
- * @author jonwang
- *
+ * @author     jonwang(jonwang@myqee.com)
+ * @category   Library
+ * @package    ORM
+ * @copyright  Copyright (c) 2008-2012 myqee.com
+ * @license    http://www.myqee.com/license.html
  */
 class MemberGroup_Data extends \OOP\ORM\Data
 {
