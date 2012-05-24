@@ -1,5 +1,5 @@
 <?php
-namespace Library\MyQEE\Administration\Model;
+namespace Library\MyQEE\Administration;
 
 /**
  * 后台管理基础模块
@@ -7,7 +7,7 @@ namespace Library\MyQEE\Administration\Model;
  * @author jonwang
  *
  */
-class Admin extends \Model
+class Model_Admin extends \Model
 {
     /**
      * 数据库配置名

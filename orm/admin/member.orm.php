@@ -10,27 +10,21 @@ namespace Library\MyQEE\Administration\ORM\Admin;
  * @copyright  Copyright (c) 2008-2012 myqee.com
  * @license    http://www.myqee.com/license.html
  */
-class Member_Finder extends \OOP\ORM\Finder\DB
+class Member_Finder extends \OOP_ORM_Finder_DB
 {
-    protected $database = \Model\Admin::DATABASE;
+    protected $database = \Model_Admin::DATABASE;
 
     protected $tablename = 'admin_member';
 
     /**
      * 获取指定组所有的用户
      *
-     * @return \ORM\Admin\Member_Result
+     * @return \ORM_Admin_Member_Result
      */
     public function get_all_members_by_group_id($group_id)
     {
-        $orm_group = new \ORM\Admin\MemberGroup_Finder();
-        $this->db()
-        ->select('m.*')
-        ->from($this->tablename.' as m')
-        ->join($orm_group->ids_tablename().' as ids')
-        ->on('m.id', 'ids.admin_id')
-        ->where('ids.group_id',$group_id)
-        ;
+        $orm_group = new \ORM_Admin_MemberGroup_Finder();
+        $this->db()->select('m.*')->from($this->tablename.' as m')->join($orm_group->ids_tablename().' as ids')->on('m.id', 'ids.admin_id')->where('ids.group_id',$group_id);
         return $this->find();
     }
 
@@ -38,7 +32,7 @@ class Member_Finder extends \OOP\ORM\Finder\DB
      * 根据用户名获取用户
      *
      * @param string $username
-     * @return \ORM\Admin\Member_Data
+     * @return \ORM_Admin_Member_Data
      */
     public function get_member_by_username($username)
     {
@@ -55,7 +49,7 @@ class Member_Finder extends \OOP\ORM\Finder\DB
  * @copyright  Copyright (c) 2008-2012 myqee.com
  * @license    http://www.myqee.com/license.html
  */
-class Member_Result extends \OOP\ORM\Result
+class Member_Result extends \OOP_ORM_Result
 {
 
 }
@@ -201,20 +195,20 @@ class Member_Data extends \Member
     /**
      * 所有组
      *
-     * @var \ORM\Admin\MemberGroup_Result
+     * @var \ORM_Admin_MemberGroup_Result
      */
     protected $_groups = null;
 
     /**
      * 返回所有组的对象集
      *
-     * @return \ORM\Admin\MemberGroup_Result
+     * @return \ORM_Admin_MemberGroup_Result
      */
     public function groups()
     {
         if ( null!==$this->_groups )return $this->_groups;
 
-        $orm_group = new \ORM\Admin\MemberGroup_Finder();
+        $orm_group = new \ORM_Admin_MemberGroup_Finder();
         $this->_groups = $orm_group->get_all_groups_by_member($this);
 
         return $this->_groups;
@@ -223,10 +217,10 @@ class Member_Data extends \Member
     /**
      * 设置管理组
      *
-     * @param \ORM\Admin\MemberGroup_Result $rs
-     * @return \ORM\MyQEE\Admin\Member_Data
+     * @param \ORM_Admin_MemberGroup_Result $rs
+     * @return \ORM_MyQEE_Admin_Member_Data
      */
-    public function set_groups(\ORM\Admin\MemberGroup_Result $member_group_result)
+    public function set_groups(\ORM_Admin_MemberGroup_Result $member_group_result)
     {
         $this->_groups = $member_group_result;
 
@@ -236,7 +230,7 @@ class Member_Data extends \Member
     /**
      * 所有组设置
      *
-     * @var \ORM\Admin\MemberGroup_Result
+     * @var \ORM_Admin_MemberGroup_Result
      */
     protected $_groups_setting = null;
 
@@ -249,7 +243,7 @@ class Member_Data extends \Member
     {
         if ( null!==$this->_groups_setting )return $this->_groups_setting;
 
-        $orm_group = new \ORM\Admin\MemberGroup_Finder();
+        $orm_group = new \ORM_Admin_MemberGroup_Finder();
         $this->_groups_setting = $orm_group->get_all_groups_setting_by_member($this);
 
         return $this->_groups_setting;
@@ -259,7 +253,7 @@ class Member_Data extends \Member
      * 设置管理组设置
      *
      * @param array $setting
-     * @return \ORM\MyQEE\Admin\Member_Data
+     * @return \ORM_MyQEE_Admin_Member_Data
      */
     public function set_groups_setting(array $setting)
     {
@@ -423,7 +417,7 @@ class Member_Data extends \Member
     {
         if ( $this->is_super_admin )return true;
 
-        $orm_group = new \ORM\Admin\MemberGroup_Finder();
+        $orm_group = new \ORM_Admin_MemberGroup_Finder();
         return $orm_group->is_own_perm_by_member_id_and_group_id($this->id, $group_id, $perm_str);
     }
 
@@ -433,16 +427,16 @@ class Member_Data extends \Member
      * $perm_str 参数同 $this->is_own_group_perm()
      *
      * @param string $perm_str
-     * @return \ORM\Admin\MemberGroup_Result
+     * @return \ORM_Admin_MemberGroup_Result
      */
     public function has_own_perm_groups($perm_str)
     {
         # 超管
         if ( $this->is_super_admin )return $this->groups();
 
-        $orm_group = new \ORM\Admin\MemberGroup_Finder();
+        $orm_group = new \ORM_Admin_MemberGroup_Finder();
 
-        $own_groups = new \ORM\Admin\MemberGroup_Result();
+        $own_groups = new \ORM_Admin_MemberGroup_Result();
         foreach ($this->groups() as $item)
         {
             if ( $orm_group->is_own_perm_by_member_id_and_group_id($this->id,$item->id,$perm_str) )
@@ -480,7 +474,7 @@ class Member_Data extends \Member
         if ($rs)
         {
             # 删除管理员对应的用户组设置
-            $orm_group = new \ORM\Admin\MemberGroup_Finder();
+            $orm_group = new \ORM_Admin_MemberGroup_Finder();
             $orm_group->db()->where('admin_id',$id)->delete($orm_group->ids_tablename());
         }
 

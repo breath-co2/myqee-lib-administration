@@ -102,24 +102,33 @@ $config['admin']['menu'] = array
             'paihang' => array
             (
                 'innerHTML' => '排行榜',
-                'href' => 'apps/paihang',
+                'href' => 'apps/a/paihang',
             ),
             'cat' => array
             (
                 'innerHTML' => '应用分类',
-                'href' => 'apps/cat',
+                'href' => 'apps/a/cat',
             ),
-            'buyed' => array
+            'installed' => array
             (
-                'innerHTML' => '已购买的应用',
-                'href' => 'apps/buyed',
+                'innerHTML' => '已安装的应用',
+                'href' => 'apps/a/installed',
             ),
             'update' => array
             (
                 'innerHTML' => '更新',
-                'href' => 'apps/update',
-            )
-        )
+                'href' => 'apps/a/update',
+            ),
+        ),
+        'apps' => array
+        (
+            'innerHTML' => '应用程序',
+            'test' => array
+            (
+                'innerHTML' => 'test',
+                'href' => 'apps/myqee/test/',
+            ),
+        ),
     ),
 
     'member' => array

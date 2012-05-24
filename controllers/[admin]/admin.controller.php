@@ -1,5 +1,5 @@
 <?php
-namespace Library\MyQEE\Administration\Controller;
+namespace Library\MyQEE\Administration;
 
 /**
  * 后台管理功能基础控制器
@@ -7,7 +7,7 @@ namespace Library\MyQEE\Administration\Controller;
  * @author jonwang
  *
  */
-class Admin extends \Controller
+class Controller_Admin extends \Controller
 {
     /**
      * 页面标题
@@ -36,16 +36,12 @@ class Admin extends \Controller
      */
     protected $location;
 
-    function __construct()
-    {
-        $this->check_login();
-    }
-
     /**
      * 检查是否登录
      */
     protected function check_login()
     {
+        return ;
         $session = $this->session();
         $member = $session->member();
 
@@ -98,10 +94,13 @@ class Admin extends \Controller
 
     public function before()
     {
+        # 检查登录
+        $this->check_login();
+
         # 记录访问日志
         if ( \HttpIO::METHOD=='POST' )
         {
-            \Database::instance(\Model\Admin::DATABASE)->insert('admin_log',
+            \Database::instance(\Model_Admin::DATABASE)->insert('admin_log',
                 array(
                     'uri'      => $_SERVER["REQUEST_URI"],
                 	'type'     => 'log',
@@ -185,9 +184,9 @@ class Admin extends \Controller
                 }
             }
 
-            echo '<title>'.$page_title.'</title>'.CRLF;
+            echo '<title>'.$page_title.'</title>'.\CRLF;
             echo $output;
-            echo '<script>myqee_top_menu='.var_export($top_menu,true).';myqee_menu='.json_encode($menu).';renew_runtime('.\number_format(\microtime(true)-\START_TIME,4).')</script>';
+            echo '<script>myqee_top_menu='.\var_export($top_menu,true).';myqee_menu='.\json_encode($menu).';renew_runtime('.\number_format(\microtime(true)-\START_TIME,4).')</script>';
         }
         else
         {
@@ -271,9 +270,25 @@ class Admin extends \Controller
         $view->render(true);
     }
 
-    public function message($msg,$code=0,$outdata=null)
+    /**
+     * 输出信息
+     *
+     * @param string $msg
+     * @param array $data
+     * @param int $code
+     */
+    protected static function show_message( $msg , $code=0 , $data = array() )
     {
-        if (\HttpIO::IS_AJAX)
+        if (\IS_SYSTEM_MODE)
+        {
+            # 系统内部调用模式
+            echo $msg;
+        }
+        elseif (isset($_SERVER["HTTP_X_PJAX"]) && $_SERVER["HTTP_X_PJAX"]=='true')
+        {
+            \View::factory('admin/show_message',array('msg'=>$msg,'data'=>$data,'code'=>$code))->render();
+        }
+        elseif (\HttpIO::IS_AJAX)
         {
             if (\is_array($msg))
             {
@@ -287,20 +302,28 @@ class Admin extends \Controller
                     'msg'  => (string)$msg,
                 );
             }
-            if (\is_array($outdata))foreach ($outdata as $k=>$v)
+            if (\is_array($data))foreach ($data as $k=>$v)
             {
                 $data[$k] = $v;
             }
             @\header('Content-Type:application/json');
+
             echo \json_encode($data);
         }
         else
         {
-            echo '<div style="padding:6px">';
-            echo $msg;
-            echo '</div>';
+            \View::factory('admin/show_message',array('msg'=>$msg,'data'=>$data,'code'=>$code))->render();
         }
-        $this->after();
+
+        # 获取当前实例化控制器对象
+        $controller = static::current_controller();
+
+        # 后置方法
+        if ( \method_exists($controller,'after') )
+        {
+            $controller->after();
+        }
+
         exit;
     }
 

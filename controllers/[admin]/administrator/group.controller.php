@@ -1,5 +1,5 @@
 <?php
-namespace Library\MyQEE\Administration\Controller\Administrator;
+namespace Library\MyQEE\Administration;
 
 /**
  * 管理员控制器
@@ -7,7 +7,7 @@ namespace Library\MyQEE\Administration\Controller\Administrator;
  * @author jonwang
  *
  */
-class Group extends \Controller\Admin
+class Controller_Administrator__Group extends \Controller_Admin
 {
     /**
      * 权限组列表
@@ -23,7 +23,7 @@ class Group extends \Controller\Admin
             }
             else
             {
-                $this->message('抱歉，您无此权限');
+                $this->show_message('抱歉，您无此权限');
             }
         }
 
@@ -46,7 +46,7 @@ class Group extends \Controller\Admin
                 $project = \Core::$project;
             }
 
-            $model_administrator = new \Model\Admin\Administrator();
+            $model_administrator = new \Model_Admin_Administrator();
             $count = $model_administrator->total_group_count($project);
             if ($count)
             {
@@ -86,7 +86,7 @@ class Group extends \Controller\Admin
 
         $can_edit_perm = true;
 
-        $orm_group = new \ORM\Admin\MemberGroup_Finder();
+        $orm_group = new \ORM_Admin_MemberGroup_Finder();
         if ($group_id>0)
         {
             $group = $orm_group->get_by_id($group_id);
@@ -94,7 +94,7 @@ class Group extends \Controller\Admin
             if ( $group->project!=\Core::$project && !$this->session()->member()->perm()->is_super_perm() )
             {
                 # 不允许跨项目操作
-                $this->message('所属项目不同，您不能通过此页面操作该组',-1);
+                $this->show_message('所属项目不同，您不能通过此页面操作该组',-1);
             }
             if ( !$this->session()->member()->perm()->is_own('administrator.edit_group_info') )
             {
@@ -107,7 +107,7 @@ class Group extends \Controller\Admin
                 }
                 else
                 {
-                    $this->message('抱歉，您无此权限');
+                    $this->show_message('抱歉，您无此权限');
                 }
             }
         }
@@ -115,12 +115,12 @@ class Group extends \Controller\Admin
         {
             if ( !$this->session()->member()->perm()->is_own('administrator.add_group') )
             {
-                $this->message('抱歉，您无此权限');
+                $this->show_message('抱歉，您无此权限');
             }
             $group = $orm_group->create();
         }
 
-        if (false)$group = new \ORM\Admin\MemberGroup_Data();
+        if (false)$group = new \ORM_Admin_MemberGroup_Data();
 
         if (\HttpIO::METHOD=='POST')
         {
@@ -143,61 +143,61 @@ class Group extends \Controller\Admin
      */
     public function action_delete($group_id=0)
     {
-        $orm_group = new \ORM\Admin\MemberGroup_Finder();
+        $orm_group = new \ORM_Admin_MemberGroup_Finder();
         if (!$group_id>0)
         {
-            $this->message('缺少参数',-1);
+            $this->show_message('缺少参数',-1);
         }
 
         $group = $orm_group->get_by_id($group_id);
         if (!$group)
         {
-            $this->message('指定的权限组不存在，可能已被删除',-1);
-            $group = new \ORM\Admin\MemberGroup_Data();
+            $this->show_message('指定的权限组不存在，可能已被删除',-1);
+            $group = new \ORM_Admin_MemberGroup_Data();
         }
 
         if ( !$this->session()->member()->perm()->is_own('administrator.delete_group') )
         {
-            $this->message('您不具备删除该权限组的权限',-1);
+            $this->show_message('您不具备删除该权限组的权限',-1);
         }
 
         if ( $group->project != \Core::$project && !$this->session()->member()->perm()->is_super_perm() )
         {
             # 夸项目操作，只有超管才可以执行
-            $this->message('您不可通过此URL执行本次操作',-1);
+            $this->show_message('您不可通过此URL执行本次操作',-1);
         }
 
         if ( $group->members()->count() )
         {
-            $this->message('此权限组含有成员，无法删除。请先清空该权限组成员后再删除',-1);
+            $this->show_message('此权限组含有成员，无法删除。请先清空该权限组成员后再删除',-1);
         }
 
         if ($group->delete())
         {
-            $this->message('删除成功。',1);
+            $this->show_message('删除成功。',1);
         }
         else
         {
-            $this->message('未删除',0);
+            $this->show_message('未删除',0);
         }
     }
 
     /**
      * 保存数据
      *
-     * @param \ORM\Admin\MemberGroup_Data $group
+     * @param \ORM_Admin_MemberGroup_Data $group
      */
-    protected function save(\ORM\Admin\MemberGroup_Data $group )
+    protected function save(\ORM_Admin_MemberGroup_Data $group )
     {
         if ( isset($_POST['group_name']) && $this->check_auth_for_info($group) )
         {
             if ( empty($_POST['group_name']) )
             {
-                $this->message('权限组名称不能空',0);
+                $this->show_message('权限组名称不能空',0);
             }
             if ( \strlen($_POST['group_desc'])>1000 )
             {
-                $this->message('权限组说明太长了，限定1000个字符',0);
+                $this->show_message('权限组说明太长了，限定1000个字符',0);
             }
             $group->group_name = $_POST['group_name'];
             $group->group_desc = $_POST['group_desc'];
@@ -228,7 +228,7 @@ class Group extends \Controller\Admin
             }
             catch (\Exception $e)
             {
-                $this->message( $e->getMessage(),$e->getCode() );
+                $this->show_message( $e->getMessage(),$e->getCode() );
             }
             # 设置数据
             $group->perm_setting = $perm_setting;
@@ -250,27 +250,27 @@ class Group extends \Controller\Admin
 
             if ($s)
             {
-                $this->message('保存成功',1);
+                $this->show_message('保存成功',1);
             }
             else
             {
-                $this->message('未保存任何数据');
+                $this->show_message('未保存任何数据');
             }
         }
         catch (\Exception $e)
         {
             \Core::debug()->error($e->getMessage());
-            $this->message('保存失败，请重试',-1);
+            $this->show_message('保存失败，请重试',-1);
         }
     }
 
     /**
      * 检查用户是否有操作对应组权限的权限
      *
-     * @param \ORM\Admin\MemberGroup_Data $gourp
+     * @param \ORM_Admin_MemberGroup_Data $gourp
      * @return boolean
      */
-    protected function check_auth_for_perm(\ORM\Admin\MemberGroup_Data $gourp)
+    protected function check_auth_for_perm(\ORM_Admin_MemberGroup_Data $gourp)
     {
         $member_perm = $this->session()->member()->perm();
 
@@ -300,7 +300,7 @@ class Group extends \Controller\Admin
         return false;
     }
 
-    protected function check_auth_for_info(\ORM\Admin\MemberGroup_Data $gourp)
+    protected function check_auth_for_info(\ORM_Admin_MemberGroup_Data $gourp)
     {
         $member_perm = $this->session()->member()->perm();
         if ( $member_perm->is_super_perm() )

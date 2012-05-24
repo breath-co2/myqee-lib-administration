@@ -160,10 +160,6 @@ input[type="password"]
     padding:0 3px;
     color:#666;
     background:url(../images/input_bg.gif) no-repeat left top;
-    border-radius:2px;
-    -moz-border-radius:2px;
-    -khtml-border-radius:2px;
-    -webkit-border-radius:2px;
 }
 
 .input,
@@ -770,15 +766,16 @@ p{
 .th,
 .mainTable th{
     font-size:13px;
-    line-height: 1.6em;
+    line-height: 1.7em;
     font-weight: bold;
     text-align: center;
-    background: #ddd;
-    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#eee), to(#ddd));
-    background: -moz-linear-gradient(#eee, #ddd);
-    background: linear-gradient(#eee, #ddd);
-    background: #ddd url(../images/title_bg.gif) left top repeat-x\9;
+    background: #dedede;
+    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#fefefe), to(#dedede));
+    background: -moz-linear-gradient(#fefefe, #dedede);
+    background: linear-gradient(#fefefe, #dedede);
+    background: #dedede url(../images/title_bg.gif) left top repeat-x\9;
     white-space:nowrap;
+    text-shadow:1px 1px 0 #fff;
 }
 
 #toolbar_div{
@@ -865,7 +862,7 @@ p{
 
 .tag {
     zoom:1;
-    height:24px;
+    height:28px;
     padding:6px 0 0 0;
 }
 .tag:after{
@@ -879,23 +876,22 @@ p{
 .tag li{
     float:left;
     display:inline;
-    margin:0 4px 0 0;
-    padding:0 8px;
+    margin:0 2px 0 0;
+    padding:0 10px;
     border:1px solid #ccc;
     color:#999;
     border-bottom:none;
     cursor:pointer;
-    line-height:22px;
-    line-height:25px\9;
-    height:23px;
+    line-height:26px;
+    line-height:29px\9;
+    height:27px;
     overflow:hidden;
     background:#fafafa;
+    background:-webkit-gradient(linear, 0 0, 0 bottom, from(#eee), to(#fff));
+    background:-moz-linear-gradient(#eee, #fff);
+    background:linear-gradient(#eee, #fff);
     font-size:13px;
     position:relative;
-    border-radius:4px 4px 0 0;
-    -moz-border-radius:4px 4px 0 0;
-    -khtml-border-radius:4px 4px 0 0;
-    -webkit-border-radius:4px 4px 0 0;
 }
 
 .tag li.hover{
@@ -905,12 +901,12 @@ p{
     cursor:default;
     border:1px solid #bfbfbf;
     border-bottom:none;
-    height:24px;
-    line-height:23px;
-    background:#eee;
-    background:-webkit-gradient(linear, 0 0, 0 bottom, from(#fefefe), to(#eee));
-    background:-moz-linear-gradient(#fefefe, #eee);
-    background:linear-gradient(#fefefe, #eee);
+    height:28px;
+    line-height:27px;
+    background:#fefefe;
+    background:-webkit-gradient(linear, 0 0, 0 bottom, from(#fff), to(#fefefe));
+    background:-moz-linear-gradient(#fff, #fefefe);
+    background:linear-gradient(#fff, #fefefe);
 }
 
 .helpicon {
@@ -979,23 +975,11 @@ p{
     font-weight:bold;
 }
 
-#error_msg{
-    background:url(../images/error_msg.png) no-repeat;
-    display: none;
-    height: 24px;
-    padding: 1px 0px 0px 30px;
-    font-size: 15px;
-    color:black;
-    text-shadow: 1px 1px 0 #D7DEF0;
-    overflow: hidden;
+.show_message
+{
+    padding:120px 0 20px 0;text-align:center;
 }
+.show_message .show_message_ok{display:inline-block;padding:22px 50px;background:url(../images/icon/48x48_ok.png) no-repeat left center;}
+.show_message .show_message_info{display:inline-block;padding:22px 50px;background:url(../images/icon/48x48_info.png) no-repeat left center;}
+.show_message .show_message_error{display:inline-block;padding:22px 50px;background:url(../images/icon/48x48_error.png) no-repeat left center;}
 
-#error_back{ 
-    padding: 1px 0px 0px 10px;
-    background:#F7866A;  
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#F7866A), to(white));
-    background: -moz-linear-gradient(left, #F7866A, white 50%);
-    background:linear-gradient(#F7866A, #eee);
-    filter:  progid:DXImageTransform.Microsoft.gradient(gradientType=1,startColorstr='#F7866A', endColorstr='#ffffff'); /* IE6,IE7 */
-    -ms-filter: progid:DXImageTransform.Microsoft.gradient(gradientType=1,startColorstr='#F7866A', endColorstr='#ffffff'); /* IE8 */
-}

@@ -1,5 +1,5 @@
 <?php
-namespace Library\MyQEE\Administration\ORM\Admin;
+namespace Library\MyQEE\Administration;
 
 /**
  * 超级管理员ORM
@@ -10,14 +10,14 @@ namespace Library\MyQEE\Administration\ORM\Admin;
  * @copyright  Copyright (c) 2008-2012 myqee.com
  * @license    http://www.myqee.com/license.html
  */
-class MemberGroup_Finder extends \OOP\ORM\Finder\DB
+class ORM_Admin_MemberGroup_Finder extends \OOP_ORM_Finder_DB
 {
     /**
      * 数据库
      *
      * @var string
      */
-    protected $database = \Model\Admin::DATABASE;
+    protected $database = \Model_Admin::DATABASE;
 
     /**
      * 群组表名称
@@ -59,23 +59,23 @@ class MemberGroup_Finder extends \OOP\ORM\Finder\DB
 
 //     protected static function get_group_data()
 //     {
-//         \ORM\Admin\MemberGroup_Finder::$group_data = $this->db()->order_by('sort','DESC')->get()->as_array('id');
+//         \ORM_Admin_MemberGroup_Finder::$group_data = $this->db()->order_by('sort','DESC')->get()->as_array('id');
 //         $gp_setting = $this->db()->get()->as_array();
 //         $st = array();
 //         foreach ( $gp_setting as $item )
 //         {
 //             $st[$item['admin_id']][] = $item;
 //         }
-//         \ORM\Admin\MemberGroup_Finder::$group_setting_data = $st;
+//         \ORM_Admin_MemberGroup_Finder::$group_setting_data = $st;
 //     }
 
     /**
      * 根据管理员对象获取所在全部组
      *
-     * @param \ORM\Admin\Member_Data $member
-     * @return \ORM\Admin\Member_Data
+     * @param \ORM_Admin_Member_Data $member
+     * @return \ORM_Admin_Member_Data
      */
-    public function get_all_groups_by_member(\ORM\Admin\Member_Data $member)
+    public function get_all_groups_by_member(\ORM_Admin_Member_Data $member)
     {
         if ( $member->is_super_admin )
         {
@@ -127,10 +127,10 @@ class MemberGroup_Finder extends \OOP\ORM\Finder\DB
     /**
      * 根据管理员对象获取所在全部组
      *
-     * @param \ORM\Admin\Member_Data $member
-     * @return \ORM\Admin\Member_Data
+     * @param \ORM_Admin_Member_Data $member
+     * @return \ORM_Admin_Member_Data
      */
-    public function get_all_groups_setting_by_member(\ORM\Admin\Member_Data $member)
+    public function get_all_groups_setting_by_member(\ORM_Admin_Member_Data $member)
     {
         if ( $member->is_super_admin )
         {
@@ -219,7 +219,7 @@ class MemberGroup_Finder extends \OOP\ORM\Finder\DB
         if ( null===$group_perm_setting )
         {
             $db = $this->db();
-            $tmpdata = $db->from( $this->ids_tablename )->get()->as_array();
+            $tmpdata = $db->from($this->ids_tablename)->get()->as_array();
             $group_perm_setting = array();
             foreach ($tmpdata as $item)
             {
@@ -247,7 +247,7 @@ class MemberGroup_Finder extends \OOP\ORM\Finder\DB
  * @copyright  Copyright (c) 2008-2012 myqee.com
  * @license    http://www.myqee.com/license.html
  */
-class MemberGroup_Result extends \OOP\ORM\Result
+class MemberGroup_Result extends \OOP_ORM_Result
 {
     /**
      * 获取所在组所有ID
@@ -289,7 +289,7 @@ class MemberGroup_Result extends \OOP\ORM\Result
  * @copyright  Copyright (c) 2008-2012 myqee.com
  * @license    http://www.myqee.com/license.html
  */
-class MemberGroup_Data extends \OOP\ORM\Data
+class MemberGroup_Data extends \OOP_ORM_Data
 {
     /**
      * 权限对象
@@ -298,7 +298,8 @@ class MemberGroup_Data extends \OOP\ORM\Data
      */
     protected $_permission;
 
-    public $id = array(
+    public $id = array
+    (
         'is_id_field' => true,
     );
 
@@ -328,7 +329,8 @@ class MemberGroup_Data extends \OOP\ORM\Data
      *
      * @var string
      */
-    public $project = array(
+    public $project = array
+    (
         'field_name' => 'project',
         'is_readonly' => true,
     );
@@ -338,9 +340,11 @@ class MemberGroup_Data extends \OOP\ORM\Data
      *
      * @var \Permission
      */
-    public $perm_setting = array(
+    public $perm_setting = array
+    (
         'field_name' => 'perm_setting',
-        'format' => array(
+        'format' => array
+        (
             'serialize',
         ),
     );
@@ -353,7 +357,8 @@ class MemberGroup_Data extends \OOP\ORM\Data
     public $setting = array
     (
         'field_name' => 'setting',
-        'format' => array(
+        'format' => array
+        (
             'serialize',
         ),
     );
@@ -384,11 +389,11 @@ class MemberGroup_Data extends \OOP\ORM\Data
     /**
      * 返回属于改组所有用户对象
      *
-     * @return \ORM\Admin\Member_Result
+     * @return \ORM_Admin_Member_Result
      */
     public function members()
     {
-        $orm = new \ORM\Admin\Member_Finder();
+        $orm = new \ORM_Admin_Member_Finder();
         return $orm->get_all_members_by_group_id($this->id);
     }
 }

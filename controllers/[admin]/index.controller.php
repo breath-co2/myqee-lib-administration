@@ -1,5 +1,5 @@
 <?php
-namespace Library\MyQEE\Administration\Controller;
+namespace Library\MyQEE\Administration;
 
 /**
  * 首页控制器
@@ -7,17 +7,33 @@ namespace Library\MyQEE\Administration\Controller;
  * @author jonwang
  *
  */
-class Index extends \Controller\Admin
+class Controller_Index extends \Controller_Admin
 {
     /**
      * 管理页面首页控制器
      */
     public function action_default()
     {
+//             \header( 'Cache-Control: max-age=604800' );
+//             \header( 'Last-Modified: ' . \date( 'D, d M Y H:i:s \G\M\T', \TIME-1000 ) );
+//             \header( 'Expires: ' . \date( 'D, d M Y H:i:s \G\M\T', \TIME + 86400 * 30 ) );
+//             \header( 'Pragma: cache');
+
         $this->page_title = '欢迎';
         $view = new \View('admin/index');
 
         $view->render(true);
+    }
+
+    public function action_test()
+    {
+    	sleep(2);
+    	echo('aaa<a href="/v3/admin/index/test2/">tttt</a>大大大<div style="height:1500px"></div>aaaaaaaaaaaa<div style="background:red;width:1500px;">sss</div>sdfsdf');
+    }
+
+    public function action_test2()
+    {
+    	echo('bbbbbbbbb'.\TIME);
     }
 
     /**

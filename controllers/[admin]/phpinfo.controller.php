@@ -1,5 +1,5 @@
 <?php
-namespace Library\MyQEE\Administration\Controller;
+namespace Library\MyQEE\Administration;
 
 /**
  * 首页控制器
@@ -7,7 +7,7 @@ namespace Library\MyQEE\Administration\Controller;
  * @author jonwang
  *
  */
-class phpinfo extends \Controller\Admin
+class Controller_phpinfo extends \Controller_Admin
 {
     /**
      * PHPINFO

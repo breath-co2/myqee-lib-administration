@@ -1,5 +1,5 @@
 <?php
-namespace Library\MyQEE\Administration\Controller;
+namespace Library\MyQEE\Administration;
 
 /**
  * 管理员控制器
@@ -7,13 +7,13 @@ namespace Library\MyQEE\Administration\Controller;
  * @author jonwang
  *
  */
-class Administrator extends \Controller\Admin
+class Controller_Administrator extends \Controller_Admin
 {
     public function action_default()
     {
         $view = new \View('admin/administrator/list');
 
-        $model_administrator = new \Model\Admin\Administrator();
+        $model_administrator = new \Model_Admin_Administrator();
 
         $only_list_self_group_user = false;
         $is_super = $this->session()->member()->perm()->is_super_perm();
@@ -110,7 +110,7 @@ class Administrator extends \Controller\Admin
                 $member = $this->session()->member();
                 if ( $member_id>0 && $member->id!=$member_id )
                 {
-                    $model_admin = new \Model\Admin\Administrator();
+                    $model_admin = new \Model_Admin_Administrator();
                     $member = $model_admin->get_by_id($member_id);
                     if (!$member)
                     {
@@ -144,7 +144,7 @@ class Administrator extends \Controller\Admin
             }
             else
             {
-                $model_admin = new \Model\Admin\Administrator();
+                $model_admin = new \Model_Admin_Administrator();
                 $member = $model_admin->get_by_id($member_id);
                 if (!$member)
                 {
@@ -179,7 +179,7 @@ class Administrator extends \Controller\Admin
             $this->page_title = '修改管理员';
         }
 
-        $orm_member = new \ORM\Admin\Member_Finder();
+        $orm_member = new \ORM_Admin_Member_Finder();
         if ( $member_id>0 )
         {
             $member = $orm_member->get_by_id($member_id);
@@ -216,7 +216,7 @@ class Administrator extends \Controller\Admin
             # 只列出有添加权限的组
             $groups = $this->session()->member()->has_own_perm_groups('add_user');
         }
-        if (false)$member = new \ORM\Admin\Member_Data();
+        if (false)$member = new \ORM_Admin_Member_Data();
 
         if ( $member->id>0 && $member->id==$this->session()->member()->id )
         {
@@ -289,7 +289,7 @@ class Administrator extends \Controller\Admin
     public function action_edit_perm_form( $member_id=0 )
     {
         $group_ids = \explode( ',', $_GET['group_ids'] );
-        $orm_member = new \ORM\Admin\Member_Finder();
+        $orm_member = new \ORM_Admin_Member_Finder();
         if ( $member_id>0 )
         {
             $member = $orm_member->get_by_id($member_id);
@@ -299,7 +299,7 @@ class Administrator extends \Controller\Admin
             $member = $orm_member->create();
         }
 
-        $orm_group = new \ORM\Admin\MemberGroup_Finder();
+        $orm_group = new \ORM_Admin_MemberGroup_Finder();
         $groups = $orm_group->in('id', $group_ids)->find();
 
 
@@ -322,7 +322,7 @@ class Administrator extends \Controller\Admin
      */
     public function action_shield( $member_id )
     {
-        $orm_member = new \ORM\Admin\Member_Finder();
+        $orm_member = new \ORM_Admin_Member_Finder();
         $member = $orm_member->get_by_id($member_id);
 
         if (!$member)
@@ -358,7 +358,7 @@ class Administrator extends \Controller\Admin
      */
     public function action_liftshield( $member_id )
     {
-        $orm_member = new \ORM\Admin\Member_Finder();
+        $orm_member = new \ORM_Admin_Member_Finder();
         $member = $orm_member->get_by_id($member_id);
 
         if (!$member)
@@ -396,13 +396,13 @@ class Administrator extends \Controller\Admin
             $this->message('参数错误');
         }
 
-        $orm_member = new \ORM\Admin\Member_Finder();
+        $orm_member = new \ORM_Admin_Member_Finder();
         $member = $orm_member->get_by_id($member_id);
 
         if (!$member)
         {
             $this->message('指定的用户不存在或已被删除');
-            if (false)$member = new \ORM\Admin\Member_Data();
+            if (false)$member = new \ORM_Admin_Member_Data();
         }
 
         try
@@ -437,7 +437,7 @@ class Administrator extends \Controller\Admin
         {
             throw new \Exception('新密码不能空',-1);
         }
-        if (strlen($data['new_password'])<6)
+        if (\strlen($data['new_password'])<6)
         {
             throw new \Exception('新密码太短',-1);
         }
@@ -448,7 +448,7 @@ class Administrator extends \Controller\Admin
         return true;
     }
 
-    protected function do_change_password(\ORM\Admin\Member_Data $member,$data )
+    protected function do_change_password(\ORM_Admin_Member_Data $member,$data )
     {
         if ( $member->id>0 && $member->id==$this->session()->member()->id )
         {
@@ -471,7 +471,7 @@ class Administrator extends \Controller\Admin
         }
     }
 
-    protected function save(\ORM\Admin\Member_Data $member)
+    protected function save(\ORM_Admin_Member_Data $member)
     {
         try {
 
@@ -491,7 +491,7 @@ class Administrator extends \Controller\Admin
                     throw new \Exception('两次输入的密码不一致，请重新确认', -1);
                 }
 
-                $model_admin = new \Model\Admin\Administrator();
+                $model_admin = new \Model_Admin_Administrator();
                 if ( $model_admin->get_by_username($_POST['username']) )
                 {
                     throw new \Exception('此用户名已存在，请换一个', -1);
@@ -590,10 +590,10 @@ class Administrator extends \Controller\Admin
     /**
      * 修改其他信息（用于第三方扩展）
      *
-     * @param \ORM\Admin\Member_Data $member
+     * @param \ORM_Admin_Member_Data $member
      * @throws \Exception
      */
-    protected function change_member_other_info(\ORM\Admin\Member_Data $member)
+    protected function change_member_other_info(\ORM_Admin_Member_Data $member)
     {
         return true;
     }
@@ -601,10 +601,10 @@ class Administrator extends \Controller\Admin
     /**
      * 修改权限
      *
-     * @param \ORM\Admin\Member_Data $member
+     * @param \ORM_Admin_Member_Data $member
      * @throws Exception
      */
-    protected function change_member_perm(\ORM\Admin\Member_Data $member)
+    protected function change_member_perm(\ORM_Admin_Member_Data $member)
     {
         if ( $member->id>0 && $member->id==$this->session()->member() )throw new \Exception('系统不允许管理员操作自己的权限', -1);
 
@@ -770,7 +770,7 @@ class Administrator extends \Controller\Admin
                 $this->is_change_group = true;
 
                 # 新旧管理组不一样
-                $orm_group = new \ORM\Admin\MemberGroup_Finder();
+                $orm_group = new \ORM_Admin_MemberGroup_Finder();
                 $groups = $orm_group->in('id', $new_groups)->find(null,true);
 
                 $new_group_perm_setting = array();
@@ -781,12 +781,12 @@ class Administrator extends \Controller\Admin
                 }
 
                 # 修改权限组需要验证一下新权限
-                \Controller\Administrator::check_perm_data( $new_group_perm_setting );
+                \Controller_Administrator::check_perm_data( $new_group_perm_setting );
             }
             if ( $_POST['perm_setting'] && \is_array($_POST['perm_setting']) )
             {
                 # 检查提交的额外权限
-                $perm_setting = \Controller\Administrator::check_perm_data($_POST['perm_setting']);
+                $perm_setting = \Controller_Administrator::check_perm_data($_POST['perm_setting']);
             }
 
             if ( isset($member->setting['_group_admin']) )unset($member->setting['_group_admin']);
@@ -827,12 +827,12 @@ class Administrator extends \Controller\Admin
     /**
      * 保存用户组设置
      *
-     * @param \ORM\Admin\Member_Data $member
+     * @param \ORM_Admin_Member_Data $member
      * @param boolean $is_add
      */
-    protected function save_member_group_perm(\ORM\Admin\Member_Data $member,$is_add)
+    protected function save_member_group_perm(\ORM_Admin_Member_Data $member,$is_add)
     {
-        $orm_group = new \ORM\Admin\MemberGroup_Finder();
+        $orm_group = new \ORM_Admin_MemberGroup_Finder();
 
         if ( $this->change_to_super_admin )
         {
@@ -932,9 +932,9 @@ class Administrator extends \Controller\Admin
     /**
      * 检验操作者权限是否高于此用户
      *
-     * @param \ORM\Admin\Member_Data $member
+     * @param \ORM_Admin_Member_Data $member
      */
-    protected function check_is_over_perm(\ORM\Admin\Member_Data $member)
+    protected function check_is_over_perm(\ORM_Admin_Member_Data $member)
     {
         # 超管
         if ( $this->session()->member()->perm()->is_super_perm() )return true;
@@ -976,10 +976,10 @@ class Administrator extends \Controller\Admin
     /**
      * 检查用户是否有操作用户权限的权限
      *
-     * @param \ORM\Admin\Member_Data $gourp
+     * @param \ORM_Admin_Member_Data $gourp
      * @return boolean
      */
-    protected function check_auth_for_perm(\ORM\Admin\Member_Data $member)
+    protected function check_auth_for_perm(\ORM_Admin_Member_Data $member)
     {
         $member_perm = $this->session()->member()->perm();
         if ( $member_perm->is_super_perm() )
@@ -1070,12 +1070,12 @@ class Administrator extends \Controller\Admin
     /**
      * 检查用户是否具有屏蔽指定用户的权限
      *
-     * @param \ORM\Admin\Member_Data $member
+     * @param \ORM_Admin_Member_Data $member
      * @throws Exception
      *
      * @return boolean
      */
-    protected function check_auth_for_shield(\ORM\Admin\Member_Data $member)
+    protected function check_auth_for_shield(\ORM_Admin_Member_Data $member)
     {
         if ( $member->id == $this->session()->member()->id )
         {
@@ -1121,12 +1121,12 @@ class Administrator extends \Controller\Admin
     /**
      * 检查用户是否具有解除屏蔽指定用户的权限
      *
-     * @param \ORM\Admin\Member_Data $member
+     * @param \ORM_Admin_Member_Data $member
      * @throws Exception
      *
      * @return boolean
      */
-    protected function check_auth_for_liftshield(\ORM\Admin\Member_Data $member)
+    protected function check_auth_for_liftshield(\ORM_Admin_Member_Data $member)
     {
         # 超管
         if ( $this->session()->member()->perm()->is_super_perm() )return true;
@@ -1168,12 +1168,12 @@ class Administrator extends \Controller\Admin
     /**
      * 检查用户是否有删除权限
      *
-     * @param \ORM\Admin\Member_Data $member
+     * @param \ORM_Admin_Member_Data $member
      * @throws Exception
      *
      * @return boolean
      */
-    protected function check_auth_for_delete(\ORM\Admin\Member_Data $member)
+    protected function check_auth_for_delete(\ORM_Admin_Member_Data $member)
     {
         # 不可删除自己
         if ( $member->id==$this->session()->member()->id )throw new \Exception('您不可删除自己，请使用其他账号执行本次操作' , -1);
@@ -1217,7 +1217,7 @@ class Administrator extends \Controller\Admin
     /**
      * 检查用户是否有添加权限
      *
-     * @param \ORM\Admin\Member_Data $member
+     * @param \ORM_Admin_Member_Data $member
      * @throws Exception
      *
      * @return boolean
@@ -1254,12 +1254,12 @@ class Administrator extends \Controller\Admin
     /**
      * 检查用户是否有修改用户权限
      *
-     * @param \ORM\Admin\Member_Data $member
+     * @param \ORM_Admin_Member_Data $member
      * @throws Exception
      *
      * @return boolean
      */
-    protected function check_auth_for_edit(\ORM\Admin\Member_Data $member)
+    protected function check_auth_for_edit(\ORM_Admin_Member_Data $member)
     {
         if ( $this->session()->member()->perm()->is_super_perm() )return true;
 
@@ -1308,12 +1308,12 @@ class Administrator extends \Controller\Admin
     /**
      * 检查用户是否有修改用户密码权限
      *
-     * @param \ORM\Admin\Member_Data $member
+     * @param \ORM_Admin_Member_Data $member
      * @throws Exception
      *
      * @return boolean
      */
-    protected function check_auth_for_edit_password(\ORM\Admin\Member_Data $member)
+    protected function check_auth_for_edit_password(\ORM_Admin_Member_Data $member)
     {
         # 超管
         if ( $this->session()->member()->perm()->is_super_perm() )return true;

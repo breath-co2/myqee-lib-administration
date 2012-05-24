@@ -20,7 +20,7 @@ class Session extends \Core\Session
     {
         if ( null===static::$member && isset($_SESSION['member_id']) && $_SESSION['member_id']>0 )
         {
-            $orm_member = new \ORM\Admin\Member_Finder();
+            $orm_member = new \ORM_Admin_Member_Finder();
             static::$member = $orm_member->where('id',$_SESSION['member_id'])->find(null,true)->current();
         }
     }

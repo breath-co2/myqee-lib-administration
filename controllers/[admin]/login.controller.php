@@ -1,5 +1,5 @@
 <?php
-namespace Library\MyQEE\Administration\Controller;
+namespace Library\MyQEE\Administration;
 
 /**
  * 登录，退出控制器
@@ -7,9 +7,7 @@ namespace Library\MyQEE\Administration\Controller;
  * @author jonwang
  *
  */
-use Core\Exception;
-
-class Login extends \Controller
+class Controller_Login extends \Controller
 {
     protected $message = '';
 
@@ -26,7 +24,7 @@ class Login extends \Controller
 
         $not_login = false;
         $show_captcha = false;
-        $db = \Database::instance(\Model\Admin::DATABASE);
+        $db = \Database::instance(\Model_Admin::DATABASE);
 
         if ( $db->count_records('admin_login_error_log',array('timeline<='=>\TIME-86400)) )
         {
@@ -104,7 +102,7 @@ class Login extends \Controller
      * 处理提交
      *
      * @param array $data
-     * @return Member 失败则返回false
+     * @return \Member 失败则返回false
      */
     protected function post($data,$error_num)
     {
@@ -123,7 +121,7 @@ class Login extends \Controller
             return false;
         }
 
-        $db = \Database::instance(\Model\Admin::DATABASE);
+        $db = \Database::instance(\Model_Admin::DATABASE);
 
         try
         {
@@ -140,17 +138,17 @@ class Login extends \Controller
                 }
             }
 
-            $member_finder = new \ORM\Admin\Member_Finder();
+            $member_finder = new \ORM_Admin_Member_Finder();
             $member = $member_finder->get_member_by_username($data['username']);
 
             if ( !$member )
             {
-                throw new Exception('User does not exist');
+                throw new \Exception('User does not exist');
             }
 
             if ( !$member->check_password($data['password']) )
             {
-                throw new Exception(\__('Password is incorrect'));
+                throw new \Exception(\__('Password is incorrect'));
             }
 
             if ( $error_num )

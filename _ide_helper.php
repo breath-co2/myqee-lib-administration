@@ -1,34 +1,22 @@
 <?php
 
-namespace Controller
+namespace
 {
-    class Admin extends \Library\MyQEE\Administration\Controller\Admin{}
-    class Administrator extends \Library\MyQEE\Administration\Controller\Administrator{}
-}
+    class Controller_Admin extends \Library\MyQEE\Administration\Controller_Admin{}
+    class Controller_Administrator extends \Library\MyQEE\Administration\Controller_Administrator{}
 
+    class Model_Admin extends \Library\MyQEE\Administration\Model_Admin{}
+    class Model_Admin_Administrator extends \Library\MyQEE\Administration\Model_Admin_Administrator{}
 
-namespace Model
-{
-    class Admin extends \Library\MyQEE\Administration\Model\Admin{}
-}
+    class ORM_Admin_Member_Data extends \Library\MyQEE\Administration\ORM_Admin_Member_Data{}
 
-namespace Model\Admin
-{
-    class Administrator extends \Library\MyQEE\Administration\Model\Admin\Administrator{}
-}
+    class ORM_Admin_Member_Finder extends \Library\MyQEE\Administration\ORM_Admin_Member_Finder{}
 
+    class ORM_Admin_Member_Result extends \Library\MyQEE\Administration\ORM_Admin_Member_Result{}
 
-namespace ORM\Admin
-{
-    class Member_Data extends \Library\MyQEE\Administration\ORM\Admin\Member_Data{}
+    class ORM_Admin_MemberGroup_Data extends \Library\MyQEE\Administration\ORM_Admin_MemberGroup_Data{}
 
-    class Member_Finder extends \Library\MyQEE\Administration\ORM\Admin\Member_Finder{}
+    class ORM_Admin_MemberGroup_Finder extends \Library\MyQEE\Administration\ORM_Admin_MemberGroup_Finder{}
 
-    class Member_Result extends \Library\MyQEE\Administration\ORM\Admin\Member_Result{}
-
-    class MemberGroup_Data extends \Library\MyQEE\Administration\ORM\Admin\MemberGroup_Data{}
-
-    class MemberGroup_Finder extends \Library\MyQEE\Administration\ORM\Admin\MemberGroup_Finder{}
-
-    class MemberGroup_Result extends \Library\MyQEE\Administration\ORM\Admin\MemberGroup_Result{}
+    class ORM_Admin_MemberGroup_Result extends \Library\MyQEE\Administration\ORM_Admin_MemberGroup_Result{}
 }

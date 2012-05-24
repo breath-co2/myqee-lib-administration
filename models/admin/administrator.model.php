@@ -1,5 +1,5 @@
 <?php
-namespace Library\MyQEE\Administration\Model\Admin;
+namespace Library\MyQEE\Administration;
 
 /**
  * 超级管理员模块
@@ -7,7 +7,7 @@ namespace Library\MyQEE\Administration\Model\Admin;
  * @author jonwang
  *
  */
-class Administrator extends \Model\Admin
+class Model_Admin_Administrator extends \Model_Admin
 {
     /**
      * 获取管理员数目
@@ -68,17 +68,13 @@ class Administrator extends \Model\Admin
      * @param int $limit
      * @param int $group_id
      * @param int $list_type null=默认，1=管理员，2=组长
-     * @return \ORM\Admin\Aministrator_Result
+     * @return \ORM_Admin_Aministrator_Result
      */
     public function get_aministrator_list( $project = null , $list_groups = null , $offset = 0 , $limit = 20 ,$list_type=null )
     {
-        $orm_member = new \ORM\Admin\Member_Finder();
+        $orm_member = new \ORM_Admin_Member_Finder();
 
-        $orm_member->driver()
-        ->select('m.*')
-        ->from($orm_member->tablename() .' as m')
-        ->order_by('m.id','DESC')
-        ;
+        $orm_member->driver()->select('m.*')->from($orm_member->tablename() .' as m')->order_by('m.id','DESC');
 
         if ( $project )
         {
@@ -128,7 +124,7 @@ class Administrator extends \Model\Admin
     public function search_aministrator_list($project, $list_groups ,$keyword)
     {
         $keyword = '%'.$keyword.'%';
-        $orm_member = new \ORM\Admin\Member_Finder();
+        $orm_member = new \ORM_Admin_Member_Finder();
 
         if ( $project )
         {
@@ -153,7 +149,7 @@ class Administrator extends \Model\Admin
      */
     public function get_by_id($member_id)
     {
-        $orm_member = new \ORM\Admin\Member_Finder();
+        $orm_member = new \ORM_Admin_Member_Finder();
         return $orm_member->get_by_id($member_id);
     }
 
@@ -165,7 +161,7 @@ class Administrator extends \Model\Admin
      */
     public function get_by_username( $username )
     {
-        $orm_member = new \ORM\Admin\Member_Finder();
+        $orm_member = new \ORM_Admin_Member_Finder();
         return $orm_member->where('username',$username)->find(null,true)->current();
     }
 
@@ -186,11 +182,11 @@ class Administrator extends \Model\Admin
      *
      * @param int $offset
      * @param int $limit
-     * @return \ORM\Admin\MemberGroup_Result
+     * @return \ORM_Admin_MemberGroup_Result
      */
     public function get_group_list( $project = null , $offset = 0 , $limit = 20)
     {
-        $orm_group = new \ORM\Admin\MemberGroup_Finder();
+        $orm_group = new \ORM_Admin_MemberGroup_Finder();
 
         if ($project)
         {

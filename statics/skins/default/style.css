@@ -1,0 +1,333 @@
+@charset "utf-8";
+
+html{
+    filter:expression(document.execCommand("BackgroundImageCache", false, true));
+    margin:0px;
+	height:100%;
+}
+
+body,form{-webkit-text-size-adjust:none;}
+
+body {
+    font:12px/1.5 Verdana,Helvetica,Arial,sans-serif;
+    padding: 0px;
+    margin:0px auto;
+    color:#333;
+    overflow: hidden;
+	width:100%;
+	height:100%;
+}
+
+input,textarea,select{
+display:inline-block;
+width:210px;
+height:18px;
+padding:4px;
+margin-bottom:9px;
+font-size:13px;
+line-height:18px;
+color:#555555;
+border:1px solid #ccc;
+-webkit-border-radius:3px;
+-moz-border-radius:3px;
+border-radius:3px;
+}
+
+input[type="image"]{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
+
+input,textarea{
+-webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);
+-moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);
+box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);
+-webkit-transition:border linear 0.2s,box-shadow linear 0.2s;
+-moz-transition:border linear 0.2s,box-shadow linear 0.2s;
+-ms-transition:border linear 0.2s,box-shadow linear 0.2s;
+-o-transition:border linear 0.2s,box-shadow linear 0.2s;
+transition:border linear 0.2s,box-shadow linear 0.2s;
+}
+input[type="file"]{width:auto;padding:initial;line-height:initial;border:initial;background-color:#ffffff;background-color:initial;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
+
+input:focus,textarea:focus{
+border-color:rgba(82, 168, 236, 0.8);
+-webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);
+-moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);
+box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);
+outline:0;
+outline:thin dotted \9;
+}
+input[type="file"]:focus,input[type="radio"]:focus,input[type="checkbox"]:focus,select:focus{
+-webkit-box-shadow:none;
+-moz-box-shadow:none;
+box-shadow:none;
+outline:thin dotted #333;
+outline:5px auto -webkit-focus-ring-color;
+outline-offset:-2px;
+}
+
+#body-main{
+	top:0;
+	left:0;
+	bottom:0;
+	position:fixed;
+	display:block;
+	width:100%;
+}
+
+#bg-div{
+	background:#017d95 url(bg.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	background-size: cover;
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0px;
+	left:0;
+}
+
+#bg-div.big-screen{
+	background-image: url(bg@2x.jpg);
+}
+
+.ul{
+    list-style-type: none;
+    margin:0;
+    padding:0;
+    zoom:1;
+}
+.ul:after{
+    content: '\20';
+    display: block;
+    clear: both;
+}
+
+#left-menu-div{position:absolute;left: 0;top:0;height:100%;}
+#left-menu-div-hoverbg{position:absolute;background:rgba(255,255,255,0.3);width:0;height:0;opacity:0;overflow:hidden;top:0;left:0;}
+#logo{position:fixed;width:210px;background:rgba(255,255,255,0.3) url(logo.png) no-repeat left bottom;height: 40px;cursor: pointer;-webkit-background-size:210px 40px;background-size:210px 40px;}
+#left-quick-menu-div{
+	position:absolute;
+	top:40px;
+	bottom:0;
+	background:rgba(0,0,0,0.4);width:50px;
+	-webkit-mask:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(255,255,255,0)),color-stop(10%,rgba(255,255,255,1)),to(rgba(36,142,36,1)));
+}
+#left-menu{position:absolute;top:40px;bottom:0;left:50px;}
+#main-desktop-right-btn,#main-desktop-left-btn{position:fixed;right:10px;opacity:0.3;cursor:pointer;bottom:6px;background:url(arrow_right.png);width:32px;height:32px;transition: all 0.3s ease-in-out 0s;-webkit-transition: all 0.3s ease-in-out 0s;-moz-transition: all 0.3s ease-in-out 0s;-o-transition: all 0.3s ease-in-out 0s;}
+#main-desktop-right-btn:hover,#main-desktop-left-btn:hover{opacity:0.6;}
+#main-desktop-left-btn{margin-left:10px;right:auto;}
+#main-desktop-center-div{text-align:center;position:fixed;white-space:pre;left:0;right:0;bottom:-20px;}
+#main-desktop-center-div div{display:inline-block;position:relative;margin:0 4px;top:-36px;width:6px;height:6px;background:#fff;border-radius:3px;opacity:0.5;}
+#main-desktop-center-div div.focus{opacity:0.9;}
+
+.menu-div{position:absolute;width:160px;display:block;margin-right:1px;background:rgba(255,255,255,0.3);height:100%;text-shadow: 1px 1px 0 rgba(255,255,255,0.3);}
+.menu-div .scroller{position:absolute;width:160px;}
+.left-menu-ul{display:block;border-top:1px solid #518ea2;border-bottom: 1px solid rgba(255,255,255,0.2);font-size:14px;color:#00505e;}
+.left-menu-ul li{display:block;height:26px;}
+.left-menu-ul li div.text{height:24px;border-top: 1px solid rgba(255,255,255,0.2);border-bottom:1px solid #518ea2;line-height:22px;overflow:hidden;padding:0 12px 0 12px;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;}
+.left-menu-ul li.hover{background:rgba(255,255,255,0.3);}
+.menu_top_bg{background:rgba(255,255,255,0.3);position:absolute;margin-top:-200px;height:200px;width:160px;z-index:-1;}
+.sub_menu_right,.sub_menu_right_bg{position:absolute;margin:4px 0 0 133px;width:8px;height:0px;overflow: hidden;border-color:transparent transparent transparent rgba(58,114,127,0.45);border-style:solid;border-width:8px;font-size:0;}
+.sub_menu_right_bg{margin:5px 0 0 134px;border-left-color:rgba(0,0,0,0.1)}
+.left-menu-ul li.hover .sub_menu_right{border-left-color:rgba(255,255,255,0.8);}
+.left-menu-ul li.hover .sub_menu_right_bg{border-left-color:rgba(0,0,0,0.3);}
+.left-menu-ul li.goto-parent-menu{background:url(up_menu.png) 8px center no-repeat;display:none;}
+.left-menu-ul li.goto-parent-menu div.text{padding-left:26px;}
+
+#left-quick-menu-div{overflow:hidden;width:50px;}
+#left-quick-menu-div .scroller{overflow:hidden;}
+#left-quick-menu-div ul{width: 50px;}
+#left-quick-menu-div ul li{float:left;width:40px;height:40px;margin:5px 0 0 5px;text-align:center;vertical-align:middle;display:table-cell;}
+#left-quick-menu-div ul li img{padding:4px;border-radius:3px;cursor:pointer;width:32px;height:32px;}
+
+
+#main-body-div{position:absolute;left:211px;right:0;top:0;bottom:0;display:none;overflow:hidden;}
+#main-body-div.for-phone{left:0;box-shadow:none;}
+
+.window-main{position:absolute;left:0;right:0;top:0;bottom:0;min-width:320px;}
+.for-phone .window-main{border-left:none;border-right:none;}
+.window-title{
+text-align:center;
+border-bottom:1px rgba(0,0,0,0.4) solid;
+height:40px;
+line-height:38px;
+padding:0 4px;
+box-shadow:inset 1px 1px 0 rgba(255,255,255,0.6),inset -1px -1px 0 rgba(255,255,255,0.4);
+background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 247, 255, 0.2)), to(rgba(45, 112, 127, 0.3)));
+background-image: -webkit-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
+background-image: -moz-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
+background-image: -o-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
+background-image: -ms-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
+background-image: linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
+}
+.window-body{background:#fff;padding:0px;left:0;right:0;top:41px;bottom:0;overflow:auto;position:absolute;}
+.window-body .scroller{overflow:auto;height:100%;}
+.window-body-text{padding:5px;}
+
+
+
+.title-btn,.back-btn,.btn-r{background:url(title_btn.png) no-repeat left top;-webkit-background-size:150px 100px;background-size:150px 100px;}
+.title-btn,.back-btn{float:right;margin:5px 6px 0 0;padding:0 0 0 2px;line-height:27px;font-size:14px;color:#fff;cursor:pointer;text-shadow: 0 -1px 1px rgba(0,0,0,0.3);}
+.back-btn{float:left;margin:5px 0 0 1px;background-position:left -69px;;padding:0 0 0 16px;}
+.back-btn .btn-r,.title-btn .btn-r{background-position:right -35px;height:29px;padding:0 8px 0 0;}
+.title-div{font-size:14px;text-shadow: 1px 1px 0 rgba(255,255,255,0.5);color:#00434f;text-align:center;padding:0 8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.btn-close,.btn-refresh{border-radius:3px;background:url(button_close.png);width:24px;height:24px;float:right;margin:7px 2px;cursor:pointer;background-size:100% 100%;}
+.btn-refresh{background:url(button_refresh.png) center center no-repeat;}
+.btn-refresh.loading{background:url(loading_1.png) center center no-repeat;background-size:18px 18px;cursor:default;}
+
+
+
+#main-desktop{position:absolute;left:0;top:0;width:100%;height:100%;font-size:12px;}
+#main-desktop-div{position:absolute;height:100%;width:100%;}
+.desktop-div{position:absolute;height:100%;width:100%;}
+
+#calendar-div{
+position:absolute;
+right:335px;
+top:50px;
+width:160px;
+height: 176px;
+background:url(weather_bg_l.png);
+text-shadow:1px 1px 0 rgba(0,0,0,0.5);
+color:rgba(255,255,255,0.9);
+font-size:12px;
+-webkit-background-size:100% 100%;
+background-size:100% 100%;
+}
+#calendar-date,#calendar-date-chinese{position:absolute;width:154px;height:18px;line-height:16px;overflow:hidden;margin:10px 0 0 6px;text-align:center;white-space:nowrap;}
+#calendar-date-chinese{margin:148px 0 0 6px;}
+.calender-num{position:absolute;margin:37px 0 0 25px;}
+.calender-num span{background-image:url(weather_nums.png);background-repeat:no-repeat;float:left;width:55px;height:107px;-webkit-background-size:550px 107px;background-size:550px 107px;}
+.calendar-num-0{background-position:0 0;}
+.calendar-num-1{background-position:-55px 0;}
+.calendar-num-2{background-position:-110px 0;}
+.calendar-num-3{background-position:-165px 0;}
+.calendar-num-4{background-position:-220px 0;}
+.calendar-num-5{background-position:-275px 0;}
+.calendar-num-6{background-position:-330px 0;}
+.calendar-num-7{background-position:-385px 0;}
+.calendar-num-8{background-position:-440px 0;}
+.calendar-num-9{background-position:-495px 0;}
+
+
+#weather-div
+{
+position:absolute;
+right:28px;
+background:url(weather_bg_r.png);
+width: 303px;
+height:176px;
+top:50px;
+text-shadow:1px 1px 0 rgba(0,0,0,0.5);
+color:rgba(255,255,255,0.9);
+-webkit-background-size:100% 100%;
+background-size:100% 100%;
+}
+.weather-img{width: 280px;height: 230px;position: absolute;margin:-50px 0 0 0;right:-50px;}
+.weather_sun{background-image:url(weather_daytime_daySun.png);}
+.weather-city{font-size:40px;position:absolute;margin:6px 0 0 15px;}
+.weather-info{position: absolute;margin:70px 0 0 15px;font-size:15px;line-height:1.2em;}
+.weather-num{position: absolute;margin:110px 0 0 15px;font-size:40px;font-family:sans-serif;}
+
+.for-phone #calendar-div{top:300px;right:28px;}
+.for-phone #weather-div{background-image:url(weather_bg_r2.png);width:160px;height:250px;}
+.for-phone .weather-city{margin-top:90px;text-align:center;width:130px;}
+.for-phone .weather-info{margin-top:145px;text-align:center;width:130px;}
+.for-phone .weather-num{margin-top:200px;text-align:center;width:130px;font-size:34px;}
+
+
+
+
+.loaded{position:fixed;background:rgba(0,0,0,0.25);border-radius:4px;font-size:14px;text-shadow: 1px 1px 0 rgba(255,255,255,0.5);;white-space:nowrap;overflow:hidden;text-align:center;vertical-align:middle;}
+
+
+
+
+/**
+ *
+ * Horizontal Scrollbar
+ *
+ */
+.myScrollbarH 
+{
+	position:absolute;
+	z-index:100;
+	height:7px;
+	bottom:1px;
+	left:2px;
+	right:7px
+}
+
+.myScrollbarH > div {
+	height:100%;
+}
+
+
+/**
+ *
+ * Vertical Scrollbar
+ *
+ */
+.myScrollbarV {
+	position:absolute;
+	z-index:100;
+	width:7px;
+	bottom:3px;
+	top:3px;
+	margin-left:152px;
+}
+
+.myScrollbarV > div {
+	width:100%;
+}
+
+
+/**
+ *
+ * Both Scrollbars
+ *
+ */
+.myScrollbarH > div,
+.myScrollbarV > div {
+	position:absolute;
+	z-index:100;
+
+	/* The following is probably what you want to customize */
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-o-box-sizing:border-box;
+	box-sizing:border-box;
+	
+	width:5px;
+	background:rgba(0,0,0,0.45);
+	border-radius:3px;
+}
+
+
+/* HD / Retina -----------------------------------------*/
+@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5),only screen and (min-resolution:200dpi)
+{
+#logo{background-image: url(logo@2x.png);}
+.title-btn,.back-btn,.btn-r{background-image:url(title_btn@2x.png)}
+/*缩小一半*/
+.for-phone #weather-div,.for-phone-h #weather-div,.for-phone #calendar-div,.for-phone-h #calendar-div{zoom:0.5;}
+.for-phone .weather-city,.for-phone-h .weather-city{font-size:20px;}
+.for-phone .weather-info,.for-phone-h .weather-info{font-size:9pt;}
+.for-phone .weather-num,.for-phone-h .weather-num{font-size:16px;}
+
+.big-screen #calendar-div{background-image:url(weather_bg_l@2x.png);}
+.big-screen #weather-div{background-image:url(weather_bg_r@2x.png);}
+.big-screen .calender-num span{background-image:url(weather_nums@2x.png);}
+
+.btn-close{background-image:url(button_close@2x.png);}
+.btn-refresh{background-image:url(button_refresh@2x.png);}
+.btn-refresh.loading{background-image:url(loading_1@2x.png);}
+
+.left-menu-ul li.goto-parent-menu{background-image:url(up_menu@2x.png);background-size:15px 16px;}
+
+#main-desktop-right-btn,#main-desktop-left-btn{background-size:32px 32px;background:url(arrow_right@2x.png);}
+}
+
+
+@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5)
+{
+
+}
