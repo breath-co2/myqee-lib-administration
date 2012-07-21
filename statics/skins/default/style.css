@@ -20,8 +20,6 @@ body {
 
 input,textarea,select{
 display:inline-block;
-width:210px;
-height:18px;
 padding:4px;
 margin-bottom:9px;
 font-size:13px;
@@ -63,6 +61,9 @@ outline:thin dotted #333;
 outline:5px auto -webkit-focus-ring-color;
 outline-offset:-2px;
 }
+/*设置input的placeholder字体颜色*/
+input:-moz-placeholder{color: #b8b8b8;}
+::-webkit-input-placeholder{color:#b8b8b8;}
 
 #body-main{
 	top:0;
@@ -111,11 +112,12 @@ outline-offset:-2px;
 	-webkit-mask:-webkit-gradient(linear,0% 100%,0% 0%,from(rgba(255,255,255,0)),color-stop(10%,rgba(255,255,255,1)),to(rgba(36,142,36,1)));
 }
 #left-menu{position:absolute;top:40px;bottom:0;left:50px;}
-#main-desktop-right-btn,#main-desktop-left-btn{position:fixed;right:10px;opacity:0.3;cursor:pointer;bottom:6px;background:url(arrow_right.png);width:32px;height:32px;transition: all 0.3s ease-in-out 0s;-webkit-transition: all 0.3s ease-in-out 0s;-moz-transition: all 0.3s ease-in-out 0s;-o-transition: all 0.3s ease-in-out 0s;}
+#main-desktop-bottom-div{position:fixed;left:0;right:0;text-align:center;bottom:-45px;}
+#main-desktop-right-btn,#main-desktop-left-btn{position:absolute;right:10px;top:-65px;opacity:0.3;cursor:pointer;background:url(arrow_right.png);width:32px;height:32px;transition: all 0.3s ease-in-out 0s;-webkit-transition: all 0.3s ease-in-out 0s;-moz-transition: all 0.3s ease-in-out 0s;-o-transition: all 0.3s ease-in-out 0s;}
 #main-desktop-right-btn:hover,#main-desktop-left-btn:hover{opacity:0.6;}
-#main-desktop-left-btn{margin-left:10px;right:auto;}
-#main-desktop-center-div{text-align:center;position:fixed;white-space:pre;left:0;right:0;bottom:-20px;}
-#main-desktop-center-div div{display:inline-block;position:relative;margin:0 4px;top:-36px;width:6px;height:6px;background:#fff;border-radius:3px;opacity:0.5;}
+#main-desktop-left-btn{right:auto;left:10px;}
+#main-desktop-center-div{margin:auto;display:inline;}
+#main-desktop-center-div div{display:inline-block;position:relative;margin:0 4px;top:-60px;width:6px;height:6px;background:#fff;border-radius:3px;opacity:0.5;}
 #main-desktop-center-div div.focus{opacity:0.9;}
 
 .menu-div{position:absolute;width:160px;display:block;margin-right:1px;background:rgba(255,255,255,0.3);height:100%;text-shadow: 1px 1px 0 rgba(255,255,255,0.3);}
@@ -233,12 +235,21 @@ background-size:100% 100%;
 .for-phone .weather-info{margin-top:145px;text-align:center;width:130px;}
 .for-phone .weather-num{margin-top:200px;text-align:center;width:130px;font-size:34px;}
 
+/*缩小一半*/
+.for-phone #weather-div,.for-phone-h #weather-div,.for-phone #calendar-div,.for-phone-h #calendar-div{zoom:0.5;}
+.for-phone .weather-city,.for-phone-h .weather-city{font-size:20px;}
+.for-phone .weather-info,.for-phone-h .weather-info{font-size:9pt;}
+.for-phone .weather-num,.for-phone-h .weather-num{font-size:16px;}
+
 
 
 
 .loaded{position:fixed;background:rgba(0,0,0,0.25);border-radius:4px;font-size:14px;text-shadow: 1px 1px 0 rgba(255,255,255,0.5);;white-space:nowrap;overflow:hidden;text-align:center;vertical-align:middle;}
 
 
+
+
+#login_div{position:fixed;top:0;left:0;right:0;bottom:0;display:table;text-align:center;width:100%;height:100%;}
 
 
 /**
@@ -301,17 +312,11 @@ background-size:100% 100%;
 	border-radius:3px;
 }
 
-
 /* HD / Retina -----------------------------------------*/
 @media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5),only screen and (min-resolution:200dpi)
 {
 #logo{background-image: url(logo@2x.png);}
 .title-btn,.back-btn,.btn-r{background-image:url(title_btn@2x.png)}
-/*缩小一半*/
-.for-phone #weather-div,.for-phone-h #weather-div,.for-phone #calendar-div,.for-phone-h #calendar-div{zoom:0.5;}
-.for-phone .weather-city,.for-phone-h .weather-city{font-size:20px;}
-.for-phone .weather-info,.for-phone-h .weather-info{font-size:9pt;}
-.for-phone .weather-num,.for-phone-h .weather-num{font-size:16px;}
 
 .big-screen #calendar-div{background-image:url(weather_bg_l@2x.png);}
 .big-screen #weather-div{background-image:url(weather_bg_r@2x.png);}
@@ -324,6 +329,13 @@ background-size:100% 100%;
 .left-menu-ul li.goto-parent-menu{background-image:url(up_menu@2x.png);background-size:15px 16px;}
 
 #main-desktop-right-btn,#main-desktop-left-btn{background-size:32px 32px;background:url(arrow_right@2x.png);}
+
+
+[class^="icon-"],[class*=" icon-"]{background-image:url("../../bootstrap/img/glyphicons-halflings@2x.png");background-size:469px 159px;}
+.icon-white {
+    background-image: url("../../bootstrap/img/glyphicons-halflings-white@2x.png");
+}
+
 }
 
 

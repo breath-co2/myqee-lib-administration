@@ -247,7 +247,7 @@ class ORM_Admin_MemberGroup_Finder extends \OOP_ORM_Finder_DB
  * @copyright  Copyright (c) 2008-2012 myqee.com
  * @license    http://www.myqee.com/license.html
  */
-class MemberGroup_Result extends \OOP_ORM_Result
+class ORM_Admin_MemberGroup_Result extends \OOP_ORM_Result
 {
     /**
      * 获取所在组所有ID
@@ -289,7 +289,7 @@ class MemberGroup_Result extends \OOP_ORM_Result
  * @copyright  Copyright (c) 2008-2012 myqee.com
  * @license    http://www.myqee.com/license.html
  */
-class MemberGroup_Data extends \OOP_ORM_Data
+class ORM_Admin_MemberGroup_Data extends \OOP_ORM_Data
 {
     /**
      * 权限对象

@@ -224,7 +224,7 @@ class Controller_Administrator__Group extends \Controller_Admin
         {
             try
             {
-                $perm_setting = \Controller\Administrator::check_perm_data($_POST['perm_setting']);
+                $perm_setting = \Controller_Administrator::check_perm_data($_POST['perm_setting']);
             }
             catch (\Exception $e)
             {

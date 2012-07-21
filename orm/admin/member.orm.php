@@ -1,5 +1,5 @@
 <?php
-namespace Library\MyQEE\Administration\ORM\Admin;
+namespace Library\MyQEE\Administration;
 
 /**
  * 超级管理员ORM
@@ -10,7 +10,7 @@ namespace Library\MyQEE\Administration\ORM\Admin;
  * @copyright  Copyright (c) 2008-2012 myqee.com
  * @license    http://www.myqee.com/license.html
  */
-class Member_Finder extends \OOP_ORM_Finder_DB
+class ORM_Admin_Member_Finder extends \OOP_ORM_Finder_DB
 {
     protected $database = \Model_Admin::DATABASE;
 
@@ -49,7 +49,7 @@ class Member_Finder extends \OOP_ORM_Finder_DB
  * @copyright  Copyright (c) 2008-2012 myqee.com
  * @license    http://www.myqee.com/license.html
  */
-class Member_Result extends \OOP_ORM_Result
+class ORM_Admin_Member_Result extends \OOP_ORM_Result
 {
 
 }
@@ -64,7 +64,7 @@ class Member_Result extends \OOP_ORM_Result
  * @copyright  Copyright (c) 2008-2012 myqee.com
  * @license    http://www.myqee.com/license.html
  */
-class Member_Data extends \Member
+class ORM_Admin_Member_Data extends \Member
 {
     /**
      * 权限对象

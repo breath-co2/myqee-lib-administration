@@ -73,3 +73,37 @@ Date.prototype.format = function(str,utc){
     }
     return str;
 }
+
+
+MyQEE.cookie = {
+    get : function (name){
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ')
+                c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0)
+                return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        }
+        return null;
+    },
+    set : function (name, value, days, path){
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toGMTString();
+        };
+        path = path || '/';
+        document.cookie = name + "=" + encodeURIComponent(value) + expires + ";path=" + path;
+    },
+    del : function (name,path){
+        var exp = new Date();
+        exp.setTime (exp.getTime() - 99999);
+        path = path || '/';
+        document.cookie = name + "=''; expires=" + exp.toGMTString()+';path='+path;
+    }
+}
+
+

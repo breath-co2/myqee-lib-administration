@@ -250,7 +250,7 @@ class Controller_Administrator extends \Controller_Admin
             {
                 if ( $member->id>0 && $member->id!=$this->session()->member()->id )
                 {
-                    if ( !\array_diff($member->groups()->ids(),$groups->ids()))
+                    if ( !\array_diff($member->groups()->ids(),$groups->ids()) )
                     {
                         # 超管或者该用户所在的权限组操作者也都在
                         $this->show_edit_perm = true;

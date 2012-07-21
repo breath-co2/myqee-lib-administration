@@ -9,11 +9,12 @@ namespace Library\MyQEE\Administration;
  */
 class Controller_Statics extends \Controller
 {
+    protected $allow_suffix = 'js|css|jpg|png|gif|bmp|html|htm|mp4|swf|zip';
 
     public function before()
     {
         $f = \array_pop($this->arguments);
-        if ( $f && \preg_match('#^([a-zA-Z0-9_/\-\.@]+).(js|css|jpg|png|gif|swf)$#i', $f,$m) )
+        if ( $f && \preg_match('#^([a-zA-Z0-9_/\-\.@]+).('.$this->allow_suffix.')$#i', $f,$m) )
         {
             $args = $this->arguments;
             $args[] = $m[1];
@@ -64,6 +65,7 @@ class Controller_Statics extends \Controller
         $list = \array_map(function($t) use ($path){return $path.$t;},$list);
 
         echo 'CACHE MANIFEST'.\CRLF;
+
         echo \implode(\CRLF, $list);
     }
 
@@ -72,7 +74,7 @@ class Controller_Statics extends \Controller
         $file = $this->file;
         $type = $this->type;
 
-        if ( ! \preg_match('#^([a-zA-Z0-9_/\-\.@]+)$#', $file) || ! \preg_match( '#(js|css|jpg|png|gif|bmp|mp4|swf|zip)$#', $type ) )
+        if ( ! \preg_match('#^([a-zA-Z0-9_/\-\.@]+)$#', $file) || ! \preg_match( '#('.$this->allow_suffix.')$#', $type ) )
         {
             \Core::show_404();
         }

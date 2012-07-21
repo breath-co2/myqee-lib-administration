@@ -34,12 +34,12 @@ $config['admin']['database'] = 'admin';
 /**
  * 登录尝试几次后显示验证码
  */
-$config['admin']['login_error_show_captcha_num'] = 5;
+$config['admin']['login']['error_show_captcha_num'] = 5;
 
 /**
- * 24小时最大尝试次数，超过后当前IP将截止登录
+ * 24小时最大尝试登录次数，超过后当前IP将截止登录
  */
-$config['admin']['login_max_error_num'] = 50;
+$config['admin']['login']['max_error_num'] = 20;
 
 
 /**
@@ -47,7 +47,7 @@ $config['admin']['login_max_error_num'] = 50;
  *
  * @var int
  */
-$config['admin']['login_expired_time'] = 3600;
+$config['admin']['login']['expired_time'] = 3600;
 
 
 /**
@@ -57,20 +57,18 @@ $config['admin']['login_expired_time'] = 3600;
  */
 $config['admin']['top_menu'][] = array
 (
-        'innerHTML' => '修改密码',
-        'href'      => 'administrator/change_password/',
+    'innerHTML' => '修改密码',
+    'href'      => 'administrator/change_password/',
 );
 
 
 /**
- * 后台默认菜单
+ * 后台菜单
  *
  * @var array
  */
 $config['admin']['menu'] = array
 (
-//     '[name]' => '默认菜单',
-
     'index' => array
     (
         'innerHTML' => '管理首页',
@@ -168,7 +166,11 @@ $config['admin']['menu'] = array
     )
 );
 
-
+/**
+ * 权限设置
+ *
+ * @var array
+ */
 $config['admin']['permission'] = array
 (
     'default' => array

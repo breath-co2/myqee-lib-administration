@@ -20,9 +20,8 @@ class Controller_Login extends \Controller
             'message' => '',
             'input'   => '',
         );
-        $view = new \View('admin/login');
 
-        $not_login = false;
+        $can_not_login = false;
         $show_captcha = false;
         $db = \Database::instance(\Model_Admin::DATABASE);
 
@@ -37,25 +36,32 @@ class Controller_Login extends \Controller
         if ($error)
         {
             $error_num = $error['error_num'];
-            $config = \Core::config('admin.setting');
-            if ( $error_num>=$config['login_error_show_captcha_num']-1 )
+            $config = \Core::config('admin.login');
+            if ( $error_num>=$config['error_show_captcha_num']-1 )
             {
                 $show_captcha = true;
             }
-            if ( $config['login_max_error_num'] && $error_num>=$config['login_max_error_num'] )
+            if ( $config['max_error_num'] && $error_num>=$config['max_error_num'] )
             {
-                $not_login = true;
+                $can_not_login = true;
                 $this->message = \__('Attempts too much, and temporarily can not login');
             }
         }
 
-        if ( !$not_login && \HttpIO::METHOD=='POST')
+        if (\HttpIO::METHOD=='POST')
         {
-            $member = $this->post($_POST,$error_num);
-            if ( $member )
+            //错误次数太多，暂不允许登录
+            if ($can_not_login)
             {
-                $member->last_login_ip = \HttpIO::IP;
-                $member->last_login_time = \TIME;
+                $this->show_error( $this->message , array('show_captcha' => false , 'can_not_login' => true) );
+            }
+
+            $member = $this->post($_POST,$error_num);
+
+            if ($member)
+            {
+                $member->last_login_ip         = \HttpIO::IP;
+                $member->last_login_time       = \TIME;
                 $member->last_login_session_id = $this->session()->id();
                 $member->value_increment('login_num');
                 $member->update();
@@ -63,26 +69,21 @@ class Controller_Login extends \Controller
                 # 开启session
                 $this->session()->start();
                 $this->session()->set_member($member);
-                $url = $_POST['forward'] ? \HttpIO::POST('forward',\HttpIO::PARAM_TYPE_URL) : \Core::url('/');
 
-                $this->redirect($url);
+                $this->show_success(\__('Login success'),array('member_id'=>$member->id,'username'=>$member->username,'gravatar'=>\html::gravatar($member->email?$member->email:'admin@myqee.com',32),'login_num'=>$member->login_num));
             }
             else
             {
-                $view->shake = true;
+                $this->show_error( $this->message .($config['max_error_num'] && $config['max_error_num']-$error_num<=5?' ('.\__('Have :num chance',array(':num'=>$config['max_error_num']-$error_num)).')':'') , array('error_input' => $this->error_input , 'show_captcha' => $show_captcha) );
             }
         }
+
         $login_message = $this->session()->get('admin_member_login_message');
 
+        $view = new \View('admin/login');
+        $view->can_not_login = $can_not_login;
         $view->show_captcha = $show_captcha;
         $view->message = $login_message?$login_message:$this->message;
-        $view->error_input = $this->error_input;
-
-        if ($_POST)
-        {
-            $view->username = $_POST['username'];
-        }
-
         $view->render();
     }
 
@@ -95,7 +96,7 @@ class Controller_Login extends \Controller
         $this->session()->start()->destroy();
 
         #页面跳转到登录页
-        $this->redirect(\Core::url('login/'));
+        $this->redirect(\Core::url('/'));
     }
 
     /**
@@ -128,11 +129,12 @@ class Controller_Login extends \Controller
             if ( $error_num )
             {
                 # 有登录错误
-                $config = \Core::config('admin.core');
-                if ( $error_num>=$config['login_error_show_captcha_num']-1 )
+                $config = \Core::config('admin.login');
+                if ( $error_num>=$config['error_show_captcha_num']-1 )
                 {
                     if ( \Captcha::valid($data['captcha'])<0 )
                     {
+                        $this->error_input = 'captcha';
                         throw new \Exception(\__('Verification code error'));
                     }
                 }
@@ -143,11 +145,13 @@ class Controller_Login extends \Controller
 
             if ( !$member )
             {
-                throw new \Exception('User does not exist');
+                $this->error_input = 'username';
+                throw new \Exception(\__('User does not exist'));
             }
 
             if ( !$member->check_password($data['password']) )
             {
+                $this->error_input = 'password';
                 throw new \Exception(\__('Password is incorrect'));
             }
 
@@ -167,6 +171,7 @@ class Controller_Login extends \Controller
 
             if ( $member->shielded )
             {
+                $this->error_input = 'username';
                 throw new \Exception(\__('You have been blocked'), -1 );
             }
         }
@@ -201,7 +206,6 @@ class Controller_Login extends \Controller
             }
 
             $this->message = $e->getMessage();
-            $this->error_input = 'password';
             $id = 0;
             $member = false;
 

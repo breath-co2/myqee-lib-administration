@@ -28,7 +28,7 @@ Password            = 密码
 Verification code   = 验证码
 Login               = 登录
 
-Attempts too much, and temporarily can not login     = 尝试次数太多，暂不可登录
+Attempts too much, and temporarily can not login     = 您今日尝试次数太多，休息一会吧
 Username can not be empty                            = 用户名不能空
 The password can not be empty                        = 密码不能空
 Verification code error                              = 验证码错误
@@ -38,6 +38,8 @@ User does not exist                                  = 用户不存在
 Password is incorrect                                = 密码错误
 Login timeout, please log in again                   = 登录超时，请重新登录
 Please login                                         = 请先登录
+Have :num chance                                     = 还有:num次机会
+Login success                                        = 登录成功
 This account password has been updated, please re-login = 此账号密码已更新，请重新登录
 You do not have the authority to operate in this project, please contact administrator = 您不具备此项目的操作权限，请联系管理员
 This account has been elsewhere login, log the IP: :ip - :iplocal, login time: :time = "此号已在其它地方登录，登录IP::ip - :iplocal，登录时间: :time"
