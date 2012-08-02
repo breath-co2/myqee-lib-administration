@@ -1,4 +1,4 @@
-<div style="vertical-align:middle;display:table-cell;">
+<div style="vertical-align:middle;display:table-cell;padding:0 0 0 30px;">
     <div style="display:inline-block;text-align:left;">
         <div id="login_form_div">
         <h3 style="color:#fff;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);"><?php echo __('Administrator login')?></h3>
@@ -9,20 +9,26 @@
         <?php
         }
         ?>
-        <input type="text" id="login_form_username" name="username" placeholder="<?php echo __('Username');?>" size="12" style="margin-top:8px;padding:6px 10px;width:240px;font-size:16px;height:26px;border-radius:6px;border:1px solid #2270a0;background:rgba(255,255,255,0.8);box-shadow:inset 1px 1px 2px #8e8e8e,0 0 10px #97f4ff;" />
-        <span class="btn-group" id="login_gravatar_div" style="margin:12px 0 0 -40px;display:none;position:absolute;">
-            <span data-toggle="dropdown" style="cursor:pointer;display:block;border-radius:3px;width:32px;height:32px;background-size:100% 100%;"></span>
-            <ul class="dropdown-menu">
-                <li><a href="#" rel="nofollow" onclick="localStorage.removeItem('logined_member');var obj=$('#login_form_div > form').get(0).username;obj.value='';obj.focus();$('#login_gravatar_div').hide();return false;"><i class="icon-trash"></i> 清除</a></li>
-            </ul>
+        <span style="position:absolute;margin:13px 0 0 226px;-index:1000;display:none;" id="login_gravatar_div">
+            <span class="btn-group">
+                <span data-toggle="dropdown" style="cursor:pointer;display:block;border-radius:3px;width:32px;height:32px;background-size:100% 100%;"></span>
+                <ul class="dropdown-menu">
+                    <li><a href="#" rel="nofollow" onclick="localStorage.removeItem('logined_member');var obj=$('#login_form_div > form').get(0).username;obj.value='';obj.focus();$('#login_gravatar_div').hide();return false;"><i class="icon-trash"></i> 清除</a></li>
+                </ul>
+            </span>
         </span>
-        <input type="password" id="login_form_password" name="password" placeholder="<?php echo __('Password');?>" size="12" style="margin-top:8px;padding:6px 10px;width:240px;font-size:16px;height:26px;border-radius:6px;border:1px solid #2270a0;background:rgba(255,255,255,0.8);box-shadow:inset 1px 1px 2px #8e8e8e,0 0 10px #97f4ff;" />
+
+        <input type="text" id="login_form_username" name="username" placeholder="<?php echo __('Username');?>" size="12" style="margin-top:9px;padding:6px 10px;width:240px;font-size:16px;height:26px;border-radius:6px;border:1px solid #2270a0;background:rgba(255,255,255,0.8);box-shadow:inset 1px 1px 2px #8e8e8e,0 0 10px #97f4ff;" />
+
+        <input type="password" id="login_form_password" name="password" placeholder="<?php echo __('Password');?>" size="12" style="margin-top:9px;padding:6px 10px;width:240px;font-size:16px;height:26px;border-radius:6px;border:1px solid #2270a0;background:rgba(255,255,255,0.8);box-shadow:inset 1px 1px 2px #8e8e8e,0 0 10px #97f4ff;" />
+
+        <span id="login_captach_div" style="<?php if (!$show_captcha)echo 'display:none;"';?>white-space:nowrap;">
+            <input autocomplete="off" type="text" maxlength="4" name="captcha" placeholder="<?php echo __('Verification code')?>" size="4" style="margin-top:9px;padding:6px 10px;width:110px;font-size:16px;height:26px;border-radius:6px;border:1px solid #2270a0;background:rgba(255,255,255,0.8);box-shadow:inset 1px 1px 2px #8e8e8e,0 0 10px #97f4ff;" />
+            <img src="<?php echo Core::url('captcha/126x39.png?timeline='.microtime(1));?>" style="border-radius:6px;cursor:pointer;" title="点击更换验证码" onclick="this.src=this.src.split('?')[0]+'?timeline='+new Date().getTime();" />
+        </span>
+        
         <button type="submit" class="btn btn-large btn btn-danger"><i class="icon-check icon-white"></i> <?php echo __('Login');?></button>
-        <br />
-        <div id="login_captach_div"<?php if (!$show_captcha)echo ' style="display:none;"';?>>
-        <input autocomplete="off" type="text" maxlength="4" name="captcha" placeholder="<?php echo __('Verification code')?>" size="4" style="padding:6px 10px;width:110px;font-size:16px;height:22px;border-radius:6px;border:1px solid #2270a0;background:rgba(255,255,255,0.8);box-shadow:inset 1px 1px 2px #8e8e8e,0 0 10px #97f4ff;" />
-        <img src="<?php echo Core::url('captcha/126x36.png?timeline='.microtime(1));?>" style="cursor:pointer;margin-top:-10px" title="点击更换验证码" onclick="this.src=this.src.split('?')[0]+'?timeline='+new Date().getTime();" />
-        </div>
+
         <?php
         if (!$can_not_login){
         ?>
@@ -35,7 +41,6 @@
         </div>
         </div>
     </div>
-    
 </div>
 
 

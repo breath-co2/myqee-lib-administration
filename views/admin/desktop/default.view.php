@@ -1,4 +1,104 @@
-<div id="weather-div"><div class="weather-img weather_sun"></div><div class="weather-city">上海</div><div class="weather-info">晴转多云 微风</div><div class="weather-num">19~28℃</div></div><div id="calendar-div"></div>
+<?php $static_url = Core::url('/statics/skins/default/');?>
+<style type="text/css">
+#calendar-div{
+    position:absolute;
+    right:335px;
+    top:50px;
+    width:160px;
+    height: 176px;
+    background:url(<?php echo $static_url;?>weather_bg_l.png);
+    text-shadow:1px 1px 0 rgba(0,0,0,0.5);
+    color:rgba(255,255,255,0.9);
+    font-size:1.2em;
+    -webkit-background-size:100% 100%;
+    background-size:100% 100%;
+}
+#calendar-date,#calendar-date-chinese{position:absolute;width:154px;height:18px;line-height:16px;overflow:hidden;margin:10px 0 0 6px;text-align:center;white-space:nowrap;}
+#calendar-date-chinese{margin:148px 0 0 6px;}
+.calender-num{position:absolute;margin:37px 0 0 25px;}
+.calender-num span{background-image:url(<?php echo $static_url;?>weather_nums.png);background-repeat:no-repeat;float:left;width:55px;height:107px;-webkit-background-size:550px 107px;background-size:550px 107px;}
+.calendar-num-0{background-position:0 0;}
+.calendar-num-1{background-position:-55px 0;}
+.calendar-num-2{background-position:-110px 0;}
+.calendar-num-3{background-position:-165px 0;}
+.calendar-num-4{background-position:-220px 0;}
+.calendar-num-5{background-position:-275px 0;}
+.calendar-num-6{background-position:-330px 0;}
+.calendar-num-7{background-position:-385px 0;}
+.calendar-num-8{background-position:-440px 0;}
+.calendar-num-9{background-position:-495px 0;}
+
+
+#weather-div{
+    position:absolute;
+    right:28px;
+    background:url(<?php echo $static_url;?>weather_bg_r.png);
+    width: 303px;
+    height:176px;
+    top:50px;
+    text-shadow:1px 1px 0 rgba(0,0,0,0.5);
+    color:rgba(255,255,255,0.9);
+    background-size:100% 100%;
+}
+.weather-city{font-size:3.3em;position:absolute;margin:6px 0 0 15px;}
+.weather-info{position: absolute;margin:70px 0 0 18px;font-size:1.3em;line-height:1.5em;height:3em;}
+.weather-num{position: absolute;margin:120px 0 0 16px;font-size:3em;font-family:sans-serif;}
+.weather-location{position: absolute;margin:132px 0 0 0;right:12px;background-image:url(<?php echo $static_url;?>weather_location.png);width:27px;height:33px;background-size:100% 100%;cursor:pointer;}
+.weather-img{width: 280px;height: 230px;position: absolute;margin:-60px 0 0 0;right:-55px;}
+    .weather_daySun{background-image:url(<?php echo $static_url;?>weather_daytime_daySun.png);}
+    .weather_bigrain{background-image:url(<?php echo $static_url;?>weather_daytime_bigrain.png);}
+    .weather_bigstorm{background-image:url(<?php echo $static_url;?>weather_daytime_bigstorm.png);}
+    .weather_bigwind{background-image:url(<?php echo $static_url;?>weather_daytime_bigwind.png);}
+    .weather_cloudy{background-image:url(<?php echo $static_url;?>weather_daytime_cloudy.png);}
+    .weather_fog{background-image:url(<?php echo $static_url;?>weather_daytime_fog.png);}
+    .weather_middlerain{background-image:url(<?php echo $static_url;?>weather_daytime_middlerain.png);}
+    .weather_rainstorm{background-image:url(<?php echo $static_url;?>weather_daytime_rainstorm.png);}
+    .weather_sand{background-image:url(<?php echo $static_url;?>weather_daytime_sand.png);}
+    .weather_smallrain{background-image:url(<?php echo $static_url;?>weather_daytime_smallrain.png);}
+    .weather_smallStorm{background-image:url(<?php echo $static_url;?>weather_daytime_smallStorm.png);}
+    .weather_tinywind{background-image:url(<?php echo $static_url;?>weather_daytime_tinywind.png);}
+    .weather_yin{background-image:url(<?php echo $static_url;?>weather_daytime_yin.png);}
+    .weather_nighttime_sun{background-image:url(<?php echo $static_url;?>weather_nighttime_sun.png);}
+
+.for-small-window #calendar-div{top:300px;right:28px;transform:scale(0.5,0.5);}
+.for-small-window #weather-div{background-image:url(<?php echo $static_url;?>weather_bg_r2.png);width:160px;height:250px;}
+.for-small-window .weather-city{margin-top:90px;text-align:center;width:130px;}
+.for-small-window .weather-info{margin-top:145px;text-align:center;width:130px;}
+.for-small-window .weather-num{margin-top:200px;text-align:center;width:130px;font-size:2em;}
+.for-small-window .weather-location{right:10px;margin-top:108px}
+.for-very-small-window #weather-and-calendar-div{
+    transform:scale(0.5,0.5);
+    -moz-transform:scale(0.5,0.5);
+    -webkit-transform:scale(0.5,0.5);
+    -ms-transform:scale(0.5,0.5);
+    -o-transform:scale(0.5,0.5);
+    transform-origin:top right;
+    -moz-transform-origin:top right;
+    -webkit-transform-origin:top right;
+    -ms-transform-origin:top right;
+    -o-transform-origin:top right;
+}
+
+/* for ratina */
+@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5),only screen and (min-resolution:200dpi)
+{
+.big-screen #calendar-div{background-image:url(<?php echo $static_url;?>weather_bg_l@2x.png);}
+.big-screen #weather-div{background-image:url(<?php echo $static_url;?>weather_bg_r@2x.png);}
+.big-screen .weather-location{background-image:url(<?php echo $static_url;?>weather_location@2x.png);}
+.big-screen .calender-num span{background-image:url(<?php echo $static_url;?>weather_nums@2x.png);}
+}
+</style>
+<div id="weather-and-calendar-div">
+    <div id="weather-div">
+        <div id="weather-show-div"></div>
+        <div id="weather-setting-div" style="display:none;">
+            <div style="padding:16px 25px 0 25px;"><h3 style="padding-bottom:10px">设置我的位置</h3>
+            <?php echo Form::select(null,Weather::city_array_for_select(),'',array('id'=>'weather-select','style'=>'width:100%;'));?>
+            <input class="btn btn-success" type="button" id="weather-setting-ok" value="确定完成" style="width:100%;margin-bottom:8px;" /> <input style="width:100%;margin-bottom:8px;" class="btn" type="button" id="weather-setting-cancel" value="取消" /></div>
+        </div>
+    </div>
+    <div id="calendar-div"></div>
+</div>
 
 <script type="text/javascript">
 (function(){
@@ -134,12 +234,67 @@ var chinese_calendar = function(today)
     else return "农历 " + CnMonthofDate(today) + CnDayofDate(today);
 };
 
-var d = new Date();
-var day = d.getDate();
-var dd=[];
-if (day<10){dd[0]=0;dd[1]=day;}
-else{dd[0]=(day-day%10)/10;dd[1]=day%10;}
+(function(){
+    var d = new Date();
+    var day = d.getDate();
+    var dd=[];
+    if (day<10){dd[0]=0;dd[1]=day;}
+    else{dd[0]=(day-day%10)/10;dd[1]=day%10;}
+    
+    $('#calendar-div').html('<div id="calendar-date">'+d.format('Y年m月')+' 星期'+'天一二三四五六'.charAt(d.getDay())+'</div><div id="calendar-date-chinese">'+chinese_calendar(d)+'</div><div class="calender-num"><span class="calendar-num-'+dd[0]+'"></span><span class="calendar-num-'+dd[1]+'"></span></div>');
 
-$('#calendar-div').html('<div id="calendar-date">'+d.format('Y/m')+' 星期'+'天一二三四五六'.charAt(d.getDay())+'</div><div id="calendar-date-chinese">'+chinese_calendar(d)+'</div><div class="calender-num"><span class="calendar-num-'+dd[0]+'"></span><span class="calendar-num-'+dd[1]+'"></span></div>');
+    delete chinese_calendar;
+    delete d;
+    delete day;
+    delete dd;
+})();
+
+(function(){
+    var city = localStorage.getItem('weather_city')||'shanghai';
+    var get_weather = function()
+    {
+        $.ajax(MyQEE.Url.Site + '/desktop/weather_data?city='+city).success(function(html){
+            $('#weather-show-div').html(html);
+        }).error(function(){
+            $('#weather-show-div').html('<div style="padding:40px 0 0 0;text-align:center;">加载失败</div>');
+        });
+    }
+
+    // 获取天气
+    get_weather();
+
+    // 添加weather div的onclick绑定事件
+    var fun = function()
+    {
+        var obj = $('#weather-div');
+        obj.transition({rotateY:'90deg'},function(){
+            if (MyQEE.$('weather-show-div').style.display=='none')
+            {
+                MyQEE.$('weather-show-div').style.display = '';
+                MyQEE.$('weather-setting-div').style.display = 'none';
+            }
+            else
+            {
+                MyQEE.$('weather-show-div').style.display = 'none';
+                MyQEE.$('weather-setting-div').style.display = '';
+                MyQEE.$('weather-select').value = city;
+            }
+            obj.transition({rotateY:'0deg'});
+            delete obj;
+        });
+    }
+
+    MyQEE.$('weather-show-div').onclick = fun;
+    MyQEE.$('weather-setting-cancel').onclick = fun;
+    MyQEE.$('weather-setting-ok').onclick = function()
+    {
+        city = MyQEE.$('weather-select').value||'shanghai';
+        localStorage.setItem('weather_city',city);
+        get_weather();
+        fun();
+    };
+
+})();
+
 })();
 </script>

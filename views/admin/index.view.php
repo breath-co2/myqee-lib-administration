@@ -74,7 +74,8 @@ MyQEE.Member = {
 };
 </script>
 </head>
-<body data-spy="scroll" data-target=".subnav" data-offset="50">
+<body data-spy="scroll" data-offset="44">
+<!--[if IE]><div style="position:fixed;z-index:9999999;background:#fff;left:0;top:0;width:100%;height:100%;font-size:40px;"><script>document.write('IE死边上去，表浪费LZ时间调试');</script></div><![endif]-->
 <div id="bg-div"></div>
 <div id="is-retina-div"></div>
 <table id="page-loading-table" border="0">
