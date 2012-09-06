@@ -65,6 +65,11 @@ input:-moz-placeholder{color: #b8b8b8;}
 ::-webkit-input-placeholder{color:#b8b8b8;}
 
 
+input[type="checkbox"]{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
 
 textarea
 {
@@ -89,30 +94,6 @@ table.mainTable
     border-spacing:0;
 }
 
-/*
-.mainTable tr:hover,
-.mainTable .tr_hover:hover
-{
-    background:#e3f8f8;
-}
-.mainTable tr,
-.mainTable .tr_hover
-{
-    background:#fff;
-}
-
-.mainTable tr:hover .td1,
-.mainTable .tr_hover:hover .td1
-{
-    background:#cff3f3;
-}
-.mainTable tr .td1,
-.mainTable .tr_hover .td1,
-.mainTable .td1
-{
-    background:#e8f8f8;
-}
-*/
 table.mainTable tr.control{
     background:#f3f3f3;
 }
@@ -140,6 +121,12 @@ table.mainTable th{
     background: linear-gradient(#f0fdff, #b8e3ee);
     white-space:nowrap;
     text-shadow:1px 1px 0 #fff;
+}
+table.mainTable .th label,
+table.mainTable th label
+{
+    font-size: 13px;
+    font-weight: bold;
 }
 
 table.mainTable a.button{
@@ -317,8 +304,8 @@ table.mainTable select {
     padding:2px;
 }
 
-table.mainTable select, 
-table.mainTable textarea, 
+table.mainTable select,
+table.mainTable textarea,
 table.mainTable input[type="text"],
 table.mainTable input[type="password"],
 table.mainTable input[type="datetime"],
@@ -334,9 +321,16 @@ table.mainTable input[type="search"],
 table.mainTable input[type="tel"],
 table.mainTable input[type="color"],
 table.mainTable .uneditable-input {
+    margin-top: 0px;
     margin-bottom: 0px;
 }
 
+table.mainTable tr .td1,
+table.mainTable tr .tr_hover .td1,
+table.mainTable .td1
+{
+    background:#def8ff;
+}
 
 .helpicon {
     background: url("helpicon.gif") no-repeat 0 -1px;
@@ -475,7 +469,7 @@ background-image: linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 1
  * Horizontal Scrollbar
  *
  */
-.myScrollbarH 
+.myScrollbarH
 {
 	position:absolute;
 	z-index:100;
@@ -524,7 +518,7 @@ background-image: linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 1
 	-moz-box-sizing:border-box;
 	-o-box-sizing:border-box;
 	box-sizing:border-box;
-	
+
 	width:5px;
 	background:rgba(0,0,0,0.45);
 	border-radius:3px;
@@ -551,7 +545,7 @@ background-image: linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 1
 }
 
 .form-actions {
-    background-color: #dcfbff;
+    background-color: #def8ff;
     border-top: 1px solid #add4de;
 }
 

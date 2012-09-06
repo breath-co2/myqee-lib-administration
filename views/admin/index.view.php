@@ -43,12 +43,12 @@ background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, 
 background-image: -moz-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
 
 background-image: -ms-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);background-image: linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);            
+background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);background-image: linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
 -webkit-animation: animate-stripes 3s linear infinite;
 -moz-animation: animate-stripes 3s linear infinite;
 }
 
-@-webkit-keyframes animate-stripes { 
+@-webkit-keyframes animate-stripes {
     0% {background-position: 0 0;} 100% {background-position: 60px 0;}
 }
 @-moz-keyframes animate-stripes {
@@ -112,10 +112,11 @@ MyQEE.Member = {
             '/bootstrap/css/bootstrap.min.css',
             '/skins/default/style.css',
             [
-                '/jquery/js/jquery-1.7.2.min.js',
+                '/jquery/js/jquery-1.8.1.min.js',
+                '/jquery/js/jquery.tablesorter.min.js',
                 '/jquery/js/jquery.transit.min.js',
                 '/bootstrap/js/bootstrap.min.js',
-                '/jquery/js/jquery.form.min.js'
+                '/jquery/js/jquery.form.min.js',
             ],
             '/js/iscroll.js',
             '/js/global.js',
