@@ -18,58 +18,12 @@ body {
 	height:100%;
 }
 
-input,textarea,select{
-    display:inline-block;
-    padding:4px;
-    font-size:13px;
-    line-height:18px;
-    color:#555555;
-    border:1px solid #ccc;
-    -webkit-border-radius:3px;
-    -moz-border-radius:3px;
-    border-radius:3px;
-}
 
 input[type="image"]{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
 
-input,textarea{
-    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -webkit-transition:border linear 0.2s,box-shadow linear 0.2s;
-    -moz-transition:border linear 0.2s,box-shadow linear 0.2s;
-    -ms-transition:border linear 0.2s,box-shadow linear 0.2s;
-    -o-transition:border linear 0.2s,box-shadow linear 0.2s;
-    transition:border linear 0.2s,box-shadow linear 0.2s;
-}
-input[type="file"]{width:auto;padding:initial;line-height:initial;border:initial;background-color:#ffffff;background-color:initial;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
-
-input:focus,textarea:focus{
-border-color:rgba(82, 168, 236, 0.8);
--webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);
--moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);
-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);
-outline:0;
-outline:thin dotted \9;
-}
-input[type="file"]:focus,input[type="radio"]:focus,input[type="checkbox"]:focus,select:focus{
--webkit-box-shadow:none;
--moz-box-shadow:none;
-box-shadow:none;
-outline:thin dotted #333;
-outline:5px auto -webkit-focus-ring-color;
-outline-offset:-2px;
-}
 /*设置input的placeholder字体颜色*/
 input:-moz-placeholder{color: #b8b8b8;}
 ::-webkit-input-placeholder{color:#b8b8b8;}
-
-
-input[type="checkbox"]{
-    margin-top: auto;
-    margin-bottom: auto;
-}
-
 
 textarea
 {
@@ -115,10 +69,10 @@ table.mainTable th{
     line-height: 1.8em;
     font-weight: bold;
     text-align: center;
-    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#f0fdff), to(#b8e3ee));
-    background: -moz-linear-gradient(#f0fdff, #b8e3ee);
-    background: -o-linear-gradient(#f0fdff, #b8e3ee);
-    background: linear-gradient(#f0fdff, #b8e3ee);
+    background: #d5f0f3;
+    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#edfeff), to(#b8eaee));
+    background: -moz-linear-gradient(#edfeff, #b8eaee);
+    background: -o-linear-gradient(#edfeff, #b8eaee);
     white-space:nowrap;
     text-shadow:1px 1px 0 #fff;
 }
@@ -292,13 +246,6 @@ table.mainTable textarea[disabled="disabled"]:hover
     resize:none;
 }
 
-table.mainTable input[type="checkbox"],
-table.mainTable input[type="checkbox"]:hover,
-table.mainTable input[type="checkbox"]:active
-{
-    border:none;
-}
-
 table.mainTable select {
     margin:1px auto 1px auto;
     padding:2px;
@@ -329,8 +276,24 @@ table.mainTable tr .td1,
 table.mainTable tr .tr_hover .td1,
 table.mainTable .td1
 {
-    background:#def8ff;
+    background:#defcff;
 }
+
+
+table.mainTable label, table.mainTable input,table.mainTable button, table.mainTable select, table.mainTable textarea
+{
+    line-height: normal;
+}
+table.mainTable label
+{
+    margin-bottom: auto;
+}
+
+/*table.mainTable input[type="checkbox"]
+{
+    margin-top: auto;
+    margin-bottom: auto;
+}*/
 
 .helpicon {
     background: url("helpicon.gif") no-repeat 0 -1px;

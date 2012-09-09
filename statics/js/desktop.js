@@ -8,7 +8,13 @@ var desktop = new function()
     is_fullscreen         = false,  //是否全屏模式
     is_menu_open_mode     = true,   //是否目录开启
     menu_status,                    //窗口状态
-    left_width            = 0;      //左侧宽度
+    left_width            = 0,      //左侧宽度
+    is_support_pajx       = window.history.pushState?true:false;    //是否支持动态切换地址栏功能
+
+    var _history_reload_page  = false;
+    var _history_state        = {};
+    var _history_old_hash;
+
 
     //窗口调整大小
     window.onresize = function()
@@ -17,11 +23,11 @@ var desktop = new function()
         {
             // 调高
             $(document.body).css('height',($(window).height()+60)+'px');
-            
+
             // iphone中隐藏地址栏
             window.scrollTo(0,0);
         }
-    
+
         // 高分辨率
         if (!isRetina && $(document.body).width()>1500)
         {
@@ -31,7 +37,7 @@ var desktop = new function()
         var w = $(window).width();
         var h = $(window).height();
         if (iphone_hidden_address)h+=60;
-        
+
         //$('#bg-div').width(w-2).height(h-2);
         if (w<760)
         {
@@ -42,7 +48,7 @@ var desktop = new function()
             left_width = $('#logo').width()+1;
         }
         var hh = h - $('#logo').height();
-    
+
         $('#left-menu').children().each(function(){$(this).find('.scroller').css({minHeight:hh+'px'});if(this._sc)this._sc.refresh();});
 
         if (w<1000)
@@ -82,14 +88,14 @@ var desktop = new function()
             $('#main-desktop').removeClass('for-small-window for-very-small-window');
             $('#main-body-div').removeClass('for-small-window');
             $('#left-menu-div').css({'overflow':'visible','width':'auto'});
-    
+
             $('#main-desktop-bottom-div').css({'left':50+161*$('#left-menu').children().length});
         }
-        
+
         desktop.reset.desktop();
 
         desktop.resize_window();
-        
+
         if (is_window_show||small_window_mode)
         {
             if (menu_status===0)desktop.reset.menu();
@@ -108,7 +114,7 @@ var desktop = new function()
             var n = 0;
             $('#main-desktop-div').children().each(function(){$(this).css({'width':w+'px','left':(n*w)+'px'});n++;});
             $('#main-desktop-div').width($('#main-desktop').width()*n);
-            
+
             // 调整滚动位置
             var obj = $('#main-desktop-div')[0];
             if (obj && obj._sc)
@@ -134,8 +140,8 @@ var desktop = new function()
                     i++;
                     $(this).find('.menu_top_bg').hide();
                 });
-                
-                $('#left-menu').transition({x:-161*2},function(){                
+
+                $('#left-menu').transition({x:-161*2},function(){
                     var len = $('#left-menu').children().length;
                     var i2=0;
                     $('#left-menu').children().each(function(){
@@ -173,15 +179,15 @@ var desktop = new function()
             $('#left-menu-div').show();
         }
     }
-    
+
     this.leftmenu_hover = function(obj,w,h,bc)
     {
         var o = $('#left-menu-div-hoverbg');
         if (o[0]._stop)return;
         if (o[0].st)clearTimeout(o[0].st),o[0].st=null;
-    
+
         if (o[0].run)clearInterval(o[0].run),o[0].run = null,o[0].n=0;
-    
+
         var offset,offset_o,ch=0;
         if (!o[0].is_tring)
         {
@@ -203,7 +209,7 @@ var desktop = new function()
             //var tr = $(obj.parentNode.parentNode.parentNode)[0].style[MyQEE.cssPre+'Transform'].match(/translate(3d)?\([0-9\-]+px, ([0-9\-]+)px/i);
             //if (tr)tf=tr[2]-0;
             if (!offset)offset = $(obj).offset();
-            
+
             if (o[0].n<10)
             {
                 o[0].n++;
@@ -235,7 +241,7 @@ var desktop = new function()
         var o = $('#left-menu-div-hoverbg');
         if (o[0]._stop)return;
         if (o[0].st)clearTimeout(o[0].st),o[0].st=null;
-        
+
         o[0].st = setTimeout(function()
         {
             o.transition({scale:0,opacity:0},function(){o[0].s_over=0;o.css('scale',1);});
@@ -298,7 +304,7 @@ var desktop = new function()
     {
         level = level||'';
         $('#left-menu-div-hoverbg')[0]._stop = true;
-        
+
         if (!document.getElementById('menu_div_l'+level))
         {
             var get_menu_html = function(level)
@@ -318,7 +324,7 @@ var desktop = new function()
                         {
                             l_num+=(nn[i]-0);
                         }
-                        
+
                         l_num = Math.min(Math.max(0,n_num-mm_len),l_num);
                     }
                     else
@@ -336,7 +342,7 @@ var desktop = new function()
                         for (var j in tmp){if(typeof tmp[j]=='object'){has_submenu=true;break;}}
                         html += '<li id="menu_div_li'+level+'_'+i+'" onclick="desktop.focus_menu(this);'+(has_submenu?'desktop.create_menu(\''+level+'_'+i+'\');':'goto(\''+tmp.href+'\',true);')+'"><div class="text" onmouseover="desktop.leftmenu_hover(this,160,25);" onmouseout="desktop.leftmenu_out();">'+(has_submenu?'<div class="sub_menu_right_bg"></div><div class="sub_menu_right"></div>':'')+tmp.innerHTML+'</div></li>';
                     }
-                    
+
                     html+='</ul>';
                     return html;
                 }
@@ -366,7 +372,7 @@ var desktop = new function()
 
             // 创建菜单HTML
             var html = '<div leveldata="'+level+'" id="menu_div_l'+level+'" class="menu-div"><div style="width:161px;height:100%;" id="menu_div_s'+level+'"><div class="scroller" style="min-height:'+($(window).height()-$('#logo').height())+'px">'+get_menu_html(level)+'</div>'+(level?'<div class="menu_top_bg"></div>':'')+'</div></div>';
-            
+
             // 如果非同级菜单打开，则先关闭
             var del_level_length = 0;
             var children = $('#left-menu').children();
@@ -387,15 +393,15 @@ var desktop = new function()
             }
 
             $(html).appendTo($('#left-menu'));
-            
+
             var children_len = $('#left-menu').children().length - del_level_length;
-            
+
             var create_sc = function()
             {
                 $('#left-menu-div-hoverbg')[0]._stop = null;
                 $('#menu_div_l'+level)[0]._sc = new iScroll('menu_div_s'+level,{
                     scrollbarClass:'myScrollbar',
-                    hideScrollbar:true,
+                    hideScrollbar:true
                 });
                 //,onWheelStart: function (e) {$('#menu_div_l')[0]._sc.enabled=false;},onTouchEnd:function(){$('#menu_div_l')[0]._sc.enabled=true;}
                 setTimeout(function(){
@@ -435,7 +441,7 @@ var desktop = new function()
             {
                 $('#menu_div_l'+level).css({x:0,opacity:0}).transition({x:(children_len-1)*161,opacity:1},create_sc);
             }
-            
+
             var len = children_len;
         }
         else
@@ -443,11 +449,11 @@ var desktop = new function()
             menu_status = 0;
             //关闭菜单
             desktop.leftmenu_back(level);
-            
+
             var len = $('#menu_div_l'+level).prevAll().length;
         }
         $('#left-menu').width(161*len).children().first().css('overflow','hidden');
-    
+
         $('#main-desktop-bottom-div').transition({'left':small_window_mode?0:(50+161*len)});
     };
 
@@ -456,15 +462,15 @@ var desktop = new function()
     {
         is_fullscreen = true;
         this.resize_window();
-        
+
         // 载入Login视图
         $.ajax(MyQEE.Url.Site+'/login').success(function(data)
         {
             $('<div id="login_div">'+data+'</div>').appendTo(document.body);
-            $('#login_div').html_paste();
+            $('#login_div').html_paste(true);
         }).error(function(){alert('页面加载失败，请刷新')});
     }
-    
+
     this.login_out = function()
     {
         document.location.href = MyQEE.Url.Site+'/login/out';
@@ -481,10 +487,10 @@ var desktop = new function()
         }
 
         $('#login_div').remove();
-        
+
         is_fullscreen = false;
         this.resize_window();
-        
+
         if (data.member_id)
         {
             //更新数据
@@ -502,11 +508,91 @@ var desktop = new function()
     //初始化
     this.init = function()
     {
+        // 监控浏览器前进后退
+        var popstate = function(e)
+        {
+            if (!e.state)return;
+
+            document.title = e.state.title;
+
+            var uri = e.state.url.substr(MyQEE.Url.Site.length);
+            if (uri=='/')
+            {
+                desktop.close();
+                return;
+            }
+
+            $('#main-body-div').children().each(function(){
+                if (this.url==e.state.url)
+                {
+                    // 已打开的窗口组中有相应URL
+
+                    return false;
+                }
+            });
+
+            /*
+
+            var c = $('#main-body-div').children();
+            if (c.length==0)return false;
+            if (c.length==1)
+            {
+                this.close(callback);
+            }
+            var o2 = c.last();
+            var o1 = o2.prev();
+
+            o1.show().transition({x:0},function(){if (o1[0]._sc)o1[0]._sc.refresh();if (callback)callback();});
+            o2.transition({x:$(window).width()-left_width},function(){o2[0].remove();});
+
+            */
+        };
+
+        if( is_support_pajx )
+        {
+            window.history.replaceState({title:document.title,url:document.location.href},document.title);
+
+            window.onpopstate = popstate;
+        }
+        else
+        {
+            var hash = document.location.hash;
+            if ( hash=='' || hash.substr(0,5)!='#url=' )
+            {
+                hash = '#url=/';
+            }
+            _history_old_hash = hash;
+
+            _history_state[hash.substr(5)] = {
+                title : document.title,
+                url   : document.location.href
+            };
+
+            window.onhashchange = function()
+            {
+                var hash = document.location.hash;
+                if ( hash=='' || hash.substr(0,5)!='#url=' )
+                {
+                    hash = '#url=/';
+                }
+                if ( _history_old_hash!=hash )
+                {
+                    _history_old_hash = hash;
+
+                    var state = _history_state[hash.substr(5)];
+
+                    //调用 popstate
+                    popstate({state:state});
+                }
+            };
+        }
+
+
         var html = '<div id="main-desktop"></div><div id="left-menu-div"><div id="left-menu-div-hoverbg"></div><div id="left-menu"></div><div id="left-quick-menu-div"></div></div><div id="logo" onclick="document.location.reload();"></div><div id="main-body-div"></div>';
         var st = {'id':'body-main'};
         // 创建背景
         $('<div>',st).html(html).appendTo($(document.body));
-        
+
         if (isRetina)
         {
             if ($(window).width()>760)
@@ -526,20 +612,15 @@ var desktop = new function()
             desktop.login_show_div();
         }
 
-        // 监控浏览器前进后退
-        $(window).bind('popstate', function(e)
-        {
-            //window.history.state
-        });
-
         /**
          * 处理页面HTML
-         * @param to_next_page 是否进入下一个页面 ，1=进入下一个页面，0=关闭当前所有窗口从头开始
+         *
+         * @param first_page 是否进入下一个页面 ，0=进入下一个页面，1=关闭当前所有窗口从头开始
          */
-        $.fn.html_paste = function(to_next_page)
+        $.fn.html_paste = function(first_page)
         {
-            var obj = $(this);
-            to_next_page = to_next_page || 0;
+            var obj = this;
+            first_page = first_page || 0;
 
             //处理表单
             obj.find('form').each(function()
@@ -562,27 +643,50 @@ var desktop = new function()
                     this._submitting = true;
                     var self = this;
 
-                    // 采用AJAX提交表单
+                    // 采用 ajaxSubmit 提交表单
                     $(this).ajaxSubmit({
-                        success:function(html){self._submitting = false},
-                        error  :function(){self._submitting = false}
+                        success : function(rs)
+                        {
+                            self._submitting = false;
+
+                            if (rs.code==1)
+                            {
+                                MyQEE.Msg(rs.msg);
+                            }
+                            else if (rs.code<0)
+                            {
+                                MyQEE.error(rs.msg);
+                            }
+                            else
+                            {
+                                MyQEE.alert(rs.msg);
+                            }
+                        },
+                        error : function()
+                        {
+                            self._submitting = false;
+
+                            MyQEE.error('页面加载失败，请重试');
+                        }
                     });
 
                     return false;
                 }
+
                 this._pasted = true;
             });
 
             var now_url = document.location.href.split('#')[0];
+
             //处理超链接
             obj.find('a').each(
                 function()
                 {
                     if (this._pasted)return;
-    
+
                     this._pasted = true;
                     if ($(this).attr('rel')=='nofollow')return;
-                    if ($(this).attr('target')=='_blank')return;
+                    if ($(this).attr('target') && $(this).attr('target')!='_self')return;
 
                     // 锚点链接不处理
                     if (this.href.indexOf('#')!=-1 && this.href.split('#')[0]==now_url)
@@ -590,7 +694,7 @@ var desktop = new function()
                         return;
                     }
 
-                    this.to_next_page = to_next_page;
+                    this.first_page = first_page;
                     this._onclick = this.onclick;
                     this.onclick = function()
                     {
@@ -621,6 +725,8 @@ var desktop = new function()
             obj.find('.carousel').carousel();
             obj.find('.collapse').collapse();
             obj.find('.typeahead').typeahead();
+
+            return this;
         };
 
         // 移除loading
@@ -669,18 +775,7 @@ var desktop = new function()
     //返回上一个窗口
     this.back = function(callback)
     {
-        var c = $('#main-body-div').children();
-        if (c.length==0)return false;
-        if (c.length==1)
-        {
-            this.close(callback);
-        }
-        var o2 = c.last();
-        var o1 = o2.prev();
-
-        o1.show().transition({x:0},function(){if (o1[0]._sc)o1[0]._sc.refresh();if (callback)callback();});
-        o2.transition({x:$(window).width()-left_width},function(){o2[0].remove();});
-        return false;
+        history.go(-1);
     };
 
     //关闭窗口
@@ -710,7 +805,7 @@ var desktop = new function()
             $('#main-body-div').html('');
             if (callback)callback();
         },600);
-    
+
         this.resize_window();
         desktop.reset.menu();
     };
@@ -726,6 +821,7 @@ var desktop = new function()
             {
                 r[0].loading();
             }
+
             //TODO
             goto(o[0].url,level,{success:function(d){
                 $('<div>').html('页面已刷新').hide().addClass('loaded').appendTo($(document.body)).css({left:($(window).width()-100)/2,top:($(window).height()-50)/2,width:'100px',height:'40px',lineHeight:'38px',scale:0,y:-200}).show().transition({scale:1,opacity:1,y:0},function(){$(this).transition({scale:[3,0],opacity:0,delay:600},function(){$(this).remove();})});
@@ -745,22 +841,22 @@ var desktop = new function()
     {
         _login_rt = setTimeout(function()
         {
-        desktop.hide_loading();
-        if (!document.getElementById('page_loading_div'))
-        {
-            $('<div id="page_loading_div"><div id="page_loading_image"></div></div>').appendTo($(document.body));
-        }
+            desktop.hide_loading();
+            if (!document.getElementById('page_loading_div'))
+            {
+                $('<div id="page_loading_div"><div id="page_loading_image"></div></div>').appendTo($(document.body));
+            }
 
-        var obj = document.getElementById('page_loading_div');
-        obj.style.display = '';
-        obj.style.left = (($(window).width()-60)/2)+'px';
-        obj.style.top = (($(window).height()-60)/2)+'px';
-        var loaddiv = $('#page_loading_image');
-        obj._rr = 0;
-        obj._t = setInterval(function(){obj._rr+=30;if (obj._rr==360)obj._rr=0;loaddiv.css({transform:'rotate('+obj._rr+'deg)'});},60);
+            var obj = document.getElementById('page_loading_div');
+            obj.style.display = '';
+            obj.style.left = (($(window).width()-60)/2)+'px';
+            obj.style.top = (($(window).height()-60)/2)+'px';
+            var loaddiv = $('#page_loading_image');
+            obj._rr = 0;
+            obj._t = setInterval(function(){obj._rr+=30;if (obj._rr==360)obj._rr=0;loaddiv.css({transform:'rotate('+obj._rr+'deg)'});},60);
         },50);
     };
-    
+
     /**
      * 隐藏Loading框
      */
@@ -806,7 +902,7 @@ var desktop = new function()
             +'<li onclick="desktop.login_out();" onmouseover="desktop.leftmenu_hover(this,40,40,3);" onmouseout="desktop.leftmenu_out();"><img src="'+MyQEE.Url.Site+'/statics/skins/default/icon_logout'+(isRetina?'@2x':'')+'.png" /></li>'
             +'</ul></div>';
             $('#left-quick-menu-div').html(html);
-            
+
             var is = new iScroll('left-quick-menu-div',{scrollbarClass:'myScrollbar',hideScrollbar:true});
 
             setTimeout(function(){is.refresh();is=null;}, 10);
@@ -847,7 +943,7 @@ var desktop = new function()
         {
             var len = $('#main-body-div').children().length;
             var css = {};
-            
+
             if (setting.is_first_window && len>0)
             {
                 // 删除已经开启的窗口
@@ -868,9 +964,10 @@ var desktop = new function()
                 css.opacity = 0;
             }
 
-            var html = '<div class="window-title"><div class="btn-back"'+(len==0?' style="visibility:hidden"':'')+' onclick="desktop.back();">返回</div><div class="btn-close" onclick="desktop.close();" title="关闭"></div><div onclick="desktop.refresh();" class="btn-refresh" title="刷新"></div><div class="title-div">'+(setting.title||'标题')+'</div></div><div class="window-body"><div class="scroller"><div style="display:table;text-align:center;width:100%;height:100%;"><div style="vertical-align:middle;display:table-cell;">加载中…</div></div></div></div>';
-            
-            obj = $('<div>',{'class':'window-main'}).css(css).html(html).appendTo($('#main-body-div'));
+            var html = '<div class="window-title"><div class="btn-back"'+(len==0?' style="visibility:hidden"':'')+' onclick="desktop.back();">返回</div><div class="btn-close" onclick="desktop.close();" title="关闭"></div><div onclick="desktop.refresh();" class="btn-refresh" title="刷新"></div><div class="title-div">'+(setting.title||'')+'</div></div><div class="window-body"><div class="scroller"><div class="window-body-text">'+(setting.html||'')+'</div></div></div>';
+
+            obj = $('<div>',{'class':'window-main'}).css(css).html(html).appendTo($('#main-body-div')).html_paste(false);
+
 
             obj[0].url = setting.url;
             obj[0].setting = setting;
@@ -931,6 +1028,12 @@ var desktop = new function()
             desktop.reset.menu();
         }
 
+
+        obj.set_title = function(title)
+        {
+            $(this).find('.title-div').html(title);
+        }
+
         $('#main-body-div').show();
 
         return obj;
@@ -946,7 +1049,7 @@ var desktop = new function()
                 $('#main-desktop').html('<div id="main-desktop-div"></div><div id="main-desktop-bottom-div"><div id="main-desktop-center-div"></div><div id="main-desktop-right-btn"></div><div id="main-desktop-left-btn"></div></div>');
             }
 
-            $('#main-desktop-div').html(html).html_paste();    //处理HTML
+            $('#main-desktop-div').html(html).html_paste(true);    //处理HTML
 
             // 桌面个数
             var len = $('#main-desktop-div').children().addClass('desktop-div').length;
@@ -982,7 +1085,7 @@ var desktop = new function()
                 {
                     $('#main-desktop-left-btn').hide();
                 }
-            
+
                 if (this.currPageX==len-1)
                 {
                     $('#main-desktop-right-btn').fadeOut();
@@ -991,7 +1094,7 @@ var desktop = new function()
                 {
                     $('#main-desktop-right-btn').fadeIn();
                 }
-            
+
                 if (len>1)
                 {
                     $('#main-desktop-center-div').find('.focus').removeClass('focus');
@@ -1000,10 +1103,33 @@ var desktop = new function()
             }});
 
             if (len==1)$('#main-desktop-right-btn').hide(),$('#main-desktop-center-div').hide();
-            
+
             $('#main-desktop-right-btn').bind('click',function(){$('#main-desktop-div')[0]._sc.scrollToPage($('#main-desktop-div')[0]._sc.currPageX+1);});
             $('#main-desktop-left-btn').bind('click',function(){$('#main-desktop-div')[0]._sc.scrollToPage($('#main-desktop-div')[0]._sc.currPageX-1);}).css({ transform: 'rotate(180deg)'}).hide();
 
+        }).complete(function(){
+
+            // 桌面代码载入完毕
+            var url = document.location.href.split('#')[0].substr(MyQEE.Url.Site.length);
+
+            if ( url && url!='/' )
+            {
+                _history_reload_page = true;
+                goto(MyQEE.Url.Site+url,true);
+            }
+            else
+            {
+                var hash = decodeURIComponent(document.location.hash);
+                if (hash && hash.substr(0,5)=='#url=')
+                {
+                    url = hash.substr(5);
+                    if (url)
+                    {
+                        _history_reload_page = true;
+                        goto(MyQEE.Url.Site+url,true);
+                    }
+                }
+            }
         });
     };
 
@@ -1011,28 +1137,52 @@ var desktop = new function()
      * 跳转到指定页面
      *
      */
-    window.goto = function(url,is_first_window,s)
+    window.goto = function(url,is_first_window,setting)
     {
-        s = s||{};
+        setting = setting||{};
         is_first_window = is_first_window||false;
         $.ajax(
             {
-                url:url+'?'+new Date().getTime()
+                url:url+'?'+new Date().getTime(),
+                headers : {'X-PJAX':'true'}
             }
-        ).success(
-            function(data)
+        )
+        .success(
+            function(html)
             {
-                var obj = create_body({url:url,is_first_window:is_first_window});
+                var title = '';
+                var reg = html.match(/\<title\>(.*)\<\/title\>/);
+                if (reg)title = reg[1] || '';
+                var obj = create_body({url:url,is_first_window:is_first_window,title:title,html:html});
+
+                document.title = title;
+
                 var state = {
                     url: url,
-                    title: new Date().getTime(),
-                    tttt: 650,
+                    title: title
                 }
-                // 设置浏览器前进后退按钮
-                //window.history.pushState(state,'test', url)
 
-                var c = obj.find('.scroller').html('<div class="window-body-text">'+data+'</div>');
-                c.html_paste(1);
+                if (is_support_pajx)
+                {
+
+                    // 设置浏览器前进后退按钮
+                    if (_history_reload_page)
+                    {
+                        _history_reload_page = false;
+                        window.history.replaceState(state,document.title);
+                    }
+                    else
+                    {
+                        window.history.pushState(state,document.title,url);
+                    }
+                }
+                else
+                {
+                    var hash = url.substr(MyQEE.Url.Site.length);
+                    _history_state[hash] = state;
+
+                    _history_old_hash = document.location.hash = '#url=' + encodeURIComponent(hash);
+                }
 
                 if (obj[0]._sc)
                 {
@@ -1042,16 +1192,21 @@ var desktop = new function()
                 {
                     if ('ontouchstart' in window)
                     {
-                        c.css({position:'absolute',height:'auto'});
+                        obj.find('.scroller').css({position:'absolute',height:'auto'});
                         obj[0]._sc = new iScroll(obj.find('.window-body')[0],{wheelAction:'scroll',onBeforeScrollStart:function(e){},onBeforeScrollMove:function(e){e.preventDefault();}});
                     }
                 }
 
-                if (s.success)try
+                if (setting.success)try
                 {
-                    s.success(data);
+                    setting.success(data);
                 }
                 catch(e){}
+
+                if (window._gaq)
+                {
+                    _gaq.push(['_trackPageview']);
+                }
             }
         ).error(
             function(data)
@@ -1065,9 +1220,9 @@ var desktop = new function()
                 {
                     setTimeout("alert('页面加载失败')",200);
                 }
-                if (s.error)try
+                if (setting.error)try
                 {
-                    s.error(data);
+                    setting.error(data);
                 }
                 catch(e){}
             }
@@ -1078,9 +1233,9 @@ var desktop = new function()
                     if (this.loaded)this.loaded();
                 });
 
-                if (s.complete)try
+                if (setting.complete)try
                 {
-                    s.complete(data);
+                    setting.complete(data);
                 }
                 catch(e){}
             }
@@ -1088,9 +1243,9 @@ var desktop = new function()
             function(data)
             {
                 desktop.hide_loading();
-                if (s.done)try
+                if (setting.done)try
                 {
-                    s.done(data);
+                    setting.done(data);
                 }
                 catch(e){}
             }

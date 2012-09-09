@@ -92,7 +92,7 @@
     <div id="weather-div">
         <div id="weather-show-div"></div>
         <div id="weather-setting-div" style="display:none;">
-            <div style="padding:16px 25px 0 25px;"><h3 style="padding-bottom:10px">设置我的位置</h3>
+            <div style="padding:16px 25px 0 25px;"><div style="font-size:16px;padding-bottom:10px;">设置我的位置</div>
             <?php echo Form::select(null,Weather::city_array_for_select(),'',array('id'=>'weather-select','style'=>'width:100%;'));?>
             <input class="btn btn-success" type="button" id="weather-setting-ok" value="确定完成" style="width:100%;margin-bottom:8px;" /> <input style="width:100%;margin-bottom:8px;" class="btn" type="button" id="weather-setting-cancel" value="取消" /></div>
         </div>
@@ -240,7 +240,7 @@ var chinese_calendar = function(today)
     var dd=[];
     if (day<10){dd[0]=0;dd[1]=day;}
     else{dd[0]=(day-day%10)/10;dd[1]=day%10;}
-    
+
     $('#calendar-div').html('<div id="calendar-date">'+d.format('Y年m月')+' 星期'+'天一二三四五六'.charAt(d.getDay())+'</div><div id="calendar-date-chinese">'+chinese_calendar(d)+'</div><div class="calender-num"><span class="calendar-num-'+dd[0]+'"></span><span class="calendar-num-'+dd[1]+'"></span></div>');
 
     delete chinese_calendar;

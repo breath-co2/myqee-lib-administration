@@ -45,7 +45,7 @@ foreach ($perm_config as $key=>$value)
         if (preg_match('#^\d+$#', $k))
         {
             # 根据配置修改前置HTML
-            $outhtml_left = ($have_group_perm?'</td>'.CRLF.'</tr>':'').CRLF.'<tr>'.CRLF.'<td width="120" class="td1"><label><input type="checkbox" onclick="select_group_perm(this.parentNode.parentNode.parentNode,this.checked)" title="全选" /> '.trim($v,'-').'</label></td>'.CRLF.'<td class="td2">'.CRLF.'<ul class="ul perm_ul">';
+            $outhtml_left = ($have_group_perm?'</td>'.CRLF.'</tr>':'').CRLF.'<tr>'.CRLF.'<td width="120" class="td1" style="padding-left:6px;"><label class="checkbox"><input type="checkbox" onclick="select_group_perm(this.parentNode.parentNode.parentNode,this.checked)" title="全选" /> '.trim($v,'-').'</label></td>'.CRLF.'<td class="td2">'.CRLF.'<ul class="ul perm_ul">';
             # 重置
             $have_group_perm = false;
             continue;
@@ -101,7 +101,7 @@ foreach ($perm_config as $key=>$value)
             $tmpstr .= '<li> ';
         }
         if ($checked)$input_att['has_checked'] = 'yes';
-        $tmpstr .= '<label title="'. $v['title'].'">'.Form::checkbox($field_key,'1',$checked,$input_att).' '.$v['name'].'</label></li>';
+        $tmpstr .= '<label title="'. $v['title'].'" class="checkbox">'.Form::checkbox($field_key,'1',$checked,$input_att).' '.$v['name'].'</label></li>';
     }
     $tmpstr .= '</ul>'.CRLF.'</td>'.CRLF.'</tr>'.CRLF;
     if ($have_perm)
@@ -109,7 +109,7 @@ foreach ($perm_config as $key=>$value)
 ?>
 <table class="mainTable">
     <tr>
-        <th<?php if ($have_group)echo ' colspan="2"';?>><label><?php echo $value['name'];?> <input type="checkbox" onclick="select_group_perm(this.parentNode.parentNode.parentNode.parentNode,this.checked)" title="全选" /></label></th>
+        <th<?php if ($have_group)echo ' colspan="2"';?> style="padding:6px; 0;text-align:left;"><label style="font-size:14px;" class="checkbox "><input type="checkbox" onclick="select_group_perm(this.parentNode.parentNode.parentNode.parentNode,this.checked)" title="全选" /> <?php echo $value['name'];?></label></th>
     </tr>
 	<?php echo $tmpstr;?>
 </table>
@@ -121,8 +121,7 @@ foreach ($perm_config as $key=>$value)
 <div style="clear:both"></div>
 </div>
 <style>
-.perm_ul li{width:<?php echo (3+floor($max_len/strlen('中')));?>em;float:left;line-height:26px;height:26px;overflow:hidden;}
-.perm_ul li input{vertical-align:middle;}
+.perm_ul li{width:<?php echo (4+floor($max_len/strlen('中')));?>em;float:left;padding:5px 2px;overflow:hidden;}
 </style>
 <?php
 }

@@ -75,7 +75,7 @@ MyQEE.Member = {
 </script>
 </head>
 <body data-spy="scroll" data-offset="44">
-<!--[if IE]><div style="position:fixed;z-index:9999999;background:#fff;left:0;top:0;width:100%;height:100%;font-size:40px;"><script>document.write('IE死边上去，表浪费LZ时间调试');</script></div><![endif]-->
+<!--[if lt IE 10]><div style="position:absolute;z-index:9999999;background:#fff;left:0;top:0;width:100%;height:100%;font-size:40px;"><script>document.write('IE靠边站，表浪费程序猿时间调试');</script></div><![endif]-->
 <div id="bg-div"></div>
 <div id="is-retina-div"></div>
 <table id="page-loading-table" border="0">
@@ -116,9 +116,11 @@ MyQEE.Member = {
                 '/jquery/js/jquery.tablesorter.min.js',
                 '/jquery/js/jquery.transit.min.js',
                 '/bootstrap/js/bootstrap.min.js',
-                '/jquery/js/jquery.form.min.js',
+                '/jquery/js/jquery.form.min.js'
             ],
             '/js/iscroll.js',
+            '/js/ymPrompt/skin/simple/ymPrompt.css',
+            '/js/ymPrompt/ymPrompt.js',
             '/js/global.js',
             '/js/desktop.js'
         ];

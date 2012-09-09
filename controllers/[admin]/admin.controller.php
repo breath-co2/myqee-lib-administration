@@ -94,6 +94,20 @@ class Controller_Admin extends \Controller
 
     public function before()
     {
+        // 如果直接进入某个页面，直接输出Index页面
+        if ( \HttpIO::METHOD=='GET' )
+        {
+            if ( !\HttpIO::IS_AJAX && ( !isset($_SERVER["HTTP_X_PJAX"]) || $_SERVER["HTTP_X_PJAX"]!='true') )
+            {
+                if ($this->controller != 'Controller_index' && ($this->action!='action_default'||$this->action!='action_index'))
+                {
+                    $c = new Controller_Index();
+                    $c->action_default();
+                    exit;
+                }
+            }
+        }
+
         # 检查登录
         $this->check_login();
 
@@ -186,7 +200,6 @@ class Controller_Admin extends \Controller
 
             echo '<title>'.$page_title.'</title>'.\CRLF;
             echo $output;
-            echo '<script>myqee_top_menu='.\var_export($top_menu,true).';myqee_menu='.\json_encode($menu).';renew_runtime('.\number_format(\microtime(true)-\START_TIME,4).')</script>';
         }
         else
         {
