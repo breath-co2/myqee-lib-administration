@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <?php
 $statics_url = rtrim(Core::url('statics/'),'/');
 /*
@@ -15,6 +15,7 @@ $statics_url = rtrim(Core::url('statics/'),'/');
 <meta name="format-detection" content="telephone=no" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
 <link rel="apple-touch-icon-precomposed" href="http://app.3g.cn/App_icon_114.png" />
 <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://app.3g.cn/App_icon_114.png" />
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://app.3g.cn/App_icon_114.png" />
@@ -74,8 +75,8 @@ MyQEE.Member = {
 };
 </script>
 </head>
-<body data-spy="scroll" data-offset="44">
-<!--[if lt IE 10]><div style="position:absolute;z-index:9999999;background:#fff;left:0;top:0;width:100%;height:100%;font-size:40px;"><script>document.write('IE靠边站，表浪费程序猿时间调试');</script></div><![endif]-->
+<body data-spy="scroll" data-offset="44" scroll="no">
+<!--[if lt IE 8]><div style="position:absolute;z-index:9999999;background:#fff;left:0;top:0;width:100%;height:100%;font-size:30px;text-align:center;padding:150px 0 0;"><script>var _ie_no_ = true;document.write('本系统不支持IE6和IE7，请使用更高版本浏览器<br><br>推荐使用<a href="http://firefox.com.cn/" target="_blank" style="color:#000">Firefox</a>、<a href="http://www.google.cn/intl/zh-CN/chrome/browser/" target="_blank" style="color:#000">Chrome</a>等浏览器');</script></div><![endif]-->
 <div id="bg-div"></div>
 <div id="is-retina-div"></div>
 <table id="page-loading-table" border="0">
@@ -83,7 +84,7 @@ MyQEE.Member = {
 <td align="center">
 <div id="page-loading-div">
 <div id="page-loading"><div id="page-loading-bar"></div></div>
-<div style="padding:5px;" onclick="document.location.reload();">加载中...</div>
+<div style="padding:5px;" onclick="document.location.reload();" id="page-loading-text">加载中...</div>
 </div>
 </td>
 </tr>
@@ -91,6 +92,8 @@ MyQEE.Member = {
 <script type="text/javascript">
 (function()
 {
+    if (typeof _ie_no_ == 'boolean' && _ie_no_)return;
+
     var tmp = document.getElementById('is-retina-div');
     if (tmp.clientWidth==10)
     {
@@ -125,11 +128,48 @@ MyQEE.Member = {
             '/js/desktop.js'
         ];
         var c = urls.length;
+        var tmp = function(obj)
+        {
+            var len = obj.length;
+            for(var i=0;i<obj.length;i++)
+            {
+                if (typeof obj[i] =='object' )
+                {
+                    len += tmp(obj[i])-1;
+                }
+            }
+            return len;
+        }
+        var c = tmp(urls);
+        tmp = null;
+        delete tmp;
+
         var w = 400;
         if (document.body.clientWidth<600)
         {
             document.getElementById('page-loading').style.width = '160px';
             w = 160;
+        }
+
+        var err_num = 0;
+
+        var showmsg = function()
+        {
+            if ( err_num+p>=c )
+            {
+                if (err_num>0)
+                {
+                    document.getElementById('page-loading-text').innerHTML = '文件加载有误，请刷新页面 (失败'+err_num+'/'+c+')';
+                }
+                else
+                {
+                    document.getElementById('page-loading-text').innerHTML = '加载完毕';
+                }
+            }
+            else
+            {
+                document.getElementById('page-loading-text').innerHTML = '加载中 ('+p+'/'+c+')'+(err_num? ' (失败 '+err_num+')':'')+' ....';
+            }
         }
 
         var lf = function(urls)
@@ -160,9 +200,10 @@ MyQEE.Member = {
                 t.type = 'text/javascript';
                 t.src = MyQEE.Url.Statics + url;//+'?t='+new Date().getTime();
             }
+
             t.onload = function()
             {
-                if (this._onloaded)return;
+                if (this._onloaded||this._error)return;
                 this._onloaded = true;
                 p++;
                 document.getElementById('page-loading-bar').style.width = (w*p/c) + 'px';
@@ -171,7 +212,6 @@ MyQEE.Member = {
                 {
                     for (var i=1;i<urls.length;i++)
                     {
-                        c++;
                         lf(urls[i]);
                     }
                 }
@@ -180,6 +220,8 @@ MyQEE.Member = {
                 {
                     setTimeout('desktop.init();',10);
                 }
+
+                showmsg();
             }
             t.onreadystatechange = function()
             {
@@ -190,9 +232,21 @@ MyQEE.Member = {
             }
             t.onerror = function()
             {
+                if (typeof urls == 'object')
+                {
+                    err_num+=urls.length;
+                }
+                else
+                {
+                    err_num++;
+                }
+                this._error = true;
                 // 失败
-                alert(url)
+                document.getElementById('page-loading-text').innerHTML = '加载中 ('+p+'/'+c+') (失败 '+err_num+') ...';
+
+                showmsg();
             }
+
             document.getElementsByTagName('head')[0].appendChild(t);
         }
 
@@ -204,7 +258,7 @@ MyQEE.Member = {
         //chrome,safari等浏览器不支持css的onload的事件
         var ck = setInterval(function()
         {
-            if (p==c)
+            if (p==c||err_num==c)
             {
                 //all success
                 clearInterval(ck);
@@ -214,7 +268,7 @@ MyQEE.Member = {
             for (var i=1;i<document.styleSheets.length;i++)
             {
                 var f = document.styleSheets[i].ownerNode;
-                if (f && f.onload && !f._onloaded)
+                if (f && f.onload && !f._onloaded && !f._error)
                 {
                     f.onload();
                 }

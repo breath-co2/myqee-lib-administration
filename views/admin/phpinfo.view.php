@@ -9,7 +9,8 @@
 .phpinfo .center {text-align: center;}
 .phpinfo .center table { margin-left: auto; margin-right: auto; text-align: left;}
 .phpinfo .center th,.phpinfo .center th:hover { text-align: center !important; }
-.phpinfo td,.phpinfo th { border: 1px solid #555; font-size: 90%; vertical-align: baseline;}
+.phpinfo table.mainTable td,
+.phpinfo table.mainTable th{border: 1px solid #555; font-size: 90%; vertical-align: baseline;}
 .phpinfo h1 {font-size: 150%;}
 .phpinfo h2 {font-size: 125%;}
 .phpinfo .p {text-align: left;}
@@ -19,6 +20,12 @@
 .phpinfo .vr {background-color: #cccccc; text-align: right; color: #000000;}
 .phpinfo img {float: right; border: 0px;}
 .phpinfo hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #000000;}
+.phpinfo table.mainTable td,
+.phpinfo table.mainTable th,
+.phpinfo .table-bordered td,
+.phpinfo .table-bordered th {
+    white-space:normal;
+}
 </style>
 <div class="phpinfo">
 <?php

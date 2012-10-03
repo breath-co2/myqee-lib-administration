@@ -1,4 +1,4 @@
-<table border="0" cellpadding="4" cellspacing="1" align="center" class="mainTable">
+<table class="table-bordered table-striped table-hover">
     <tr>
         <th width="60">ID</th>
         <th>管理组名称</th>
@@ -17,9 +17,9 @@
     ?>
     <tr align="center">
         <td class="td1"><?php echo $item->id;?></td>
-        <td class="td2"><?php echo $item->group_name;?></td>
-        <td class="td2"><?php echo $item->group_desc;?></td>
-        <td class="td2">
+        <td><?php echo $item->group_name;?></td>
+        <td><?php echo $item->group_desc;?></td>
+        <td>
         <a class="button"<?php if ( $group_manager && !$groups_setting[$item->id]['view_users'])echo ' disabled="disabled"'; ?> href="<?php echo Core::url('administrator/?group_id='.$item->id);?>">查看成员</a>
         <a class="button"<?php if ( $group_manager && !$groups_setting[$item->id]['edit_group'])echo ' disabled="disabled"'; ?> href="<?php echo Core::url('administrator/group/edit/'.$item->id);?>">修改</a>
         <input type="button" value="删除"<?php if ($group_manager)echo ' disabled="disabled"';?> onclick="MyQEE.ask_todo('<?php echo Core::url('administrator/group/delete/'.$item->id);?>','您确认要删除此管理组？')" />
@@ -35,7 +35,6 @@
         </td>
     </tr>
 </table>
-
 <center>
 <?php echo $pagehtml;?>
 </center>

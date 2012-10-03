@@ -19,6 +19,8 @@ class Controller_Index extends \Controller_Admin
 //             \header( 'Expires: ' . \date( 'D, d M Y H:i:s \G\M\T', \TIME + 86400 * 30 ) );
 //             \header( 'Pragma: cache');
 
+//         $d = Weather::geta('shanghai');
+//         exit;
         $this->page_title = '欢迎';
         $view = new \View('admin/index');
 
@@ -27,8 +29,7 @@ class Controller_Index extends \Controller_Admin
 
     public function action_test()
     {
-    	sleep(2);
-    	echo('aaa<a href="/v3/admin/index/test2/">tttt</a>大大大<div style="height:1500px"></div>aaaaaaaaaaaa<div style="background:red;width:1500px;">sss</div>sdfsdf');
+        Weather::get();
     }
 
     public function action_test2()

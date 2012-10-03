@@ -1,3 +1,8 @@
+<style type="text/css">
+#login_form_username,#login_form_password{
+    margin-top:9px;padding:6px 10px;width:240px;font-size:16px;height:26px;border-radius:6px;border:1px solid #2270a0;background:rgba(255,255,255,0.8);box-shadow:inset 1px 1px 2px #8e8e8e,0 0 10px #97f4ff;background:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpENzk3OUJERjAwQzkxMUUyQkJDMzg2RTc1NkVCMUY5RiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpENzk3OUJFMDAwQzkxMUUyQkJDMzg2RTc1NkVCMUY5RiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkQ3OTc5QkREMDBDOTExRTJCQkMzODZFNzU2RUIxRjlGIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkQ3OTc5QkRFMDBDOTExRTJCQkMzODZFNzU2RUIxRjlGIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+ry1XbAAAABBJREFUeNpi+P///xmAAAMACcgDyob6aEsAAAAASUVORK5CYII=)\0;
+}
+</style>
 <div style="vertical-align:middle;display:table-cell;padding:0 0 0 30px;">
     <div style="display:inline-block;text-align:left;">
         <div id="login_form_div">
@@ -18,19 +23,24 @@
             </span>
         </span>
 
-        <input type="text" id="login_form_username" name="username" placeholder="<?php echo __('Username');?>" size="12" style="margin-top:9px;padding:6px 10px;width:240px;font-size:16px;height:26px;border-radius:6px;border:1px solid #2270a0;background:rgba(255,255,255,0.8);box-shadow:inset 1px 1px 2px #8e8e8e,0 0 10px #97f4ff;" />
+        <input type="text" id="login_form_username" name="username" placeholder="<?php echo __('Username');?>" size="12" />
 
-        <input type="password" id="login_form_password" name="password" placeholder="<?php echo __('Password');?>" size="12" style="margin-top:9px;padding:6px 10px;width:240px;font-size:16px;height:26px;border-radius:6px;border:1px solid #2270a0;background:rgba(255,255,255,0.8);box-shadow:inset 1px 1px 2px #8e8e8e,0 0 10px #97f4ff;" />
+        <input type="password" id="login_form_password" name="password" placeholder="<?php echo __('Password');?>" size="12" />
 
-        <span id="login_captach_div" style="<?php if (!$show_captcha)echo 'display:none;"';?>white-space:nowrap;">
+        <span id="login_captach_div" style="display:none;white-space:nowrap;">
             <input autocomplete="off" type="text" maxlength="4" name="captcha" placeholder="<?php echo __('Verification code')?>" size="4" style="margin-top:9px;padding:6px 10px;width:110px;font-size:16px;height:26px;border-radius:6px;border:1px solid #2270a0;background:rgba(255,255,255,0.8);box-shadow:inset 1px 1px 2px #8e8e8e,0 0 10px #97f4ff;" />
-            <img src="<?php echo Core::url('captcha/126x39.png?timeline='.microtime(1));?>" style="border-radius:6px;cursor:pointer;" title="点击更换验证码" onclick="this.src=this.src.split('?')[0]+'?timeline='+new Date().getTime();" />
+            <img data-src="<?php echo Core::url('captcha/126x39.png?timeline='.microtime(1));?>" style="border-radius:6px;cursor:pointer;" title="点击更换验证码" onclick="this.src=this.getAttribute('data-src').split('?')[0]+'?timeline='+new Date().getTime();" />
         </span>
-        
+
         <button type="submit" class="btn btn-large btn btn-danger"><i class="icon-check icon-white"></i> <?php echo __('Login');?></button>
 
         <?php
-        if (!$can_not_login){
+        if (!$can_not_login)
+        {
+            if ($show_captcha)
+            {
+                echo '<script>$("#login_captach_div").show().find("img").get(0).onclick();</script>';
+            }
         ?>
         </form>
         <?php
@@ -93,14 +103,14 @@
                     if (data.data.show_captcha)
                     {
                         //显示验证码
-                        $('#login_captach_div').show().find('img').click();
+                        $('#login_captach_div').show().find('img').get(0).onclick();
                     }
-                    
+
                     if (data.data.error_input && form[data.data.error_input])
                     {
                         form[data.data.error_input].focus();
                     }
-                    
+
                     if (data.data.can_not_login)
                     {
                         form._msg = data.msg;
@@ -115,7 +125,7 @@
             },
             error  :function(){alert('页面处理失败，请重试');}
         });
-    
+
         return false;
     };
 
@@ -125,7 +135,7 @@
     {
         l = $.parseJSON(localStorage.getItem('logined_member'));
     }catch(e){}
-    
+
     if (l)
     {
         $('#login_form_username')[0].value = l[0];

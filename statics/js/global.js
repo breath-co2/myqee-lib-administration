@@ -15,6 +15,16 @@ MyQEE.is_ios     = MyQEE.is_iphone||MyQEE.is_ipod||MyQEE.is_ipad;
 MyQEE.is_ie      = navigator.appName=="Microsoft Internet Explorer"?true:false;
 MyQEE.ie         = (MyQEE.userAgent.indexOf('msie') != -1 && !MyQEE.is_opera) && MyQEE.userAgent.substr(MyQEE.userAgent.indexOf('msie') + 5, 3);
 
+if (typeof console =='undefined' )
+{
+    var console = {
+        log : function(){},
+        info : function(){},
+        error : function(){}
+    };
+}
+
+
 (function()
 {
     if (MyQEE.userAgent.indexOf('webkit')!=-1)
@@ -76,6 +86,14 @@ Date.prototype.format = function(str,utc)
     return str;
 }
 
+if (typeof Date.now == 'undefined')
+{
+    // IE8下兼容支持Date.now()方法
+    Date.now = function()
+    {
+        return new Date().getTime();
+    }
+}
 
 MyQEE.cookie = {
     get : function (name)

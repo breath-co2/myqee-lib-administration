@@ -75,7 +75,7 @@ class Controller_Admin extends \Controller
             if (\HttpIO::IS_AJAX)
             {
                 # AJAX 请求
-                self::message($e->getMessage(),-1);
+                $this->show_error($e->getMessage());
             }
             else
             {
@@ -127,9 +127,9 @@ class Controller_Admin extends \Controller
         }
 
         # 不允许非超管跨项目访问
-        if ( $this->session()->member()->project!=\Bootstrap::$project && !$this->session()->member()->is_super_admin )
+        if ( $this->session()->member()->id && $this->session()->member()->project!=\Bootstrap::$project && !$this->session()->member()->is_super_admin )
         {
-            self::message(\__('You do not have the authority to operate in this project, please contact administrator'),-1);
+            $this->show_error(\__('You do not have the authority to operate in this project, please contact administrator'));
         }
 
         \ob_start();
@@ -356,6 +356,7 @@ class Controller_Admin extends \Controller
      */
     protected function header_check_perm( & $admin_menu)
     {
+        return;
         if (!is_array($admin_menu))$admin_menu = array();
         $perm = $this->session()->member()->perm();
         $havearr = false;

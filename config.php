@@ -57,7 +57,7 @@ $config['admin']['login']['expired_time'] = 3600;
  */
 $config['admin']['top_menu'][] = array
 (
-    'innerHTML' => '修改密码',
+    'html' => '修改密码',
     'href'      => 'administrator/change_password/',
 );
 
@@ -71,16 +71,15 @@ $config['admin']['menu'] = array
 (
     'index' => array
     (
-        'innerHTML' => '管理首页',
-        'style' => 'font-weight:bold',
-        'href' => '/',
+        'html'      => '管理首页',
+        'icon'      => 'icon_home',
         'dev_tools' => array
         (
-            'prem' => 'index.phpinfo',
-            'innerHTML' => '开发工具',
-            'phpinfo' => array
+            'prem'     => 'index.phpinfo',
+            'html'     => '开发工具1',
+            'phpinfo'  => array
             (
-                'innerHTML' => 'phpinfo()',
+                'html' => 'phpinfo()',
                 'href' => 'phpinfo/',
                 'perm' => 'default.view_phpinfo',
             ),
@@ -89,41 +88,43 @@ $config['admin']['menu'] = array
 
     'apps' => array
     (
-        'innerHTML' => '应用管理',
-        'list' => array(
-            'innerHTML' => '应用商店',
+        'html' => '应用管理',
+        'icon' => 'icon_app',
+        'list' => array
+        (
+            'html' => '应用商店',
             'list' => array
             (
-                'innerHTML' => '精选应用',
+                'html' => '精选应用',
                 'href' => 'apps/',
             ),
             'paihang' => array
             (
-                'innerHTML' => '排行榜',
+                'html' => '排行榜',
                 'href' => 'apps/a/paihang',
             ),
             'cat' => array
             (
-                'innerHTML' => '应用分类',
+                'html' => '应用分类',
                 'href' => 'apps/a/cat',
             ),
             'installed' => array
             (
-                'innerHTML' => '已安装的应用',
+                'html' => '已安装的应用',
                 'href' => 'apps/a/installed',
             ),
             'update' => array
             (
-                'innerHTML' => '更新',
+                'html' => '更新',
                 'href' => 'apps/a/update',
             ),
         ),
         'apps' => array
         (
-            'innerHTML' => '应用程序',
+            'html' => '应用程序',
             'test' => array
             (
-                'innerHTML' => 'test',
+                'html' => 'test',
                 'href' => 'apps/myqee/test/',
             ),
         ),
@@ -131,39 +132,55 @@ $config['admin']['menu'] = array
 
     'member' => array
     (
-        'innerHTML' => '管理员管理',
-        'admin' => array(
-            'innerHTML' => '成员管理',
+        'html' => '管理员管理',
+        'icon' => 'icon_member',
+        'admin' => array
+        (
+            'html' => '成员管理',
             'list' => array
             (
-                'innerHTML' => '管理员列表',
+                'html' => '管理员列表',
                 'href' => 'administrator/',
                 'perm' => 'administrator.view_user_info||administrator.is_group_manager',
             ),
             'add' => array
             (
-                'innerHTML' => '添加管理员',
+                'html' => '添加管理员',
                 'href' => 'administrator/add',
                 'perm' => 'administrator.add_new_user||administrator.is_group_manager',
             )
         ),
         'admin_group' => array
         (
-            'innerHTML' => '组管理',
+            'html' => '组管理',
             'list' => array
             (
-                'innerHTML' => '权限组列表',
+                'html' => '权限组列表',
                 'href' => 'administrator/group/',
                 'perm' => 'administrator.view_group_info||administrator.can_edit_group',
             ),
             'add' => array
             (
-                'innerHTML' => '添加权限组',
+                'html' => '添加权限组',
                 'href' => 'administrator/group/add',
                 'perm' => 'administrator.add_group',
             )
         )
-    )
+    ),
+
+    'settings' => array
+    (
+        'html' => '设置',
+        'icon' => 'icon_settings',
+    ),
+
+    'login_out' => array
+    (
+        'html'   => '安全退出',
+        'bottom' => 1,
+        'click'  => 'desktop.login_out()',
+        'icon'   => 'icon_logout',
+    ),
 );
 
 /**

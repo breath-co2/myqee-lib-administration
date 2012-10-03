@@ -7,8 +7,10 @@ var desktop = new function()
     is_window_show        = false,  //是否窗口模式
     is_fullscreen         = false,  //是否全屏模式
     is_menu_open_mode     = true,   //是否目录开启
-    menu_status,                    //窗口状态
+    menu_width            = 160,    //菜单宽带
     left_width            = 0,      //左侧宽度
+    site_full_url         = '',     //站点完整URL前缀
+    history_index         = 0,      //前进后退索引
     is_support_pajx       = window.history.pushState?true:false;    //是否支持动态切换地址栏功能
 
     var _history_reload_page  = false;
@@ -95,15 +97,6 @@ var desktop = new function()
         desktop.reset.desktop();
 
         desktop.resize_window();
-
-        if (is_window_show||small_window_mode)
-        {
-            if (menu_status===0)desktop.reset.menu();
-        }
-        else
-        {
-            if (menu_status===1)desktop.reset.menu();
-        }
     };
 
     this.reset = {
@@ -129,38 +122,7 @@ var desktop = new function()
         },
         menu : function()
         {
-            //重新设定目录
-            if (is_window_show||small_window_mode)
-            {
-                menu_status = 1;
-                // 窗口打开
-                var i=0;
-                $('#left-menu').children().each(function(){
-                    if (i>0)$($(this).find('li')[0]).show();
-                    i++;
-                    $(this).find('.menu_top_bg').hide();
-                });
 
-                $('#left-menu').transition({x:-161*2},function(){
-                    var len = $('#left-menu').children().length;
-                    var i2=0;
-                    $('#left-menu').children().each(function(){
-                        i2++;
-                        if (i2<len)$(this).fadeOut();
-                    });
-                });
-            }
-            else
-            {
-                menu_status = 0;
-                // 窗口关闭
-                $('#left-menu').children().each(function(){
-                    this.style.overflow = '';
-                    $(this).show().find('.menu_top_bg').fadeIn();
-                    $($(this).find('li')[0]).hide();
-                });
-                $('#left-menu').transition({x:0});
-            }
         }
     };
 
@@ -179,283 +141,6 @@ var desktop = new function()
             $('#left-menu-div').show();
         }
     }
-
-    this.leftmenu_hover = function(obj,w,h,bc)
-    {
-        var o = $('#left-menu-div-hoverbg');
-        if (o[0]._stop)return;
-        if (o[0].st)clearTimeout(o[0].st),o[0].st=null;
-
-        if (o[0].run)clearInterval(o[0].run),o[0].run = null,o[0].n=0;
-
-        var offset,offset_o,ch=0;
-        if (!o[0].is_tring)
-        {
-            offset = $(obj).offset();
-            if (offset.left!=o[0].s_l || 1!=o[0].s_over || w!=o[0].s_w || h!=o[0].s_h)
-            {
-                o[0].is_tring = true;
-                o[0].s_w = w;
-                o[0].s_h = h;
-                o[0].s_l = offset.left;
-                o[0].s_over = 1;
-                o.transition({opacity:1,width:w,height:h,left:offset.left,borderRadius:bc||0},300,function(){o[0].is_tring=null;});
-            }
-        }
-
-        o[0].n = 0;
-        o[0].run = setInterval(function(){
-            var tf = 0;
-            //var tr = $(obj.parentNode.parentNode.parentNode)[0].style[MyQEE.cssPre+'Transform'].match(/translate(3d)?\([0-9\-]+px, ([0-9\-]+)px/i);
-            //if (tr)tf=tr[2]-0;
-            if (!offset)offset = $(obj).offset();
-
-            if (o[0].n<10)
-            {
-                o[0].n++;
-                if (o[0].n<=4)
-                {
-                    offset_o = o.offset();
-                    var top = offset_o.top + (offset.top+tf-offset_o.top)/2;
-                    if (o[0].n==4)ch = (offset.top+tf-offset_o.top)*-1;
-                }
-                else
-                {
-                    ch = ch/-2;
-                    var top = offset.top + tf + ch;
-                }
-                o.css({top:top});
-            }
-            else
-            {
-                o.css({top:offset.top+tf});
-                clearInterval(o[0].run);
-                o[0].run = null;
-            }
-        },50);
-    };
-
-
-    this.leftmenu_out = function()
-    {
-        var o = $('#left-menu-div-hoverbg');
-        if (o[0]._stop)return;
-        if (o[0].st)clearTimeout(o[0].st),o[0].st=null;
-
-        o[0].st = setTimeout(function()
-        {
-            o.transition({scale:0,opacity:0},function(){o[0].s_over=0;o.css('scale',1);});
-        },200);
-    };
-
-    this.focus_menu = function (obj)
-    {
-        $(obj).parent().children().each(function(){$(this).removeClass('hover')});
-        if (!small_window_mode)$(obj).addClass('hover');
-    };
-
-    this.leftmenu_back = function(level)
-    {
-        level = level||'';
-        if (''==level)return;
-        var obj1 = $('#menu_div_l'+level);
-        if(!obj1.length)return;
-        if (obj1[0]._running)return;
-
-        var obj2 = obj1.prev();
-        if(!obj2.length)return;
-
-        obj1[0]._running = true;
-        if (small_window_mode||is_window_show)
-        {
-            obj2.show(300,function(){
-                $('#left-menu').transition({x:'+=161'},function(){
-                    $('#left-menu-div-hoverbg')[0]._stop = null;
-                    obj2.nextAll().each(function(){
-                        if (this._sc)
-                        {
-                            this._sc.destroy();
-                            delete this._sc;
-                        }
-                    }).remove();
-                    delete obj1[0]._running;
-                });
-            });
-        }
-        else
-        {
-            obj2.nextAll().each(function(){
-                $(this).transition({x:0,opacity:0},function(){
-                    if (this[0]._sc)
-                    {
-                        this[0]._sc.destroy();
-                        this[0]._sc = null;
-                    }
-                    this.remove();
-                });
-            });
-            setTimeout("$('#left-menu-div-hoverbg')[0]._stop = null;",300);
-            delete obj1[0]._running;
-        }
-        obj2.find('li.hover').removeClass('hover');
-    };
-
-    this.create_menu = function(level)
-    {
-        level = level||'';
-        $('#left-menu-div-hoverbg')[0]._stop = true;
-
-        if (!document.getElementById('menu_div_l'+level))
-        {
-            var get_menu_html = function(level)
-            {
-                level = level||'';
-                function h(mm)
-                {
-                    var hh = $(window).height()-$('#logo').height()-top_scroll_height;
-                    var n_num = Math.floor((hh)/26);
-                    var l_num = 0;
-                    var mm_len = 0;
-                    for(var i in mm){mm_len++;}
-                    if (level.indexOf('_')!=-1)
-                    {
-                        var nn = level.split('_');
-                        for(var i=0;i<nn.length;i++)
-                        {
-                            l_num+=(nn[i]-0);
-                        }
-
-                        l_num = Math.min(Math.max(0,n_num-mm_len),l_num);
-                    }
-                    else
-                    {
-                        l_num = 0;
-                    }
-                    var html = '<ul class="ul left-menu-ul" style="margin-top:'+(l_num*26)+'px;margin-bottom:'+(hh%26-2)+'px;"><li onclick="desktop.leftmenu_back(\''+level+'\');" class="goto-parent-menu"><div class="text" onmouseover="desktop.leftmenu_hover(this,160,25);" onmouseout="desktop.leftmenu_out();">返回上级菜单</text></li>';
-
-                    for(var i in mm)
-                    {
-                        var tmp = mm[i];
-                        if (typeof mm[i]!='object')continue;
-                        i = i.replace(/_/g,'--');
-                        var has_submenu = false;
-                        for (var j in tmp){if(typeof tmp[j]=='object'){has_submenu=true;break;}}
-                        html += '<li id="menu_div_li'+level+'_'+i+'" onclick="desktop.focus_menu(this);'+(has_submenu?'desktop.create_menu(\''+level+'_'+i+'\');':'goto(\''+tmp.href+'\',true);')+'"><div class="text" onmouseover="desktop.leftmenu_hover(this,160,25);" onmouseout="desktop.leftmenu_out();">'+(has_submenu?'<div class="sub_menu_right_bg"></div><div class="sub_menu_right"></div>':'')+tmp.innerHTML+'</div></li>';
-                    }
-
-                    html+='</ul>';
-                    return html;
-                }
-
-                var tmpmenu = menu;
-
-                if (level!='')
-                {
-                    var l = level.substr(1).split('_');
-                    for(var i=0;i<l.length;i++)
-                    {
-                        var k = l[i].replace(/--/g,'_');
-                        if (typeof tmpmenu[k] == 'object' )
-                        {
-                            tmpmenu = tmpmenu[k];
-                        }
-                        else
-                        {
-                            tmpmenu = {};
-                            break;
-                        }
-                    }
-                }
-
-                return h(tmpmenu);
-            };
-
-            // 创建菜单HTML
-            var html = '<div leveldata="'+level+'" id="menu_div_l'+level+'" class="menu-div"><div style="width:161px;height:100%;" id="menu_div_s'+level+'"><div class="scroller" style="min-height:'+($(window).height()-$('#logo').height())+'px">'+get_menu_html(level)+'</div>'+(level?'<div class="menu_top_bg"></div>':'')+'</div></div>';
-
-            // 如果非同级菜单打开，则先关闭
-            var del_level_length = 0;
-            var children = $('#left-menu').children();
-            var children_len = children.length;
-            level_arr = level.split('_');
-            var tmplevelstr = '';
-            if (children.length)for(var i=1;i<children_len;i++)
-            {
-                tmplevelstr += '_' + level_arr[i];
-                var nowlevelstr = $(children.get(i)).attr('leveldata');
-                if (nowlevelstr!=tmplevelstr)
-                {
-                    // 菜单层级不一样，移除后面的菜单
-                    desktop.leftmenu_back(nowlevelstr);
-                    del_level_length = children_len-i;
-                    break;
-                }
-            }
-
-            $(html).appendTo($('#left-menu'));
-
-            var children_len = $('#left-menu').children().length - del_level_length;
-
-            var create_sc = function()
-            {
-                $('#left-menu-div-hoverbg')[0]._stop = null;
-                $('#menu_div_l'+level)[0]._sc = new iScroll('menu_div_s'+level,{
-                    scrollbarClass:'myScrollbar',
-                    hideScrollbar:true
-                });
-                //,onWheelStart: function (e) {$('#menu_div_l')[0]._sc.enabled=false;},onTouchEnd:function(){$('#menu_div_l')[0]._sc.enabled=true;}
-                setTimeout(function(){
-                    $('#menu_div_l'+level)[0]._sc.refresh();
-                }, 10);
-            }
-
-            if (is_window_show||small_window_mode)
-            {
-                menu_status = 1;
-                // 窗口为开启状态
-                $('#menu_div_l'+level).css({'overflow':'hidden',x:(children_len-1)*161}).find('ul').css('marginTop',0);
-                if(level)$('#menu_div_l'+level).find('li.goto-parent-menu').css({'display':'block'});
-
-                if (children_len>1)
-                {
-                    $('#left-menu').transition({x:'-=161'},function(){
-                        $('#menu_div_l'+level).prev().fadeOut();
-                        create_sc();
-                    });
-                }
-                else
-                {
-                    create_sc();
-                }
-
-                // 将此菜单后面的菜单全部移除（如果有）
-                $('#menu_div_l'+level).nextAll().each(function(){
-                    if (this._sc)
-                    {
-                        this._sc.destroy();
-                        delete this._sc;
-                    }
-                }).remove();
-            }
-            else
-            {
-                $('#menu_div_l'+level).css({x:0,opacity:0}).transition({x:(children_len-1)*161,opacity:1},create_sc);
-            }
-
-            var len = children_len;
-        }
-        else
-        {
-            menu_status = 0;
-            //关闭菜单
-            desktop.leftmenu_back(level);
-
-            var len = $('#menu_div_l'+level).prevAll().length;
-        }
-        $('#left-menu').width(161*len).children().first().css('overflow','hidden');
-
-        $('#main-desktop-bottom-div').transition({'left':small_window_mode?0:(50+161*len)});
-    };
 
     //显示登录框
     this.login_show_div = function()
@@ -508,119 +193,13 @@ var desktop = new function()
     //初始化
     this.init = function()
     {
-        // 监控浏览器前进后退
-        var popstate = function(e)
-        {
-            if (!e.state)return;
-
-            document.title = e.state.title;
-
-            var uri = e.state.url.substr(MyQEE.Url.Site.length);
-            if (uri=='/')
-            {
-                desktop.close();
-                return;
-            }
-
-            $('#main-body-div').children().each(function(){
-                if (this.url==e.state.url)
-                {
-                    // 已打开的窗口组中有相应URL
-
-                    return false;
-                }
-            });
-
-            /*
-
-            var c = $('#main-body-div').children();
-            if (c.length==0)return false;
-            if (c.length==1)
-            {
-                this.close(callback);
-            }
-            var o2 = c.last();
-            var o1 = o2.prev();
-
-            o1.show().transition({x:0},function(){if (o1[0]._sc)o1[0]._sc.refresh();if (callback)callback();});
-            o2.transition({x:$(window).width()-left_width},function(){o2[0].remove();});
-
-            */
-        };
-
-        if( is_support_pajx )
-        {
-            window.history.replaceState({title:document.title,url:document.location.href},document.title);
-
-            window.onpopstate = popstate;
-        }
-        else
-        {
-            var hash = document.location.hash;
-            if ( hash=='' || hash.substr(0,5)!='#url=' )
-            {
-                hash = '#url=/';
-            }
-            _history_old_hash = hash;
-
-            _history_state[hash.substr(5)] = {
-                title : document.title,
-                url   : document.location.href
-            };
-
-            window.onhashchange = function()
-            {
-                var hash = document.location.hash;
-                if ( hash=='' || hash.substr(0,5)!='#url=' )
-                {
-                    hash = '#url=/';
-                }
-                if ( _history_old_hash!=hash )
-                {
-                    _history_old_hash = hash;
-
-                    var state = _history_state[hash.substr(5)];
-
-                    //调用 popstate
-                    popstate({state:state});
-                }
-            };
-        }
-
-
-        var html = '<div id="main-desktop"></div><div id="left-menu-div"><div id="left-menu-div-hoverbg"></div><div id="left-menu"></div><div id="left-quick-menu-div"></div></div><div id="logo" onclick="document.location.reload();"></div><div id="main-body-div"></div>';
-        var st = {'id':'body-main'};
-        // 创建背景
-        $('<div>',st).html(html).appendTo($(document.body));
-
-        if (isRetina)
-        {
-            if ($(window).width()>760)
-            {
-                // 窗口和屏幕分辨率宽度>1500,切换到高清背景图
-                $(document.body).addClass('big-screen');
-            }
-        }
-
-        if (MyQEE.Member.Id)
-        {
-            logined_init();
-        }
-        else
-        {
-            // 显示登录窗口
-            desktop.login_show_div();
-        }
-
         /**
          * 处理页面HTML
          *
-         * @param first_page 是否进入下一个页面 ，0=进入下一个页面，1=关闭当前所有窗口从头开始
          */
-        $.fn.html_paste = function(first_page)
+        $.fn.html_paste = function()
         {
             var obj = this;
-            first_page = first_page || 0;
 
             //处理表单
             obj.find('form').each(function()
@@ -694,7 +273,6 @@ var desktop = new function()
                         return;
                     }
 
-                    this.first_page = first_page;
                     this._onclick = this.onclick;
                     this.onclick = function()
                     {
@@ -705,7 +283,7 @@ var desktop = new function()
                         if (true==this._onloading)return false;
                         this._onloading = true;
                         var self = this;
-                        goto(this.href,false,{complete:function(){self._onloading = false;}});
+                        goto(this.href,{complete:function(){self._onloading = false;}});
                         return false;
                     }
                 }
@@ -726,8 +304,153 @@ var desktop = new function()
             obj.find('.collapse').collapse();
             obj.find('.typeahead').typeahead();
 
+            if (MyQEE.is_iphone)
+            {
+                $('form.form-horizontal').removeClass('form-horizontal').addClass('form-inline');
+            }
+
             return this;
         };
+
+
+        // 监控浏览器前进后退
+        var popstate = function(e)
+        {
+            if (!e.state)return;
+
+            document.title = e.state.title;
+
+            var uri = e.state.url.substr(site_full_url.length);
+
+            if (uri=='/')
+            {
+                desktop.close();
+                return;
+            }
+
+            $('#main-body-div').show();
+
+            var show_index;
+            // 隐藏其它DIV
+            $('#main-body-div div.window-main').each(function()
+            {
+                if (this.style.display!='none')
+                {
+                    show_index = $(this).attr('data-index');
+                    if (show_index==e.state.index)
+                    {
+                        return;
+                    }
+                    if (show_index>e.state.index)
+                    {
+                        var n = 1;
+                    }
+                    else
+                    {
+                        var n = -1;
+                    }
+                    $(this).transition({x:n*($(window).width()-left_width)},function(){$(this).hide();});
+                }
+            });
+
+            var obj = $('#main-body-div div.window-main[data-index='+e.state.index+']');
+
+            if (obj.length>0)
+            {
+                obj[0].show();
+            }
+
+
+            /*
+
+            var c = $('#main-body-div').children();
+            if (c.length==0)return false;
+            if (c.length==1)
+            {
+                this.close(callback);
+            }
+            var o2 = c.last();
+            var o1 = o2.prev();
+
+            o1.show().transition({x:0},function(){if (o1[0]._sc)o1[0]._sc.refresh();if (callback)callback();});
+            o2.transition({x:$(window).width()-left_width},function(){o2[0].remove();});
+
+            */
+        };
+
+        if ( MyQEE.Url.Site.substr(0,7)!='http://' && MyQEE.Url.Site.substr(0,8)!='https://' )
+        {
+            site_full_url = document.location.protocol+'//'+document.location.host+(document.location.port?':'+document.location.host:'') + MyQEE.Url.Site;
+        }
+        else
+        {
+            site_full_url = MyQEE.Url.Site;
+        }
+
+        if( is_support_pajx )
+        {
+            window.history.replaceState({title:document.title,url:document.location.href,index:0},document.title);
+
+            window.onpopstate = popstate;
+        }
+        else
+        {
+            var hash = document.location.hash;
+            if ( hash=='' || hash.substr(0,5)!='#url=' )
+            {
+                hash = '#url=/';
+            }
+            _history_old_hash = hash;
+
+            _history_state[hash.substr(5)] = {
+                title : document.title,
+                url   : document.location.href,
+                index : 0
+            };
+
+            window.onhashchange = function()
+            {
+                var hash = document.location.hash;
+                if ( hash=='' || hash.substr(0,5)!='#url=' )
+                {
+                    hash = '#url=/';
+                }
+                if ( _history_old_hash!=hash )
+                {
+                    _history_old_hash = hash;
+
+                    var state = _history_state[hash.substr(5)];
+
+                    //调用 popstate
+                    popstate({state:state});
+                }
+            };
+        }
+
+
+        var html = '<div id="main-desktop"></div><div id="left-menu-div"><div id="left-menu-div-hoverbg"></div><div id="left-menu"></div><div id="left-menu-icon-div"><div id="left-first-menu-div"></div><div id="left-bottom-menu-div"></div></div></div><div id="logo" onclick="document.location.reload();"><img src="'+MyQEE.Url.Statics+'/skins/default/'+(isRetina?'logo@2x.png':'logo.png')+'" /></div><div id="main-body-div"></div>';
+        var st = {'id':'body-main'};
+        // 创建背景
+        $('<div>',st).html(html).appendTo($(document.body));
+
+        if (isRetina)
+        {
+            if ($(window).width()>760)
+            {
+                // 窗口和屏幕分辨率宽度>1500,切换到高清背景图
+                $(document.body).addClass('big-screen');
+            }
+        }
+
+        if (MyQEE.Member.Id)
+        {
+            logined_init();
+        }
+        else
+        {
+            // 显示登录窗口
+            desktop.login_show_div();
+        }
 
         // 移除loading
         $('#page-loading-div').fadeOut(300,function(){
@@ -750,7 +473,7 @@ var desktop = new function()
                         // 阻止页面滚动
                         document.addEventListener('touchmove',function(e){e.preventDefault();},false);
                     }
-                    else if (h==480||h==320||h==1024||h==768)
+                    else if (h==480||h==320||h==1024||h==768||h==568)
                     {
                         top_scroll_height = 20;
                         $('#body-main').css('top','20px');
@@ -760,8 +483,6 @@ var desktop = new function()
 
                 // 调整遮罩高度
                 $('#page-loading-table').fadeOut(600,function(){$(this).remove();$('#root_css').remove();});
-
-                setTimeout('desktop_init=null;',1);
 
                 // 重新整理size
                 setTimeout('window.onresize();',20);
@@ -783,37 +504,29 @@ var desktop = new function()
     {
         is_window_show = false;
         var divs = $('#main-body-div').children();
-        var op = null;
-        divs.each(function(){
-            if ($(this).css('display')!='none'){op=$(this)};
+        var op;
+        divs.each(function()
+        {
+            if (this.style.display!='none')op=$(this);
         });
         if (op)
         {
-            op.transition({opacity: 0,scale: 0});
+            op.transition({opacity:0,scale:0},function(){op[0].close();});
         }
-        setTimeout(function()
-        {
-            $('#main-body-div').hide().children().each(function(){
-                if (this._sc)
-                {
-                    // 移除滚动条
-                    this._sc.destroy();
-                    delete this._sc;
-                }
-                $(this).remove();
-            });
-            $('#main-body-div').html('');
-            if (callback)callback();
-        },600);
 
         this.resize_window();
-        desktop.reset.menu();
+
+        setTimeout(function()
+        {
+            $('#main-body-div').hide();
+            if (callback)callback();
+        },400);
     };
 
     // 刷新页面
-    this.refresh = function(level,callback)
+    this.refresh = function(callback)
     {
-        var o = $('#'+'window_main_l_'+level);
+        var o = $('#'+'window_main_l_');
         if (o[0])
         {
             var r = o.find('.btn-refresh');
@@ -823,7 +536,7 @@ var desktop = new function()
             }
 
             //TODO
-            goto(o[0].url,level,{success:function(d){
+            goto(o[0].url,{success:function(d){
                 $('<div>').html('页面已刷新').hide().addClass('loaded').appendTo($(document.body)).css({left:($(window).width()-100)/2,top:($(window).height()-50)/2,width:'100px',height:'40px',lineHeight:'38px',scale:0,y:-200}).show().transition({scale:1,opacity:1,y:0},function(){$(this).transition({scale:[3,0],opacity:0,delay:600},function(){$(this).remove();})});
                 if (r.length)
                 {
@@ -879,160 +592,190 @@ var desktop = new function()
         }
     }
 
+    this.change_big_menu = function(key)
+    {
+        $('#left-first-menu-div li').removeClass('hover');
+        $('#left-first-menu-div #left-menu-'+key).addClass('hover');
+
+        var obj = $('#menu-ul-'+key+'-div');
+        if (!obj.length)return;
+
+        var prev_menu_num = obj.prevAll('ul').length;
+
+        $('#left-menu-show-div').transition({x:-menu_width*prev_menu_num});
+    }
+
     //登录成功后初始化
     var logined_init = function()
     {
-        // 调整left-menu高度
-        //$('#left-menu').height($(document.body).height()-$('#logo').height());
-
         create_desktop();
 
-        // 创建目录
-        var menu_url = MyQEE.Url.Site + '/menu_data?i=1&n='+MyQEE.Member.LoginNum+'&t='+new Date().getTime();
-        $.ajax({url:menu_url}).complete(function(d){
-            menu = eval('('+d.responseText+')');
-            desktop.create_menu();
-        });
-
-        // 创建快速目录
-        (function(){
-            var html = '<div class="scroller"><ul class="ul">'
-            +'<li onmouseover="desktop.leftmenu_hover(this,40,40,3);" onmouseout="desktop.leftmenu_out();"><img src="'+MyQEE.Url.Site+'/statics/skins/default/icon_home'+(isRetina?'@2x':'')+'.png" /></li>'
-            +'<li onmouseover="desktop.leftmenu_hover(this,40,40,3);" onmouseout="desktop.leftmenu_out();"><img src="'+MyQEE.Url.Site+'/statics/skins/default/icon_settings'+(isRetina?'@2x':'')+'.png" /></li>'
-            +'<li onclick="desktop.login_out();" onmouseover="desktop.leftmenu_hover(this,40,40,3);" onmouseout="desktop.leftmenu_out();"><img src="'+MyQEE.Url.Site+'/statics/skins/default/icon_logout'+(isRetina?'@2x':'')+'.png" /></li>'
-            +'</ul></div>';
-            $('#left-quick-menu-div').html(html);
-
-            var is = new iScroll('left-quick-menu-div',{scrollbarClass:'myScrollbar',hideScrollbar:true});
-
-            setTimeout(function(){is.refresh();is=null;}, 10);
-        })();
+        create_menu();
     }
+
+    // 设置菜单高亮
+    var menu_set_hover = function(url)
+    {
+        var uri = url.substr(site_full_url.length);
+
+        if (uri=='/')
+        {
+            $($('#left-first-menu-div li').removeClass('hover')[0]).addClass('hover');
+        }
+    }
+
+    // 创建菜单
+    var create_menu = function()
+    {
+        // 创建目录
+        var menu_url = MyQEE.Url.Site + '/menu_data?n='+MyQEE.Member.LoginNum;
+        $.ajax({url:menu_url,dataType:'json'}).error(function(){alert('菜单加载失败，请刷新页面')}).success(function(m)
+        {
+            menu = m;
+            var html_bottom = '<ul class="ul">';
+
+            var html_first = '<div class="scroller"><ul class="ul">';
+
+            // 递归的创建右侧菜单HTML
+            var create_right_menu = function(arr,n,kstr)
+            {
+                n=n||0;
+                kstr=kstr||'';
+                var subhtml = '';
+                for (var k in arr)
+                {
+                    if (typeof arr[k] == 'object')
+                    {
+                        subhtml += create_right_menu(arr[k],n+1,kstr+'_'+k);
+                    }
+                }
+
+                var html = '<li>'+(subhtml?'<span class="fav-arrow" onclick="var obj=$(\'#menu-li-key-'+kstr+'\');if (obj.css(\'display\')==\'none\'){obj.show();}else{obj.hide();}"></span>':'')+'<a'+(arr.href?' href="'+MyQEE.Url.Site+'/'+arr.href+'"':subhtml?' href="#" onclick="$(this).prev()[0].onclick();this.blur();return false;"':'')+'><span style="padding-left:'+n+'em;"><i class="icon-cog"></i>'+arr.html+'</a></span></li>'+(subhtml?'<div id="menu-li-key-'+kstr+'">'+subhtml+'</div>':'');
+                return html;
+            };
+
+            var html_right = '<div class="scroller"><div id="left-menu-show-div">';
+            var n = 0;
+            for (var key in menu)
+            {
+                var m = menu[key];
+                var tmp_html = '<li id="left-menu-'+key+'" onclick="'+(m.click?m.click:'desktop.change_big_menu(\''+key+'\');')+'"><img'+(m.html?' data-placement="right" rel="tooltip" data-original-title="'+m.html+'"':'')+' src="'+MyQEE.Url.Site+'/statics/skins/default/'+(m.icon||'default')+(isRetina?'@2x':'')+'.png" /></li>';
+                if (m.bottom)
+                {
+                    html_bottom += tmp_html;
+                    continue;
+                }
+                else
+                {
+                    html_first += tmp_html;
+
+                    html_right += '<ul style="margin-left:'+(menu_width*n)+'px;width:'+menu_width+'px;" id="menu-ul-'+key+'-div" class="ul left-menu-ul">';
+                    for (var k2 in m)
+                    {
+                        if (typeof m[k2] =='object')
+                        {
+                            html_right += create_right_menu(m[k2],0,k2);
+                        }
+                    }
+                    html_right += '</ul>';
+                    n++;
+                }
+            }
+            html_first  += '</ul></div>';
+            html_bottom += '</ul>';
+            html_right += '</div></div>';
+
+            // 设置左侧底部菜单
+            $('#left-bottom-menu-div').html(html_bottom).html_paste();
+
+            // 设置左侧菜单
+            $('#left-first-menu-div').css('bottom',$('#left-bottom-menu-div').height()).html(html_first).html_paste();
+            var is = new iScroll('left-first-menu-div',{scrollbarClass:'myScrollbar',hideScrollbar:true});
+            setTimeout(function(){is.refresh();is=null;},200);
+
+            // 设置右侧菜单
+            $('#left-menu').html(html_right).html_paste();
+
+            menu_set_hover(document.location.href);
+        });
+    };
 
     /**
      * 创建一个窗体
      */
     var create_body = function(setting)
     {
-        is_window_show = true;
         var obj;
+        var css = {};
 
-        if (!setting.is_first_window)
+        if (is_window_show)
         {
-            var i=0;
-            $('#main-body-div').children().each(function(){
-                if (this.url==setting.url)
-                {
-                    obj = $(this);
-                    obj.show().transition({x:0});
-                    var l_obj = $('#main-body-div').children().last();
-                    if (l_obj[0]!==obj[0])
-                    {
-                        $('#main-body-div').children().last().transition({x:$(window).width()-left_width},function(){
-                            obj.nextAll().each(function(){this.remove();});
-                        });
-                    }
-                    return false;
-                }
-                i++;
-            });
-            delete i;
-        }
-
-        if(!obj)
-        {
-            var len = $('#main-body-div').children().length;
-            var css = {};
-
-            if (setting.is_first_window && len>0)
-            {
-                // 删除已经开启的窗口
-                $('#main-body-div').children().each(function(){this.remove();});
-                len = 0;
-            }
-
-            if (len>0)
-            {
-                var to_css = {x:0,opacity:1,scale:1};
-                css.x = $('#main-body-div').width();
-                $('#main-body-div').children().last().transition({x:-$(window).width()+left_width},function(){$(this).hide();});
-            }
-            else
-            {
-                var to_css = {opacity: 1,scale: 1};
-                css.scale = 0;
-                css.opacity = 0;
-            }
-
-            var html = '<div class="window-title"><div class="btn-back"'+(len==0?' style="visibility:hidden"':'')+' onclick="desktop.back();">返回</div><div class="btn-close" onclick="desktop.close();" title="关闭"></div><div onclick="desktop.refresh();" class="btn-refresh" title="刷新"></div><div class="title-div">'+(setting.title||'')+'</div></div><div class="window-body"><div class="scroller"><div class="window-body-text">'+(setting.html||'')+'</div></div></div>';
-
-            obj = $('<div>',{'class':'window-main'}).css(css).html(html).appendTo($('#main-body-div')).html_paste(false);
-
-
-            obj[0].url = setting.url;
-            obj[0].setting = setting;
-            obj[0].remove = function()
-            {
-                //销毁滚动条
-                if (this._sc)
-                {
-                    try
-                    {
-                        this._sc.destroy();
-                        delete this._sc;
-                    }
-                    catch(e){}
-                }
-
-                if (this._t)
-                {
-                    clearInterval(this._t);
-                }
-
-                //销毁DOM
-                $(this).remove();
-            }
-
-            var load_btn = obj.find('.btn-refresh');
-            load_btn[0].loaded = function()
-            {
-                this.onclick = this._oc;
-                clearInterval(this._t);
-                this._t=null;
-                this._rr=0;
-                $(this).removeClass('loading').css({transform:'rotate(0deg)'});
-            }
-            load_btn[0].loading = function()
-            {
-                this._rr = 0;
-                if(this._t)this.loaded();
-                var s = this;
-                this._t = setInterval(function(){s._rr+=30;load_btn.css({transform:'rotate('+s._rr+'deg)'});},50);
-                $(this).addClass('loading');
-                this._oc = this.onclick;
-                this.onclick = function(){};
-            }
-            load_btn[0].loading();
-            obj.transition(to_css,function(){
-                // 调整窗口
-                desktop.resize_window();
-                // 设置菜单
-                desktop.reset.menu();
+            var to_css = {x:0,opacity:1,scale:1};
+            css.x = $('#main-body-div').width();
+            $('#main-body-div .window-main').each(function(){
+                if (this.style.display!='none')$(this).transition({x:-$(window).width()+left_width},function(){$(this).hide();});
             });
         }
         else
         {
+            var to_css = {opacity:1,scale:1};
+            css.scale = 0;
+            css.opacity = 0;
+        }
+
+        is_window_show = true;
+
+        var html = '<div class="window-title"><div class="btn-back" onclick="desktop.back();">返回</div><div class="btn-close" onclick="desktop.close();" title="关闭"></div><div onclick="desktop.refresh();" class="btn-refresh" title="刷新"></div><div class="title-div">'+(setting.title||'')+'</div></div><div class="window-body" ontouchmove="event.stopPropagation();"></div>';
+
+        obj = $('<div>',{'class':'window-main','data-index':setting.index,'data-url':setting.url}).css(css).html(html).appendTo($('#main-body-div'));
+
+        // 设置HTML内容
+        if (setting.html.length>0)obj.find('.window-body').html(setting.html).html_paste(false);
+
+        obj[0].setting = setting;
+        obj[0].close = function()
+        {
+            if (this._t)
+            {
+                clearInterval(this._t);
+            }
+            //销毁DOM
+            $(this).hide().find('.window-body').html('');
+        }
+        //显示页面
+        obj[0].show = function()
+        {
+            is_window_show = true;
+            $(this).show().transition({x:0,opacity:1,scale:1}).find('.window-body').html('1111111111');
+        };
+
+        var load_btn = obj.find('.btn-refresh');
+        load_btn[0].loaded = function()
+        {
+            this.onclick = this._oc;
+            if(this._t)clearInterval(this._t);
+            this._t=null;
+            this._rr=0;
+            $(this).removeClass('loading').css({transform:'rotate(0deg)'});
+        };
+        load_btn[0].loading = function()
+        {
+            this._rr = 0;
+            if(this._t)this.loaded();
+            var s = this;
+            this._t = setInterval(function(){s._rr+=30;if (s._rr==360)s._rr=0;load_btn.css({transform:'rotate('+s._rr+'deg)'});},50);
+            $(this).addClass('loading');
+            this._oc = this.onclick;
+            this.onclick = function(){};
+        };
+        load_btn[0].loading();
+
+        obj.transition(to_css,function(){
             // 调整窗口
             desktop.resize_window();
             // 设置菜单
             desktop.reset.menu();
-        }
-
-
-        obj.set_title = function(title)
-        {
-            $(this).find('.title-div').html(title);
-        }
+        });
 
         $('#main-body-div').show();
 
@@ -1042,7 +785,8 @@ var desktop = new function()
     //创建桌面内容
     var create_desktop = function()
     {
-        $.ajax(MyQEE.Url.Site + '/desktop').success(function(html){
+        $.ajax(MyQEE.Url.Site + '/desktop').success(function(html)
+        {
             // 创建初始化HTML
             if (!document.getElementById('main-desktop-div'))
             {
@@ -1107,15 +851,15 @@ var desktop = new function()
             $('#main-desktop-right-btn').bind('click',function(){$('#main-desktop-div')[0]._sc.scrollToPage($('#main-desktop-div')[0]._sc.currPageX+1);});
             $('#main-desktop-left-btn').bind('click',function(){$('#main-desktop-div')[0]._sc.scrollToPage($('#main-desktop-div')[0]._sc.currPageX-1);}).css({ transform: 'rotate(180deg)'}).hide();
 
-        }).complete(function(){
-
+        }).complete(function()
+        {
             // 桌面代码载入完毕
-            var url = document.location.href.split('#')[0].substr(MyQEE.Url.Site.length);
+            var url = document.location.href.split('#')[0].substr(site_full_url.length);
 
             if ( url && url!='/' )
             {
                 _history_reload_page = true;
-                goto(MyQEE.Url.Site+url,true);
+                goto(MyQEE.Url.Site+url);
             }
             else
             {
@@ -1126,7 +870,7 @@ var desktop = new function()
                     if (url)
                     {
                         _history_reload_page = true;
-                        goto(MyQEE.Url.Site+url,true);
+                        goto(MyQEE.Url.Site+url);
                     }
                 }
             }
@@ -1137,13 +881,12 @@ var desktop = new function()
      * 跳转到指定页面
      *
      */
-    window.goto = function(url,is_first_window,setting)
+    window.goto = function(url,setting)
     {
         setting = setting||{};
-        is_first_window = is_first_window||false;
         $.ajax(
             {
-                url:url+'?'+new Date().getTime(),
+                url:url+'?time='+new Date().getTime(),
                 headers : {'X-PJAX':'true'}
             }
         )
@@ -1153,7 +896,7 @@ var desktop = new function()
                 var title = '';
                 var reg = html.match(/\<title\>(.*)\<\/title\>/);
                 if (reg)title = reg[1] || '';
-                var obj = create_body({url:url,is_first_window:is_first_window,title:title,html:html});
+                var obj = create_body({url:url,title:title,html:html,index:_history_reload_page?history_index:history_index+1});
 
                 document.title = title;
 
@@ -1164,36 +907,28 @@ var desktop = new function()
 
                 if (is_support_pajx)
                 {
-
                     // 设置浏览器前进后退按钮
                     if (_history_reload_page)
                     {
                         _history_reload_page = false;
+                        state.index = history_index;
                         window.history.replaceState(state,document.title);
                     }
                     else
                     {
+                        history_index += 1;
+                        state.index = history_index;
                         window.history.pushState(state,document.title,url);
                     }
                 }
                 else
                 {
-                    var hash = url.substr(MyQEE.Url.Site.length);
-                    _history_state[hash] = state;
-
-                    _history_old_hash = document.location.hash = '#url=' + encodeURIComponent(hash);
-                }
-
-                if (obj[0]._sc)
-                {
-                    obj[0]._sc.refresh();
-                }
-                else
-                {
-                    if ('ontouchstart' in window)
+                    if (!_history_reload_page)
                     {
-                        obj.find('.scroller').css({position:'absolute',height:'auto'});
-                        obj[0]._sc = new iScroll(obj.find('.window-body')[0],{wheelAction:'scroll',onBeforeScrollStart:function(e){},onBeforeScrollMove:function(e){e.preventDefault();}});
+                        var hash = url.substr(MyQEE.Url.Site.length);
+                        _history_state[hash] = state;
+
+                        _history_old_hash = document.location.hash = '#url=' + encodeURIComponent(hash);
                     }
                 }
 
@@ -1253,7 +988,6 @@ var desktop = new function()
 
         desktop.show_loading();
     };
-
 
     return this;
 };
