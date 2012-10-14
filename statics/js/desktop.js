@@ -10,10 +10,9 @@ var desktop = new function()
     menu_width            = 160,    //菜单宽带
     left_width            = 0,      //左侧宽度
     site_full_url         = '',     //站点完整URL前缀
-    history_index         = 0,      //前进后退索引
     is_support_pajx       = window.history.pushState?true:false;    //是否支持动态切换地址栏功能
 
-    var _history_reload_page  = false;
+    var _history_now_index    = 0       // 当前history索引
     var _history_state        = {};
     var _history_old_hash;
 
@@ -52,6 +51,12 @@ var desktop = new function()
         var hh = h - $('#logo').height();
 
         $('#left-menu').children().each(function(){$(this).find('.scroller').css({minHeight:hh+'px'});if(this._sc)this._sc.refresh();});
+
+        var h = $('#main-body-div').height()-41;
+        $('#main-body-div div.window-body').each(function()
+        {
+            $(this).css('height',(h-(this.control_height||0))+'px');
+        });
 
         if (w<1000)
         {
@@ -320,19 +325,57 @@ var desktop = new function()
 
             document.title = e.state.title;
 
+            // 更新history索引
+            var old_history_index = _history_now_index;
+            _history_now_index = e.state.index;
+            var is_bak = old_history_index>e.state.index?true:false;
+
             var uri = e.state.url.substr(site_full_url.length);
 
-            if (uri=='/')
+            if (uri==''||uri=='/')
             {
-                desktop.close();
+                desktop.close(null,true);
                 return;
             }
 
-            $('#main-body-div').show();
+            var uri = get_uri_by_url(e.state.url);
+            var obj = $('#main-body-div').children('div[data-uri="'+uri+'"]');
+            if (obj && obj.html()!='')
+            {
+                is_window_show = true;
+                // 直接切换
+                obj.hide();
+                var display_div = $('#main-body-div').children('div:visible');
+                if (display_div.length)
+                {
+                    var x = -$('#main-body-div').show().width();
+                    if (is_bak)x = -x;
+                    obj.show().css({x:-x,opacity:1,scale:1});
+                    display_div.css({x:0,opacity:1,scale:1});
 
+                    obj.transition({x:0});
+                    display_div.transition({x:x},function(){
+                        display_div.hide();
+                    });
+                }
+                else
+                {
+                    $('#main-body-div').show();
+                    obj.show().css({x:0,opacity:0,scale:0}).transition({opacity:1,scale:1});
+                }
+            }
+            else
+            {
+                // 重新加载
+                goto(e.state.url,{type:'state',is_back:is_bak});
+            }
+
+            return;
+
+/*
             var show_index;
             // 隐藏其它DIV
-            $('#main-body-div div.window-main').each(function()
+            $('#main-body-div').children('div.window-main').each(function()
             {
                 if (this.style.display!='none')
                 {
@@ -353,12 +396,13 @@ var desktop = new function()
                 }
             });
 
-            var obj = $('#main-body-div div.window-main[data-index='+e.state.index+']');
+            var obj = $('#main-body-div')children('div.window-main[data-index='+e.state.index+']');
 
             if (obj.length>0)
             {
                 obj[0].show();
             }
+            */
 
 
             /*
@@ -500,25 +544,23 @@ var desktop = new function()
     };
 
     //关闭窗口
-    this.close = function(callback)
+    this.close = function(callback,ts)
     {
         is_window_show = false;
-        var divs = $('#main-body-div').children();
-        var op;
-        divs.each(function()
+        if (!ts)
         {
-            if (this.style.display!='none')op=$(this);
-        });
-        if (op)
-        {
-            op.transition({opacity:0,scale:0},function(){op[0].close();});
+            history_set_state(MyQEE.Url.Site+'/','管理首页');
         }
+        var obj = $('#main-body-div').children('div:visible');
+        obj.transition({opacity:0,scale:0},function(){
+            obj.each(function(){this.close();});
+        });
 
         this.resize_window();
 
         setTimeout(function()
         {
-            $('#main-body-div').hide();
+            $('#main-body-div').hide().children().hide();
             if (callback)callback();
         },400);
     };
@@ -526,8 +568,8 @@ var desktop = new function()
     // 刷新页面
     this.refresh = function(callback)
     {
-        var o = $('#'+'window_main_l_');
-        if (o[0])
+        var o = $('#main-body-div').children('div:visible');
+        if (o.length)
         {
             var r = o.find('.btn-refresh');
             if (r.length)
@@ -535,12 +577,20 @@ var desktop = new function()
                 r[0].loading();
             }
 
-            //TODO
-            goto(o[0].url,{success:function(d){
+            goto(o[0].setting.url,{type:'reload',success:function(d){
                 $('<div>').html('页面已刷新').hide().addClass('loaded').appendTo($(document.body)).css({left:($(window).width()-100)/2,top:($(window).height()-50)/2,width:'100px',height:'40px',lineHeight:'38px',scale:0,y:-200}).show().transition({scale:1,opacity:1,y:0},function(){$(this).transition({scale:[3,0],opacity:0,delay:600},function(){$(this).remove();})});
+                return;
                 if (r.length)
                 {
                     r[0].loaded();
+                }
+                if (typeof callback =='function')
+                {
+                    try
+                    {
+                        callback();
+                    }
+                    catch(e){console.error(e);}
                 }
             }});
         }
@@ -650,7 +700,7 @@ var desktop = new function()
                     }
                 }
 
-                var html = '<li>'+(subhtml?'<span class="fav-arrow" onclick="var obj=$(\'#menu-li-key-'+kstr+'\');if (obj.css(\'display\')==\'none\'){obj.show();}else{obj.hide();}"></span>':'')+'<a'+(arr.href?' href="'+MyQEE.Url.Site+'/'+arr.href+'"':subhtml?' href="#" onclick="$(this).prev()[0].onclick();this.blur();return false;"':'')+'><span style="padding-left:'+n+'em;"><i class="icon-cog"></i>'+arr.html+'</a></span></li>'+(subhtml?'<div id="menu-li-key-'+kstr+'">'+subhtml+'</div>':'');
+                var html = '<li>'+(subhtml?'<span class="fav-arrow" onclick="var obj=$(\'#menu-li-key-'+kstr+'\');obj.slideToggle();"></span>':'')+'<a'+(arr.href?' href="'+MyQEE.Url.Site+'/'+arr.href+'"':subhtml?' href="#" onclick="$(this).prev()[0].onclick();this.blur();return false;"':'')+'><span style="padding-left:'+n+'em;"><i class="icon-cog"></i>'+arr.html+'</a></span></li>'+(subhtml?'<div id="menu-li-key-'+kstr+'">'+subhtml+'</div>':'');
                 return html;
             };
 
@@ -683,7 +733,7 @@ var desktop = new function()
             }
             html_first  += '</ul></div>';
             html_bottom += '</ul>';
-            html_right += '</div></div>';
+            html_right  += '</div></div>';
 
             // 设置左侧底部菜单
             $('#left-bottom-menu-div').html(html_bottom).html_paste();
@@ -700,62 +750,169 @@ var desktop = new function()
         });
     };
 
+    var history_set_state = function(url, title, type)
+    {
+        if (!title)
+        {
+            title = document.title;
+        }
+        else
+        {
+            document.title = title;
+        }
+
+        var state = {
+            url: url,
+            title: title
+        }
+
+        if (is_support_pajx)
+        {
+            // 设置浏览器前进后退按钮
+            if (type=='reload')
+            {
+                state.index = _history_now_index;
+                window.history.replaceState(state,title);
+            }
+            else
+            {
+                _history_now_index += 1;
+                state.index = _history_now_index;
+                window.history.pushState(state,title,url);
+            }
+        }
+        else
+        {
+            if (type!='reload')
+            {
+                var hash = url.substr(MyQEE.Url.Site.length);
+                _history_state[hash] = state;
+
+                _history_old_hash = document.location.hash = '#url=' + encodeURIComponent(hash);
+            }
+        }
+    }
+
+    // 根据url获取uri参数
+    // 例如 url=http://www.test.com/abc/def/?a=1#c=1 返回的uri=http://www.test.com/abc/def
+    var get_uri_by_url = function(url)
+    {
+        var uri = url.split('#')[0].split('?')[0].toLowerCase();
+        if (uri.substr(uri.length-1)=='/')uri=uri.substr(0,uri.length-1);
+        return uri;
+    }
+
     /**
      * 创建一个窗体
      */
     var create_body = function(setting)
     {
-        var obj;
-        var css = {};
+        var type = setting.type;
+        delete setting.type;
+        var uri = get_uri_by_url(setting.url);
+        var obj = $('#main-body-div').children('div[data-uri="'+uri+'"]');
 
+        if (obj.length>=1)
+        {
+            var i = 0;
+            // 已经存在
+            obj.each(function()
+            {
+                this.destroy();   // 销毁内容、函数
+                i++;
+                if (i>1)
+                {
+                    $(this).remove();   //移除多余的异常div
+                }
+                else
+                {
+                    $(this).show();
+                }
+            }
+            );
+            delete i;
+        }
+
+        var to_css = {}, css = {};
+        var old_display_div;
         if (is_window_show)
         {
-            var to_css = {x:0,opacity:1,scale:1};
+            // 窗口已打开
+            to_css = {
+                x:0,
+                scale:1,
+                opacity:1
+            };
             css.x = $('#main-body-div').width();
-            $('#main-body-div .window-main').each(function(){
-                if (this.style.display!='none')$(this).transition({x:-$(window).width()+left_width},function(){$(this).hide();});
-            });
+
+            // 处理已开启的窗口
+            old_display_div = $('#main-body-div').children('div:visible');
         }
         else
         {
-            var to_css = {opacity:1,scale:1};
+            to_css = {
+                scale:1,
+                opacity:1
+            };
+            css.x = 0;
             css.scale = 0;
             css.opacity = 0;
         }
 
+        var html = '<div class="window-title"><div class="btn-back" onclick="desktop.back();">返回</div><div class="btn-close" onclick="desktop.close();" title="关闭"></div><div onclick="desktop.refresh();" class="btn-refresh" title="刷新"></div><div class="title-div"></div></div><div class="window-body" style="height:'+($('#main-body-div').height()-41)+'px" ontouchmove="event.stopPropagation();"><div class="window-body-content"></div></div>';
+        if (obj.length==0)
+        {
+            // 没有相应的URL的窗口
+            obj = $('<div>',{'class':'window-main','data-uri':uri}).html(html).appendTo($('#main-body-div'));
+        }
+        else
+        {
+            obj.html(html);
+        }
+        $('#main-body-div').show();
         is_window_show = true;
 
-        var html = '<div class="window-title"><div class="btn-back" onclick="desktop.back();">返回</div><div class="btn-close" onclick="desktop.close();" title="关闭"></div><div onclick="desktop.refresh();" class="btn-refresh" title="刷新"></div><div class="title-div">'+(setting.title||'')+'</div></div><div class="window-body" ontouchmove="event.stopPropagation();"></div>';
-
-        obj = $('<div>',{'class':'window-main','data-index':setting.index,'data-url':setting.url}).css(css).html(html).appendTo($('#main-body-div'));
-
         // 设置HTML内容
-        if (setting.html.length>0)obj.find('.window-body').html(setting.html).html_paste(false);
-
-        obj[0].setting = setting;
-        obj[0].close = function()
+        if (setting.html.length>0)
         {
-            if (this._t)
+            obj.find('div.window-body-content').html(setting.html).html_paste(false);
+            if (!MyQEE.is_iphone)
             {
-                clearInterval(this._t);
+                var c_div = obj.find('div.control-div');
+                if (c_div.length)
+                {
+                    var control_init = function()
+                    {
+                        c_div.addClass('control-div-fixed');
+                        obj.find('div.window-body')[0].control_height = c_div.height();
+                        obj.find('div.window-body').height($('#main-body-div').height()-41-c_div.height());
+                    };
+                    if (type=='reload')
+                    {
+                        control_init();
+                    }
+                    else
+                    {
+                        setTimeout(control_init,1300);
+                    }
+                }
+                delete c_div;
             }
-            //销毁DOM
-            $(this).hide().find('.window-body').html('');
         }
-        //显示页面
-        obj[0].show = function()
-        {
-            is_window_show = true;
-            $(this).show().transition({x:0,opacity:1,scale:1}).find('.window-body').html('1111111111');
-        };
 
+        var dom = obj[0];
+        dom._title = obj.find('title').html();
+        // 移除title标签
+        obj.find('title').remove();
+
+        // 封装loading按钮
         var load_btn = obj.find('.btn-refresh');
         load_btn[0].loaded = function()
         {
             this.onclick = this._oc;
             if(this._t)clearInterval(this._t);
-            this._t=null;
-            this._rr=0;
+            delete this._t;
+            this._rr = 0;
             $(this).removeClass('loading').css({transform:'rotate(0deg)'});
         };
         load_btn[0].loading = function()
@@ -763,21 +920,75 @@ var desktop = new function()
             this._rr = 0;
             if(this._t)this.loaded();
             var s = this;
-            this._t = setInterval(function(){s._rr+=30;if (s._rr==360)s._rr=0;load_btn.css({transform:'rotate('+s._rr+'deg)'});},50);
+            this._t = setInterval(function(){s._rr+=30;if(s._rr==360)s._rr=0;load_btn.css({transform:'rotate('+s._rr+'deg)'});},50);
             $(this).addClass('loading');
             this._oc = this.onclick;
             this.onclick = function(){};
         };
         load_btn[0].loading();
 
-        obj.transition(to_css,function(){
+        // 封装dom方法
+        dom.setting = setting;
+        dom.close = function()
+        {
+            // 处理loading
+            var load_btn = $(this).find('.btn-refresh');
+            if (load_btn[0]._t)load_btn[0].loaded();
+
+            // 1分钟后销毁，以释放内存
+            var dom = this;
+            this._destory_t = setTimeout(function(){
+                dom.desktop();
+            },60000);
+        }
+        //显示页面
+        dom.show = function()
+        {
+            is_window_show = true;
+            $(this).show().transition({x:0,opacity:1,scale:1});
+        };
+        // 对象销毁
+        dom.destroy = function()
+        {
+            // 处理销毁定时器
+            if (this._destory_t)
+            {
+                clearTimeout(this._destory_t);
+                delete this._destory_t;
+            }
+
+            // 执行销毁回调函数
+
+
+            // 清除HTML
+            this.innerHTML = '';
+        };
+        // title
+        dom.get_title = function()
+        {
+            return this._title;
+        };
+
+        if (type=='reload')
+        {
+            obj.css({scale:1});
+            return obj;
+        }
+
+        if (old_display_div && old_display_div.length)
+        {
+            // 处理页面切换
+            old_display_div.transition({x:-$('#main-body-div').width()},function(){old_display_div.hide();});
+        }
+
+        obj.css(css).transition(to_css,function()
+        {
             // 调整窗口
             desktop.resize_window();
+
             // 设置菜单
             desktop.reset.menu();
         });
-
-        $('#main-body-div').show();
 
         return obj;
     };
@@ -858,8 +1069,7 @@ var desktop = new function()
 
             if ( url && url!='/' )
             {
-                _history_reload_page = true;
-                goto(MyQEE.Url.Site+url);
+                goto(MyQEE.Url.Site+url,{type:'reload'});
             }
             else
             {
@@ -869,8 +1079,7 @@ var desktop = new function()
                     url = hash.substr(5);
                     if (url)
                     {
-                        _history_reload_page = true;
-                        goto(MyQEE.Url.Site+url);
+                        goto(MyQEE.Url.Site+url,{type:'reload'});
                     }
                 }
             }
@@ -880,10 +1089,32 @@ var desktop = new function()
     /**
      * 跳转到指定页面
      *
+     * @return false
      */
     window.goto = function(url,setting)
     {
         setting = setting||{};
+
+        if (url=='')
+        {
+            // 回桌面
+
+            return false;
+        }
+        else if (setting.type!='reload')
+        {
+            var uri = get_uri_by_url(url);
+            var tmp_obj = $('#main-body-div').children('div[data-uri="'+uri+'"]');
+
+            if (tmp_obj.length>0 && tmp_obj.css('display')!='none')
+            {
+                // 窗口还打开，则执行刷新操作
+                desktop.refresh();
+                return false;
+            }
+            delete tmp_obj;
+        }
+
         $.ajax(
             {
                 url:url+'?time='+new Date().getTime(),
@@ -893,50 +1124,17 @@ var desktop = new function()
         .success(
             function(html)
             {
-                var title = '';
-                var reg = html.match(/\<title\>(.*)\<\/title\>/);
-                if (reg)title = reg[1] || '';
-                var obj = create_body({url:url,title:title,html:html,index:_history_reload_page?history_index:history_index+1});
+                // 创建一个窗口
+                var obj = create_body({url:url,html:html,type:setting.type});
 
-                document.title = title;
-
-                var state = {
-                    url: url,
-                    title: title
-                }
-
-                if (is_support_pajx)
-                {
-                    // 设置浏览器前进后退按钮
-                    if (_history_reload_page)
-                    {
-                        _history_reload_page = false;
-                        state.index = history_index;
-                        window.history.replaceState(state,document.title);
-                    }
-                    else
-                    {
-                        history_index += 1;
-                        state.index = history_index;
-                        window.history.pushState(state,document.title,url);
-                    }
-                }
-                else
-                {
-                    if (!_history_reload_page)
-                    {
-                        var hash = url.substr(MyQEE.Url.Site.length);
-                        _history_state[hash] = state;
-
-                        _history_old_hash = document.location.hash = '#url=' + encodeURIComponent(hash);
-                    }
-                }
+                // 设置历史状态
+                history_set_state(url, obj[0].get_title(), setting.type);
 
                 if (setting.success)try
                 {
-                    setting.success(data);
+                    setting.success(html);
                 }
-                catch(e){}
+                catch(e){console.error(e);}
 
                 if (window._gaq)
                 {
@@ -959,7 +1157,7 @@ var desktop = new function()
                 {
                     setting.error(data);
                 }
-                catch(e){}
+                catch(e){console.error(e);}
             }
         ).complete(
             function(data)
@@ -972,7 +1170,7 @@ var desktop = new function()
                 {
                     setting.complete(data);
                 }
-                catch(e){}
+                catch(e){console.error(e);}
             }
         ).done(
             function(data)
@@ -982,11 +1180,13 @@ var desktop = new function()
                 {
                     setting.done(data);
                 }
-                catch(e){}
+                catch(e){console.error(e);}
             }
         );
 
         desktop.show_loading();
+
+        return false;
     };
 
     return this;

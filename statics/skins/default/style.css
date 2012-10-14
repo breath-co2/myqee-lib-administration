@@ -189,9 +189,8 @@ table.mainTable input[type="submit"],
     overflow:hidden;
     text-align:center;
     color:#3d3d3d;
-    letter-spacing:1px;
     cursor:pointer;
-    padding:0 4px;
+    padding:0 3px;
     border:1px solid #ababab;
     font-size:12px;
     text-shadow:#fff 1px 1px 0;
@@ -226,6 +225,14 @@ table.mainTable input[type="submit"],
     letter-spacing:1px;
     text-decoration:none;
     background:url(btn_big.gif) repeat-x center top;
+}
+
+
+table.mainTable a.button,
+.table-bordered a.button
+{
+    height:20px;
+    line-height:20px;
 }
 
 table.mainTable a.submit,
@@ -331,7 +338,7 @@ table.mainTable input[type="password"]:focus,
     -o-transition: all 0.1s ease-in-out 0s;
     -moz-box-shadow: 0 0 5px rgba(0,0,0,0.3);
     -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.3);
-    box-shadow:inset 1px 1px 2px #ddd, 0 0 7px #9dc6ef;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
 table.mainTable input[type="password"]
@@ -606,12 +613,22 @@ height:39px\0;
 line-height:36px\0;
 background: url(ie_window_title.png) left bottom\0;
 }
-.window-body{background:#f2feff;padding:10px;left:0;right:0;top:41px;bottom:0;overflow:auto;position:absolute;}
+.window-body{background:#f2feff;overflow:auto;height:400px;}
+.window-body-content{padding:10px;}
 .control-div{margin:0 -10px -10px;}
-
+.control-div-fixed{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:0;
+    -moz-box-shadow: 0 -5px 10px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0 -5px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 -5px 10px rgba(0,0,0,0.1);
+}
 
 .title-div{font-size:14px;text-shadow: 1px 1px 0 rgba(255,255,255,0.5);color:#00434f;text-align:center;padding:0 8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
-.btn-back{float:left;width:40px;text-align:left;height:40px;background-image:url(button_back.png);background-repeat:no-repeat;background-position:left top;padding-left:20px;color:#fff;text-shadow: 0 -1px 0 rgba(0,0,0,0.7);font-size:14px;cursor:pointer;background-size:60px 40px;}
+.btn-back{float:left;width:40px;text-align:left;height:40px;background-image:url(button_back.png);background-repeat:no-repeat;background-position:left top;padding-left:20px;color:#fff;text-shadow: 0 1px 0 rgba(0,0,0,0.7);font-size:14px;cursor:pointer;background-size:60px 40px;}
 .btn-close,.btn-refresh{border-radius:3px;background:url(button_close.png);width:24px;height:24px;float:right;margin:7px 2px;cursor:pointer;background-size:100% 100%;}
 .btn-refresh{background:url(button_refresh.png) center center no-repeat;}
 .btn-refresh.loading{background:url(loading_1.png) center center no-repeat;background-size:18px 18px;cursor:default;}
@@ -625,7 +642,7 @@ background: url(ie_window_title.png) left bottom\0;
 .desktop-div{position:absolute;height:100%;width:100%;}
 
 
-.loaded{position:fixed;background:rgba(0,0,0,0.25);border-radius:4px;font-size:14px;text-shadow: 1px 1px 0 rgba(255,255,255,0.5);;white-space:nowrap;overflow:hidden;text-align:center;vertical-align:middle;}
+.loaded{position:fixed;background:rgba(0,0,0,0.6);color:#fff;font-weight:bold;border-radius:4px;font-size:14px;white-space:nowrap;overflow:hidden;text-align:center;vertical-align:middle;}
 
 
 
@@ -715,10 +732,18 @@ background: url(ie_window_title.png) left bottom\0;
 }
 
 .form-actions {
-    background-color: #def8ff;
+    margin-top: 0;
+    margin-bottom: 0;
     border-top: 1px solid #add4de;
+    background-color: #c6ebee\0;
+    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#dcfcff), to(#aae7eb));
+    background: -moz-linear-gradient(#dcfcff, #aae7eb);
+    background: -o-linear-gradient(#dcfcff, #aae7eb);
 }
 
+.form-horizontal .control-div-fixed .form-actions{
+    padding-left: 190px;
+}
 
 
 

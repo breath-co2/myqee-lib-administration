@@ -3,7 +3,7 @@
         <th width="60">ID</th>
         <th>管理组名称</th>
         <th>管理组说明</th>
-        <th width="180">操作</th>
+        <th width="140">操作</th>
     </tr>
     <?php
     $member_id = Session::instance()->member()->id;
