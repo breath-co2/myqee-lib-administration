@@ -70,7 +70,7 @@ class Controller_Login extends \Controller
                 $this->session()->start();
                 $this->session()->set_member($member);
 
-                $this->show_success(\__('Login success'),array('member_id'=>$member->id,'username'=>$member->username,'gravatar'=>\html::gravatar($member->email?$member->email:'admin@myqee.com',32),'login_num'=>$member->login_num));
+                $this->show_success(\__('Login success'),array('member_id'=>$member->id,'username'=>$member->username,'gravatar'=>\html::gravatar($member->email?$member->email:'admin@myqee.com',32),'loginNum'=>$member->login_num));
             }
             else
             {

@@ -253,7 +253,7 @@ var chinese_calendar = function(today)
     var city = localStorage.getItem('weather_city')||'shanghai';
     var get_weather = function()
     {
-        $.ajax(MyQEE.Url.Site + '/desktop/weather_data?city='+city).success(function(html){
+        $.ajax(MyQEE.url.site + '/desktop/weather_data?city='+city).success(function(html){
             $('#weather-show-div').html(html);
         }).error(function(){
             $('#weather-show-div').html('<div style="padding:40px 0 0 0;text-align:center;">加载失败</div>');

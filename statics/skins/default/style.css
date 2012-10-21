@@ -99,15 +99,15 @@ table.mainTable .td1,
 .table-bordered tr .td1,
 .table-bordered .td1
 {
-    background-color:#d5fbff;
-    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#e7fcfe), to(#d5fbff));
-    background: -moz-linear-gradient(#e7fcfe, #d5fbff);
-    background: -o-linear-gradient(#e7fcfe, #d5fbff);
+    background-color:#d1fbff;
+    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#dcfcff), to(#d1fbff));
+    background: -moz-linear-gradient(#dcfcff, #d1fbff);
+    background: -o-linear-gradient(#dcfcff, #d1fbff);
 }
 table.mainTable.table-striped tbody tr:nth-child(2n+1) td,
 .table-bordered.table-striped tbody tr:nth-child(2n+1) td
 {
-    background-color:#ebfdff;
+    background-color:#e9fdff;
 }
 table.mainTable.table-striped tbody tr:nth-child(2n+1) td.td1,
 .table-bordered.table-striped tbody tr:nth-child(2n+1) td.td1
@@ -477,7 +477,7 @@ table.mainTable .uneditable-input,
     clear: both;
 }
 
-#left-menu-div{position:absolute;left: 0;top:0;height:100%;}
+#left-menu-div{position:absolute;left: 0;top:0;height:100%;-webkit-user-select:none;-moz-user-select:none;}
 #left-menu-div-hoverbg{position:absolute;background:rgba(255,255,255,0.3);width:0;height:0;opacity:0;overflow:hidden;top:0;left:0;}
 #logo
 {
@@ -565,16 +565,16 @@ table.mainTable .uneditable-input,
 .left-menu-ul li a{display:block;height:24px;border-top: 1px solid rgba(255,255,255,0.2);border-bottom:1px solid #518ea2;line-height:22px;line-height:24px\0;overflow:hidden;padding:0 5px 0 5px;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;}
 .left-menu-ul li a:link,.left-menu-ul li a:visited
 {
-    color:#00505e;
+    color:#222;
     text-decoration:none;
 }
 .left-menu-ul li a:hover,.left-menu-ul li a:active
 {
-    color:#00505e;
+    color:#222;
     text-decoration:none;
     background:rgba(255,255,255,0.3);
 }
-.left-menu-ul li a i{margin:3px 2px 0 0;opacity:0.7}
+.left-menu-ul li a i{margin:2px 2px 0 0;opacity:0.75}
 .left-menu-ul li .fav-arrow
 {
     position:absolute;
@@ -595,27 +595,45 @@ table.mainTable .uneditable-input,
 .window-main{position:absolute;left:0;right:0;top:0;bottom:0;min-width:320px;}
 .for-small-window .window-main{border-left:none;border-right:none;}
 .window-title{
-text-align:center;
-border-bottom:1px rgba(0,0,0,0.4) solid;
-height:40px;
-line-height:38px;
-padding:0 4px;
-box-shadow:inset 1px 1px 0 rgba(255,255,255,0.6),inset -1px -1px 0 rgba(255,255,255,0.4);
-background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 247, 255, 0.2)), to(rgba(45, 112, 127, 0.3)));
-background-image: -webkit-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
-background-image: -moz-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
-background-image: -o-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
-background-image: -ms-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
-background-image: linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
-border:1px #a3e2ef solid\0;
-border-bottom:1px #357785 solid\0;
-height:39px\0;
-line-height:36px\0;
-background: url(ie_window_title.png) left bottom\0;
+    text-align:center;
+    border-bottom:1px rgba(0,0,0,0.4) solid;
+    height:40px;
+    line-height:38px;
+    padding:0 4px;
+    box-shadow:inset 1px 1px 0 rgba(255,255,255,0.6),inset -1px -1px 0 rgba(255,255,255,0.4);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 247, 255, 0.2)), to(rgba(45, 112, 127, 0.3)));
+    background-image: -webkit-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
+    background-image: -moz-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
+    background-image: -o-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
+    background-image: -ms-linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
+    background-image: linear-gradient(top, rgba(255, 247, 255, 0.2), rgba(45, 112, 127, 0.3));
+    border:1px #a3e2ef solid\0;
+    border-bottom:1px #357785 solid\0;
+    height:39px\0;
+    line-height:36px\0;
+    background: url(ie_window_title.png) left bottom\0;
 }
+
 .window-body{background:#f2feff;overflow:auto;height:400px;}
-.window-body-content{padding:10px;}
-.control-div{margin:0 -10px -10px;}
+.window-body::-webkit-scrollbar{width:10px;height:10px;overflow:visible;}
+.window-body::-webkit-scrollbar-button{width:0;height:0;display:none;}
+.window-body::-webkit-scrollbar-corner{width:0;height:0;display:none;}
+.window-body::-webkit-scrollbar-track{border:1px solid transparent;background-clip:padding-box;}
+.window-body::-webkit-scrollbar-track:hover{background-color:rgba(0,0,0,0.035);-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,0.14),inset -1px -1px 0 rgba(0,0,0,0.07)}
+.window-body::-webkit-scrollbar-track:active{background-color:rgba(0,0,0,0.05);-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,0.14),inset -1px -1px 0 rgba(0,0,0,0.07)}
+.window-body::-webkit-scrollbar-thumb:vertical  {background-clip:padding-box;border:1px solid transparent;min-height:28px;}
+.window-body::-webkit-scrollbar-thumb:horizontal{background-clip:padding-box;border:1px solid transparent;min-width:28px;}
+.window-body::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,0.2);-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,0.10),inset 0 -1px 0 rgba(0,0,0,0.07)}
+.window-body::-webkit-scrollbar-thumb:vertical:hover{background-color:rgba(0,0,0,0.4);-webkit-box-shadow:inset 1px 1px 1px rgba(0,0,0,0.25)}
+.window-body::-webkit-scrollbar-thumb:vertical:active{background-color:rgba(0,0,0,0.5);-webkit-box-shadow:inset 1px 1px 3px rgba(0,0,0,0.35)}
+
+
+.J-M::-webkit-scrollbar-track:vertical{border-left:6px solid transparent;border-right:1px solid transparent;background-clip:padding-box}
+.J-M::-webkit-scrollbar-track:horizontal{border-top:6px solid transparent;border-bottom:1px solid transparent;background-clip:padding-box}
+
+.window-body-content{padding:8px;}
+
+.control-div{margin:0 -8px -8px;}
 .control-div-fixed{
     position:fixed;
     bottom:0;
@@ -742,7 +760,7 @@ background: url(ie_window_title.png) left bottom\0;
 }
 
 .form-horizontal .control-div-fixed .form-actions{
-    padding-left: 190px;
+    padding-left: 188px;
 }
 
 

@@ -64,14 +64,14 @@ background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, trans
 </style>
 <script type="text/javascript">
 var MyQEE = {};
-MyQEE.Url = {
-    Site    : '<?php echo rtrim(Core::url('/'),'/');?>',
-    Statics : '<?php echo $statics_url;?>'
+MyQEE.url = {
+    site    : '<?php echo rtrim(Core::url('/'),'/');?>',
+    statics : '<?php echo $statics_url;?>'
 };
-MyQEE.Member = {
-    Id : '<?php echo Session::instance()->member_id();?>',
-    Username : '<?php echo Session::instance()->member()->username;?>',
-    LoginNum : '<?php echo Session::instance()->member()->login_num;?>'
+MyQEE.member = {
+    id : '<?php echo Session::instance()->member_id();?>',
+    username : '<?php echo Session::instance()->member()->username;?>',
+    loginNum : '<?php echo Session::instance()->member()->login_num;?>'
 };
 </script>
 </head>
@@ -192,13 +192,13 @@ MyQEE.Member = {
                 t.setAttribute('rel' ,'stylesheet');
                 t.setAttribute('type' , 'text/css');
                 t.setAttribute('id' , url);
-                t.setAttribute('href' , MyQEE.Url.Statics + url);//+'?t='+new Date().getTime());
+                t.setAttribute('href' , MyQEE.url.statics + url);//+'?t='+new Date().getTime());
             }
             else
             {
                 var t = document.createElement('script');
                 t.type = 'text/javascript';
-                t.src = MyQEE.Url.Statics + url;//+'?t='+new Date().getTime();
+                t.src = MyQEE.url.statics + url;//+'?t='+new Date().getTime();
             }
 
             t.onload = function()

@@ -1,16 +1,16 @@
 var desktop = new function()
 {
-    var menu              = [],     //菜单数组
-    small_window_mode     = false,  //窄屏幕窗口
-    iphone_hidden_address = false,  //iphone下是否隐藏地址栏状态
-    top_scroll_height     = 0,      //页面顶部卷去的高度
-    is_window_show        = false,  //是否窗口模式
-    is_fullscreen         = false,  //是否全屏模式
-    is_menu_open_mode     = true,   //是否目录开启
-    menu_width            = 160,    //菜单宽带
-    left_width            = 0,      //左侧宽度
-    site_full_url         = '',     //站点完整URL前缀
-    is_support_pajx       = window.history.pushState?true:false;    //是否支持动态切换地址栏功能
+    var menu            = [],     //菜单数组
+    smallWindowMode     = false,  //窄屏幕窗口
+    iphoneHiddenAddress = false,  //iphone下是否隐藏地址栏状态
+    topScrollHeight     = 0,      //页面顶部卷去的高度
+    isWindowShow        = false,  //是否窗口模式
+    isFullscreen        = false,  //是否全屏模式
+    isMenuOpenMode      = true,   //是否目录开启
+    menuWidth           = 160,    //菜单宽带
+    leftWidth           = 0,      //左侧宽度
+    siteFullUrl         = '',     //站点完整URL前缀
+    isSupportPajx       = window.history.pushState?true:false;    //是否支持动态切换地址栏功能
 
     var _history_now_index    = 0       // 当前history索引
     var _history_state        = {};
@@ -20,7 +20,7 @@ var desktop = new function()
     //窗口调整大小
     window.onresize = function()
     {
-        if(iphone_hidden_address)
+        if(iphoneHiddenAddress)
         {
             // 调高
             $(document.body).css('height',($(window).height()+60)+'px');
@@ -37,16 +37,16 @@ var desktop = new function()
 
         var w = $(window).width();
         var h = $(window).height();
-        if (iphone_hidden_address)h+=60;
+        if (iphoneHiddenAddress)h+=60;
 
         //$('#bg-div').width(w-2).height(h-2);
         if (w<760)
         {
-            left_width = 0;
+            leftWidth = 0;
         }
         else
         {
-            left_width = $('#logo').width()+1;
+            leftWidth = $('#logo').width()+1;
         }
         var hh = h - $('#logo').height();
 
@@ -60,7 +60,7 @@ var desktop = new function()
 
         if (w<1000)
         {
-            small_window_mode = true;
+            smallWindowMode = true;
             $('#main-body-div').addClass('for-small-window');
 
             if (w<720)
@@ -91,7 +91,7 @@ var desktop = new function()
         }
         else
         {
-            small_window_mode = false;
+            smallWindowMode = false;
             $('#main-desktop').removeClass('for-small-window for-very-small-window');
             $('#main-body-div').removeClass('for-small-window');
             $('#left-menu-div').css({'overflow':'visible','width':'auto'});
@@ -133,7 +133,7 @@ var desktop = new function()
 
     this.resize_window = function()
     {
-        if ( is_fullscreen || (small_window_mode && is_window_show) )
+        if ( isFullscreen || (smallWindowMode && isWindowShow) )
         {
             $('#main-desktop').hide();
             $('#left-menu-div').hide();
@@ -150,11 +150,11 @@ var desktop = new function()
     //显示登录框
     this.login_show_div = function()
     {
-        is_fullscreen = true;
+        isFullscreen = true;
         this.resize_window();
 
         // 载入Login视图
-        $.ajax(MyQEE.Url.Site+'/login').success(function(data)
+        $.ajax(MyQEE.url.site+'/login').success(function(data)
         {
             $('<div id="login_div">'+data+'</div>').appendTo(document.body);
             $('#login_div').html_paste(true);
@@ -163,7 +163,7 @@ var desktop = new function()
 
     this.login_out = function()
     {
-        document.location.href = MyQEE.Url.Site+'/login/out';
+        document.location.href = MyQEE.url.site+'/login/out';
         return false;
     }
 
@@ -178,19 +178,19 @@ var desktop = new function()
 
         $('#login_div').remove();
 
-        is_fullscreen = false;
+        isFullscreen = false;
         this.resize_window();
 
         if (data.member_id)
         {
             //更新数据
-            MyQEE.Member.Id = data.member_id;
-            MyQEE.Member.Username = data.username;
-            MyQEE.Member.LoginNum = data.login_num;
+            MyQEE.member.id = data.member_id;
+            MyQEE.member.username = data.username;
+            MyQEE.member.loginNum = data.loginNum;
         }
 
         //加入登录用户
-        localStorage.setItem('logined_member',JSON.stringify([MyQEE.Member.Username,data.gravatar]));
+        localStorage.setItem('logined_member',JSON.stringify([MyQEE.member.username,data.gravatar]));
 
         logined_init();
     }
@@ -309,7 +309,7 @@ var desktop = new function()
             obj.find('.collapse').collapse();
             obj.find('.typeahead').typeahead();
 
-            if (MyQEE.is_iphone)
+            if (MyQEE.isIphone)
             {
                 $('form.form-horizontal').removeClass('form-horizontal').addClass('form-inline');
             }
@@ -328,10 +328,11 @@ var desktop = new function()
             // 更新history索引
             var old_history_index = _history_now_index;
             _history_now_index = e.state.index;
-            var is_bak = old_history_index>e.state.index?true:false;
+            var is_back = old_history_index>e.state.index?true:false;
 
-            var uri = e.state.url.substr(site_full_url.length);
+            var uri = e.state.url.substr(siteFullUrl.length);
 
+            MyQEE.closeWin();
             if (uri==''||uri=='/')
             {
                 desktop.close(null,true);
@@ -340,98 +341,50 @@ var desktop = new function()
 
             var uri = get_uri_by_url(e.state.url);
             var obj = $('#main-body-div').children('div[data-uri="'+uri+'"]');
-            if (obj && obj.html()!='')
+            if (obj.length>0 && obj.html()!='')
             {
-                is_window_show = true;
+                isWindowShow = true;
                 // 直接切换
                 obj.hide();
                 var display_div = $('#main-body-div').children('div:visible');
                 if (display_div.length)
                 {
                     var x = -$('#main-body-div').show().width();
-                    if (is_bak)x = -x;
-                    obj.show().css({x:-x,opacity:1,scale:1});
+                    if (is_back)x = -x;
+                    obj.css({x:-x,opacity:1,scale:1});
                     display_div.css({x:0,opacity:1,scale:1});
 
-                    obj.transition({x:0});
-                    display_div.transition({x:x},function(){
-                        display_div.hide();
+                    obj[0].show();
+                    display_div.transition({x:x},function()
+                    {
+                        display_div.each(function(){
+                            this.close();
+                        });
                     });
                 }
                 else
                 {
                     $('#main-body-div').show();
-                    obj.show().css({x:0,opacity:0,scale:0}).transition({opacity:1,scale:1});
+                    obj.css({x:0,opacity:0,scale:0})[0].show();
                 }
             }
             else
             {
                 // 重新加载
-                goto(e.state.url,{type:'state',is_back:is_bak});
+                goto(e.state.url,{type:'state',is_back:is_back});
             }
-
-            return;
-
-/*
-            var show_index;
-            // 隐藏其它DIV
-            $('#main-body-div').children('div.window-main').each(function()
-            {
-                if (this.style.display!='none')
-                {
-                    show_index = $(this).attr('data-index');
-                    if (show_index==e.state.index)
-                    {
-                        return;
-                    }
-                    if (show_index>e.state.index)
-                    {
-                        var n = 1;
-                    }
-                    else
-                    {
-                        var n = -1;
-                    }
-                    $(this).transition({x:n*($(window).width()-left_width)},function(){$(this).hide();});
-                }
-            });
-
-            var obj = $('#main-body-div')children('div.window-main[data-index='+e.state.index+']');
-
-            if (obj.length>0)
-            {
-                obj[0].show();
-            }
-            */
-
-
-            /*
-
-            var c = $('#main-body-div').children();
-            if (c.length==0)return false;
-            if (c.length==1)
-            {
-                this.close(callback);
-            }
-            var o2 = c.last();
-            var o1 = o2.prev();
-
-            o1.show().transition({x:0},function(){if (o1[0]._sc)o1[0]._sc.refresh();if (callback)callback();});
-            o2.transition({x:$(window).width()-left_width},function(){o2[0].remove();});
-
-            */
         };
 
-        if ( MyQEE.Url.Site.substr(0,7)!='http://' && MyQEE.Url.Site.substr(0,8)!='https://' )
+        if ( MyQEE.url.site.substr(0,7)!='http://' && MyQEE.url.site.substr(0,8)!='https://' )
         {
-            site_full_url = document.location.protocol+'//'+document.location.host+(document.location.port?':'+document.location.host:'') + MyQEE.Url.Site;
+            siteFullUrl = document.location.protocol+'//'+document.location.host+(document.location.port?':'+document.location.host:'') + MyQEE.url.site;
         }
         else
         {
-            site_full_url = MyQEE.Url.Site;
+            siteFullUrl = MyQEE.url.site;
         }
 
-        if( is_support_pajx )
+        if( isSupportPajx )
         {
             window.history.replaceState({title:document.title,url:document.location.href,index:0},document.title);
 
@@ -454,7 +407,7 @@ var desktop = new function()
 
             window.onhashchange = function()
             {
-                var hash = document.location.hash;
+                var hash = decodeURIComponent(document.location.hash);
                 if ( hash=='' || hash.substr(0,5)!='#url=' )
                 {
                     hash = '#url=/';
@@ -462,17 +415,18 @@ var desktop = new function()
                 if ( _history_old_hash!=hash )
                 {
                     _history_old_hash = hash;
-
                     var state = _history_state[hash.substr(5)];
-
-                    //调用 popstate
-                    popstate({state:state});
+                    if (state)
+                    {
+                        //调用 popstate
+                        popstate({state:state});
+                    }
                 }
             };
         }
 
 
-        var html = '<div id="main-desktop"></div><div id="left-menu-div"><div id="left-menu-div-hoverbg"></div><div id="left-menu"></div><div id="left-menu-icon-div"><div id="left-first-menu-div"></div><div id="left-bottom-menu-div"></div></div></div><div id="logo" onclick="document.location.reload();"><img src="'+MyQEE.Url.Statics+'/skins/default/'+(isRetina?'logo@2x.png':'logo.png')+'" /></div><div id="main-body-div"></div>';
+        var html = '<div id="main-desktop"></div><div id="left-menu-div"><div id="left-menu-div-hoverbg"></div><div id="left-menu"></div><div id="left-menu-icon-div"><div id="left-first-menu-div"></div><div id="left-bottom-menu-div"></div></div></div><div id="logo" onclick="document.location.reload();"><img src="'+MyQEE.url.statics+'/skins/default/'+(isRetina?'logo@2x.png':'logo.png')+'" /></div><div id="main-body-div"></div>';
         var st = {'id':'body-main'};
         // 创建背景
         $('<div>',st).html(html).appendTo($(document.body));
@@ -486,7 +440,7 @@ var desktop = new function()
             }
         }
 
-        if (MyQEE.Member.Id)
+        if (MyQEE.member.id)
         {
             logined_init();
         }
@@ -500,7 +454,7 @@ var desktop = new function()
         $('#page-loading-div').fadeOut(300,function(){
             setTimeout(function()
             {
-                if (MyQEE.is_ios)
+                if (MyQEE.isIos)
                 {
                     var h = document.body.offsetHeight;
                     if (h<480 && h!=320)
@@ -512,14 +466,14 @@ var desktop = new function()
                         // iphone中隐藏地址栏
                         window.scrollTo(0,0);
 
-                        iphone_hidden_address = true;
+                        iphoneHiddenAddress = true;
 
                         // 阻止页面滚动
                         document.addEventListener('touchmove',function(e){e.preventDefault();},false);
                     }
                     else if (h==480||h==320||h==1024||h==768||h==568)
                     {
-                        top_scroll_height = 20;
+                        topScrollHeight = 20;
                         $('#body-main').css('top','20px');
                         $('#logo').css({'marginTop':'-20px','paddingTop':'20px'});
                     }
@@ -546,10 +500,10 @@ var desktop = new function()
     //关闭窗口
     this.close = function(callback,ts)
     {
-        is_window_show = false;
+        isWindowShow = false;
         if (!ts)
         {
-            history_set_state(MyQEE.Url.Site+'/','管理首页');
+            history_set_state(MyQEE.url.site+'/','管理首页');
         }
         var obj = $('#main-body-div').children('div:visible');
         obj.transition({opacity:0,scale:0},function(){
@@ -560,7 +514,7 @@ var desktop = new function()
 
         setTimeout(function()
         {
-            $('#main-body-div').hide().children().hide();
+            $('#main-body-div').hide().children('div:visible').each(function(){this.close();});
             if (callback)callback();
         },400);
     };
@@ -652,7 +606,7 @@ var desktop = new function()
 
         var prev_menu_num = obj.prevAll('ul').length;
 
-        $('#left-menu-show-div').transition({x:-menu_width*prev_menu_num});
+        $('#left-menu-show-div').transition({x:-menuWidth*prev_menu_num});
     }
 
     //登录成功后初始化
@@ -666,7 +620,7 @@ var desktop = new function()
     // 设置菜单高亮
     var menu_set_hover = function(url)
     {
-        var uri = url.substr(site_full_url.length);
+        var uri = url.substr(siteFullUrl.length);
 
         if (uri=='/')
         {
@@ -678,7 +632,7 @@ var desktop = new function()
     var create_menu = function()
     {
         // 创建目录
-        var menu_url = MyQEE.Url.Site + '/menu_data?n='+MyQEE.Member.LoginNum;
+        var menu_url = MyQEE.url.site + '/menu_data?n='+MyQEE.member.loginNum;
         $.ajax({url:menu_url,dataType:'json'}).error(function(){alert('菜单加载失败，请刷新页面')}).success(function(m)
         {
             menu = m;
@@ -700,7 +654,7 @@ var desktop = new function()
                     }
                 }
 
-                var html = '<li>'+(subhtml?'<span class="fav-arrow" onclick="var obj=$(\'#menu-li-key-'+kstr+'\');obj.slideToggle();"></span>':'')+'<a'+(arr.href?' href="'+MyQEE.Url.Site+'/'+arr.href+'"':subhtml?' href="#" onclick="$(this).prev()[0].onclick();this.blur();return false;"':'')+'><span style="padding-left:'+n+'em;"><i class="icon-cog"></i>'+arr.html+'</a></span></li>'+(subhtml?'<div id="menu-li-key-'+kstr+'">'+subhtml+'</div>':'');
+                var html = '<li>'+(subhtml?'<span class="fav-arrow" onclick="var obj=$(\'#menu-li-key-'+kstr+'\');obj.slideToggle();"></span>':'')+'<a'+(arr.href?' href="'+MyQEE.url.site+'/'+arr.href+'"':subhtml?' href="#" onclick="$(this).prev()[0].onclick();this.blur();return false;"':'')+'><span style="padding-left:'+n+'em;">'+arr.html+'</a></span></li>'+(subhtml?'<div id="menu-li-key-'+kstr+'">'+subhtml+'</div>':'');
                 return html;
             };
 
@@ -709,7 +663,7 @@ var desktop = new function()
             for (var key in menu)
             {
                 var m = menu[key];
-                var tmp_html = '<li id="left-menu-'+key+'" onclick="'+(m.click?m.click:'desktop.change_big_menu(\''+key+'\');')+'"><img'+(m.html?' data-placement="right" rel="tooltip" data-original-title="'+m.html+'"':'')+' src="'+MyQEE.Url.Site+'/statics/skins/default/'+(m.icon||'default')+(isRetina?'@2x':'')+'.png" /></li>';
+                var tmp_html = '<li id="left-menu-'+key+'" onclick="'+(m.click?m.click:'desktop.change_big_menu(\''+key+'\');')+'"><img'+(m.html?' data-placement="right" rel="tooltip" data-original-title="'+m.html+'"':'')+' src="'+MyQEE.url.site+'/statics/skins/default/'+(m.icon||'default')+(isRetina?'@2x':'')+'.png" /></li>';
                 if (m.bottom)
                 {
                     html_bottom += tmp_html;
@@ -719,7 +673,7 @@ var desktop = new function()
                 {
                     html_first += tmp_html;
 
-                    html_right += '<ul style="margin-left:'+(menu_width*n)+'px;width:'+menu_width+'px;" id="menu-ul-'+key+'-div" class="ul left-menu-ul">';
+                    html_right += '<ul style="margin-left:'+(menuWidth*n)+'px;width:'+menuWidth+'px;" id="menu-ul-'+key+'-div" class="ul left-menu-ul">';
                     for (var k2 in m)
                     {
                         if (typeof m[k2] =='object')
@@ -766,10 +720,10 @@ var desktop = new function()
             title: title
         }
 
-        if (is_support_pajx)
+        if (isSupportPajx)
         {
             // 设置浏览器前进后退按钮
-            if (type=='reload')
+            if (type=='reload'||type=='state')
             {
                 state.index = _history_now_index;
                 window.history.replaceState(state,title);
@@ -783,12 +737,18 @@ var desktop = new function()
         }
         else
         {
-            if (type!='reload')
+            if (type=='reload' || type=='state')
             {
-                var hash = url.substr(MyQEE.Url.Site.length);
+                state.index = _history_now_index;
                 _history_state[hash] = state;
-
-                _history_old_hash = document.location.hash = '#url=' + encodeURIComponent(hash);
+            }
+            else
+            {
+                var hash = url.substr(siteFullUrl.length);
+                _history_now_index += 1;
+                state.index = _history_now_index;
+                _history_state[hash] = state;
+                _history_old_hash = document.location.hash = '#url=' + encodeURIComponent(hash).replace(/%2F/g,'/');
             }
         }
     }
@@ -808,7 +768,9 @@ var desktop = new function()
     var create_body = function(setting)
     {
         var type = setting.type;
+        var is_back = setting.is_back;
         delete setting.type;
+        delete setting.is_back;
         var uri = get_uri_by_url(setting.url);
         var obj = $('#main-body-div').children('div[data-uri="'+uri+'"]');
 
@@ -818,24 +780,22 @@ var desktop = new function()
             // 已经存在
             obj.each(function()
             {
-                this.destroy();   // 销毁内容、函数
+                if (this.innerHTML!='')
+                {
+                    this.destroy();   // 销毁内容、函数
+                }
                 i++;
                 if (i>1)
                 {
                     $(this).remove();   //移除多余的异常div
-                }
-                else
-                {
-                    $(this).show();
                 }
             }
             );
             delete i;
         }
 
-        var to_css = {}, css = {};
-        var old_display_div;
-        if (is_window_show)
+        var to_css = {}, css = {} , old_display_div = {};
+        if (isWindowShow)
         {
             // 窗口已打开
             to_css = {
@@ -844,7 +804,9 @@ var desktop = new function()
                 opacity:1
             };
             css.x = $('#main-body-div').width();
+            if (is_back)css.x = -css.x;
 
+            //obj.hide();
             // 处理已开启的窗口
             old_display_div = $('#main-body-div').children('div:visible');
         }
@@ -869,14 +831,14 @@ var desktop = new function()
         {
             obj.html(html);
         }
+        obj.show();
         $('#main-body-div').show();
-        is_window_show = true;
 
         // 设置HTML内容
         if (setting.html.length>0)
         {
             obj.find('div.window-body-content').html(setting.html).html_paste(false);
-            if (!MyQEE.is_iphone)
+            if (!MyQEE.isIphone)
             {
                 var c_div = obj.find('div.control-div');
                 if (c_div.length)
@@ -907,7 +869,7 @@ var desktop = new function()
 
         // 封装loading按钮
         var load_btn = obj.find('.btn-refresh');
-        load_btn[0].loaded = function()
+        if (!load_btn[0].loaded)load_btn[0].loaded = function()
         {
             this.onclick = this._oc;
             if(this._t)clearInterval(this._t);
@@ -915,7 +877,7 @@ var desktop = new function()
             this._rr = 0;
             $(this).removeClass('loading').css({transform:'rotate(0deg)'});
         };
-        load_btn[0].loading = function()
+        if (!load_btn[0].loading)load_btn[0].loading = function()
         {
             this._rr = 0;
             if(this._t)this.loaded();
@@ -929,26 +891,34 @@ var desktop = new function()
 
         // 封装dom方法
         dom.setting = setting;
-        dom.close = function()
+        if (!dom.close)dom.close = function()
         {
+            $(this).hide();
             // 处理loading
             var load_btn = $(this).find('.btn-refresh');
             if (load_btn[0]._t)load_btn[0].loaded();
 
             // 1分钟后销毁，以释放内存
             var dom = this;
+            if (this._destory_t)clearTimeout(this._destory_t);
             this._destory_t = setTimeout(function(){
-                dom.desktop();
+                dom.destroy();
             },60000);
         }
+
         //显示页面
-        dom.show = function()
+        if (!dom.show)dom.show = function()
         {
-            is_window_show = true;
+            if (this._destory_t)
+            {
+                clearTimeout(this._destory_t);
+                delete this._destory_t;
+            }
             $(this).show().transition({x:0,opacity:1,scale:1});
         };
+
         // 对象销毁
-        dom.destroy = function()
+        if (!dom.destroy)dom.destroy = function()
         {
             // 处理销毁定时器
             if (this._destory_t)
@@ -963,6 +933,7 @@ var desktop = new function()
             // 清除HTML
             this.innerHTML = '';
         };
+
         // title
         dom.get_title = function()
         {
@@ -975,10 +946,10 @@ var desktop = new function()
             return obj;
         }
 
-        if (old_display_div && old_display_div.length)
+        if (old_display_div.length)
         {
             // 处理页面切换
-            old_display_div.transition({x:-$('#main-body-div').width()},function(){old_display_div.hide();});
+            old_display_div.transition({x:-css.x},function(){old_display_div.each(function(){this.close();});});
         }
 
         obj.css(css).transition(to_css,function()
@@ -996,7 +967,7 @@ var desktop = new function()
     //创建桌面内容
     var create_desktop = function()
     {
-        $.ajax(MyQEE.Url.Site + '/desktop').success(function(html)
+        $.ajax(MyQEE.url.site + '/desktop').success(function(html)
         {
             // 创建初始化HTML
             if (!document.getElementById('main-desktop-div'))
@@ -1019,7 +990,7 @@ var desktop = new function()
             desktop.reset.desktop();
 
             if (!$('#main-desktop-div')[0]._sc)$('#main-desktop-div')[0]._sc = new iScroll('main-desktop',{vScroll:false,hScrollbar:false,vScrollbar:false,snap:true,wheelAction:'none',onBeforeScrollStart:function(){},onScrollEnd:function(){
-                if (small_window_mode)
+                if (smallWindowMode)
                 {
                     if ( this.currPageX>0 )
                     {
@@ -1065,11 +1036,11 @@ var desktop = new function()
         }).complete(function()
         {
             // 桌面代码载入完毕
-            var url = document.location.href.split('#')[0].substr(site_full_url.length);
+            var url = document.location.href.split('#')[0].substr(siteFullUrl.length);
 
             if ( url && url!='/' )
             {
-                goto(MyQEE.Url.Site+url,{type:'reload'});
+                goto(siteFullUrl+url,{type:'reload'});
             }
             else
             {
@@ -1079,7 +1050,7 @@ var desktop = new function()
                     url = hash.substr(5);
                     if (url)
                     {
-                        goto(MyQEE.Url.Site+url,{type:'reload'});
+                        goto(siteFullUrl+url,{type:'reload'});
                     }
                 }
             }
@@ -1125,7 +1096,8 @@ var desktop = new function()
             function(html)
             {
                 // 创建一个窗口
-                var obj = create_body({url:url,html:html,type:setting.type});
+                var obj = create_body({url:url,html:html,type:setting.type,is_back:setting.is_back});
+                isWindowShow = true;
 
                 // 设置历史状态
                 history_set_state(url, obj[0].get_title(), setting.type);
