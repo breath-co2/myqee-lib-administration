@@ -70,7 +70,7 @@ if ($list)
 {
 ?>
 <table class="mainTable">
-    <tr>
+    <thead>
         <th width="40">ID</th>
         <th>用户名（昵称）</th>
         <th>所属管理组</th>
@@ -78,8 +78,8 @@ if ($list)
         <th width="30">超管</th>
         <th width="30">屏蔽</th>
         <th width="40">登录数</th>
-        <th width="190">操作</th>
-    </tr>
+        <th width="160">操作</th>
+    </thead>
     <?php
     $member_id = Session::instance()->member()->id;
     if ($list)foreach ($list as $item)
@@ -88,7 +88,7 @@ if ($list)
     ?>
     <tr align="center">
         <td class="td1"><?php echo $item->id;?></td>
-        <td class="td2"><?php echo $item->username;if ($item->nickname)echo ' ('.$item->nickname.')';?></td>
+        <td class="td2" align="left"><?php echo $item->username;if ($item->nickname)echo ' ('.$item->nickname.')';?></td>
         <td class="td2">
         <?php
         if ( $item->groups()->count()==0 )
@@ -185,12 +185,12 @@ if ($list)
     <?php
     }
     ?>
-    <tr>
-        <td class="td1" colspan="7"> </td>
+    <tfoot>
+        <td class="td1" colspan="7"></td>
         <td class="td1" align="center">
         <a class="submit" href="<?php echo Core::url('administrator/add');?>">创建新用户</a>
         </td>
-    </tr>
+    </tfoot>
 </table>
 
 <center>
