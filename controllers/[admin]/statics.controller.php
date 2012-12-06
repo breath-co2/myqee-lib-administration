@@ -74,7 +74,7 @@ class Controller_Statics extends \Controller
         $file = $this->file;
         $type = $this->type;
 
-        if ( ! \preg_match('#^([a-zA-Z0-9_/\-\.@]+)$#', $file) || ! \preg_match( '#('.$this->allow_suffix.')$#', $type ) )
+        if ( ! \preg_match('#^([a-zA-Z0-9_/\-\.@]+)$#', $file) || ! \preg_match( '#('.$this->allow_suffix.')$#i', $type ) )
         {
             \Core::show_404();
         }
@@ -86,23 +86,24 @@ class Controller_Statics extends \Controller
             // 清理所有已输出的header
             \header_remove();
 
-            if ( $type == 'jpg' )
+            $low_type = strtolower($type);
+            if ( $low_type == 'jpg' )
             {
                 \header( 'Content-Type: image/jpeg' );
             }
-            elseif ( \in_array( $type, array( 'gif', 'png' ) ) )
+            elseif ( \in_array( $low_type, array( 'gif', 'png' ) ) )
             {
-                \header( 'Content-Type: image/' . $type );
+                \header( 'Content-Type: image/' . $low_type );
             }
-            elseif ( $type == 'css' )
+            elseif ( $low_type == 'css' )
             {
                 \header( 'Content-Type: text/css' );
             }
-            elseif ( $type == 'js' )
+            elseif ( $low_type == 'js' )
             {
                 \header( 'Content-Type: application/x-javascript' );
             }
-            elseif ( $type == 'swf' )
+            elseif ( $low_type == 'swf' )
             {
                 \header( 'Content-Type: application/swf' );
             }
